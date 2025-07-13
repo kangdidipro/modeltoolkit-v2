@@ -46,9 +46,7 @@ export default function BlogPage() {
         {blogPosts.map((post) => (
           <Card key={post.title} className="flex flex-col overflow-hidden">
             <CardHeader className="p-0">
-                <div>
-                    <Image src={post.image} alt={post.title} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint={post.aiHint} />
-                </div>
+                <Image src={post.image} alt={post.title} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint={post.aiHint} />
             </CardHeader>
             <CardContent className="p-6 flex-grow">
               <CardTitle className="font-headline text-xl mb-2">{post.title}</CardTitle>
@@ -57,7 +55,7 @@ export default function BlogPage() {
             <CardFooter className="p-6 pt-0">
               <Button asChild variant="link" className="p-0 h-auto">
                 <Link href={post.link}>
-                  <span>Read More <ArrowRight className="inline-block ml-1 h-4 w-4" /></span>
+                  Read More <ArrowRight className="inline-block ml-1 h-4 w-4" />
                 </Link>
               </Button>
             </CardFooter>

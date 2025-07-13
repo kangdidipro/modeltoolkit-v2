@@ -47,7 +47,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <SidebarGroup>
               <SidebarGroupLabel>Models</SidebarGroupLabel>
               <SidebarMenuItem>
-                <Link href="/models/swot" legacyBehavior passHref>
+                <Link href="/models/swot">
                   <SidebarMenuButton
                     isActive={isActive("/models/swot")}
                     icon={<LayoutGrid />}
@@ -80,7 +80,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <SidebarGroup>
               <SidebarGroupLabel>Resources</SidebarGroupLabel>
               <SidebarMenuItem>
-                <Link href="/blog" legacyBehavior passHref>
+                <Link href="/blog">
                   <SidebarMenuButton
                     isActive={isActive("/blog")}
                     icon={<Newspaper />}
@@ -96,7 +96,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <SidebarFooter>
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <Link href="/feedback" legacyBehavior passHref>
+                    <Link href="/feedback">
                     <SidebarMenuButton
                         isActive={isActive("/feedback")}
                         icon={<MessageCircle />}
