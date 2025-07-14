@@ -333,5 +333,4 @@ export default function ChangeManagementCanvas() {
       </div>
     </>
   )
-
-    
+}
