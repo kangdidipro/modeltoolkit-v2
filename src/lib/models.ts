@@ -89,6 +89,14 @@ export type Mckinsey7sFrameworkModel = {
   skills: ModelItem[];
 };
 
+export type AdkarModel = {
+  awareness: ModelItem[];
+  desire: ModelItem[];
+  knowledge: ModelItem[];
+  ability: ModelItem[];
+  reinforcement: ModelItem[];
+};
+
 
 export const initialSwotData: SwotModel = {
   strengths: [
@@ -196,6 +204,14 @@ export const initialMckinsey7sFrameworkData: Mckinsey7sFrameworkModel = {
   style: [{ id: 's4', content: 'Management style' }],
   staff: [{ id: 's5', content: 'Employee capabilities' }],
   skills: [{ id: 's6', content: 'Core competencies' }],
+};
+
+export const initialAdkarModelData: AdkarModel = {
+  awareness: [{ id: 'adkar1', content: 'Communicate the business reasons for change.' }],
+  desire: [{ id: 'adkar2', content: 'Address personal motivations for the change.' }],
+  knowledge: [{ id: 'adkar3', content: 'Provide training and education on new skills.' }],
+  ability: [{ id: 'adkar4', content: 'Offer coaching and practice sessions.' }],
+  reinforcement: [{ id: 'adkar5', content: 'Recognize and reward successful change adoption.' }],
 };
 
 
