@@ -69,13 +69,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/pareto-principle">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/pareto-principle")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="Pareto Principle (80/20)"
                   >
                     Pareto Principle (80/20)
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
                  <SidebarMenuButton

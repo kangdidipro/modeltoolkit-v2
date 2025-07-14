@@ -17,6 +17,11 @@ export type EisenhowerMatrixModel = {
   delete: ModelItem[];
 };
 
+export type ParetoPrincipleModel = {
+  vitalFew: ModelItem[];
+  usefulMany: ModelItem[];
+};
+
 export const initialSwotData: SwotModel = {
   strengths: [
     { id: 's1', content: 'Strong brand recognition' },
@@ -49,6 +54,16 @@ export const initialEisenhowerMatrixData: EisenhowerMatrixModel = {
   ],
 };
 
+export const initialParetoPrincipleData: ParetoPrincipleModel = {
+  vitalFew: [
+    { id: 'vf1', content: 'Top 20% of customers generating 80% of revenue.' },
+  ],
+  usefulMany: [
+    { id: 'um1', content: 'Remaining 80% of customers.' },
+  ],
+};
+
+
 export const modelInfo: { [key: string]: { name: string; description: string } } = {
   swot: {
     name: 'SWOT Analysis',
@@ -57,6 +72,10 @@ export const modelInfo: { [key: string]: { name: string; description: string } }
   'eisenhower-matrix': {
     name: 'Eisenhower Matrix',
     description: 'Prioritize tasks by urgency and importance to focus on what matters.',
+  },
+  'pareto-principle': {
+    name: 'Pareto Principle (80/20 Rule)',
+    description: 'Identify the 20% of inputs that create 80% of the results.',
   },
   'business-model-canvas': {
     name: 'Business Model Canvas',
