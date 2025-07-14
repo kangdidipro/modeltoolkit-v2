@@ -153,6 +153,13 @@ export type DiffusionOfInnovationsModel = {
   laggards: ModelItem[];
 };
 
+export type FlowModel = {
+  flow: ModelItem[];
+  anxiety: ModelItem[];
+  boredom: ModelItem[];
+  apathy: ModelItem[];
+};
+
 
 export const initialSwotData: SwotModel = {
   strengths: [
@@ -327,6 +334,13 @@ export const initialDiffusionOfInnovationsData: DiffusionOfInnovationsModel = {
   earlyMajority: [{ id: 'di3', content: 'Pragmatists who need a proven solution' }],
   lateMajority: [{ id: 'di4', content: 'Conservatives, risk-averse' }],
   laggards: [{ id: 'di5', content: 'Skeptics, last to adopt' }],
+};
+
+export const initialFlowModelData: FlowModel = {
+  flow: [{ id: 'flow1', content: 'Challenging and engaging work' }],
+  anxiety: [{ id: 'anxiety1', content: 'Difficult task with no experience' }],
+  boredom: [{ id: 'boredom1', content: 'Easy, repetitive tasks' }],
+  apathy: [{ id: 'apathy1', content: 'Meaningless, simple work' }],
 };
 
 
