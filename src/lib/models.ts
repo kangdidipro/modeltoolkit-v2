@@ -64,6 +64,13 @@ export type PortersFiveForcesModel = {
   rivalryAmongCompetitors: ModelItem[];
 };
 
+export type AidaModel = {
+  awareness: ModelItem[];
+  interest: ModelItem[];
+  desire: ModelItem[];
+  action: ModelItem[];
+};
+
 
 export const initialSwotData: SwotModel = {
   strengths: [
@@ -146,6 +153,13 @@ export const initialPortersFiveForcesData: PortersFiveForcesModel = {
   bargainingPowerOfSuppliers: [{ id: 'pff3', content: 'Supplier concentration' }],
   threatOfSubstitutes: [{ id: 'pff4', content: 'Switching costs' }],
   rivalryAmongCompetitors: [{ id: 'pff5', content: 'Industry growth rate' }],
+};
+
+export const initialAidaModelData: AidaModel = {
+  awareness: [{ id: 'aida1', content: 'Run social media ad campaign' }],
+  interest: [{ id: 'aida2', content: 'Create engaging blog post' }],
+  desire: [{ id: 'aida3', content: 'Showcase customer testimonials' }],
+  action: [{ id: 'aida4', content: 'Offer a limited-time discount' }],
 };
 
 
