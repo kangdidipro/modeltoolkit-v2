@@ -160,6 +160,12 @@ export type FlowModel = {
   apathy: ModelItem[];
 };
 
+export type ChangeManagementModel = {
+  unfreeze: ModelItem[];
+  change: ModelItem[];
+  refreeze: ModelItem[];
+};
+
 
 export const initialSwotData: SwotModel = {
   strengths: [
@@ -343,6 +349,12 @@ export const initialFlowModelData: FlowModel = {
   apathy: [{ id: 'apathy1', content: 'Meaningless, simple work' }],
 };
 
+export const initialChangeManagementData: ChangeManagementModel = {
+  unfreeze: [{ id: 'cm1', content: 'Identify threats and need for change' }],
+  change: [{ id: 'cm2', content: 'Communicate the change vision' }],
+  refreeze: [{ id: 'cm3', content: 'Anchor changes in corporate culture' }],
+};
+
 
 export const modelInfo: { [key: string]: { name: string; description: string } } = {
   'eisenhower-matrix': {
@@ -426,5 +438,7 @@ export const modelInfo: { [key: string]: { name: string; description: string } }
     description: 'Models to explain the process of communication.',
   },
 };
+
+    
 
     
