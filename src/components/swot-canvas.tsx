@@ -4,46 +4,57 @@ import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialSwotData, type SwotModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, Download, Printer, GripVertical, Save, History, Upload, FileDown } from "lucide-react"
+import { Plus, Trash2, Download, Printer, GripVertical, Save, History, Upload, FileDown, X, RefreshCw } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter
+} from "@/components/ui/dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "./ui/separator"
 
 type ColumnKeys = keyof SwotModel;
-const LOCAL_STORAGE_KEY = 'swot-model-data';
+const LOCAL_STORAGE_KEY = 'swot-model-history';
+
+type HistoryEntry = {
+  timestamp: number;
+  data: SwotModel;
+};
 
 export default function SwotCanvas() {
   const [data, setData] = useState<SwotModel>(initialSwotData);
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [editingText, setEditingText] = useState("");
-  
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
   const draggedItem = useRef<{ item: ModelItem; from: ColumnKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Load data from localStorage on initial render
+    // Load history from localStorage on initial render
     try {
-      const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (savedData) {
-        setData(JSON.parse(savedData));
+      const savedHistory = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (savedHistory) {
+        const parsedHistory = JSON.parse(savedHistory);
+        setHistory(parsedHistory);
+        // Load the most recent version into the canvas
+        if (parsedHistory.length > 0) {
+          setData(parsedHistory[0].data);
+        }
       }
     } catch (error) {
-      console.error("Failed to load data from localStorage", error);
+      console.error("Failed to load history from localStorage", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Could not load saved data.",
+        description: "Could not load saved history.",
       });
     }
   }, [toast]);
@@ -123,12 +134,18 @@ export default function SwotCanvas() {
     e.currentTarget.classList.remove("opacity-50", "scale-95");
   }
 
-  const handleSaveToLocal = () => {
+  const handleSave = () => {
     try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+      const newEntry: HistoryEntry = {
+        timestamp: Date.now(),
+        data: data,
+      };
+      const updatedHistory = [newEntry, ...history];
+      setHistory(updatedHistory);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedHistory));
       toast({
         title: "Work Saved",
-        description: "Your SWOT analysis has been saved in your browser.",
+        description: "Your SWOT analysis has been saved to history.",
       });
     } catch (error) {
       console.error("Failed to save data to localStorage", error);
@@ -140,30 +157,13 @@ export default function SwotCanvas() {
     }
   };
 
-  const handleLoadFromLocal = () => {
-    try {
-      const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (savedData) {
-        setData(JSON.parse(savedData));
-        toast({
-          title: "Work Loaded",
-          description: "Your saved SWOT analysis has been loaded.",
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "No Saved Data",
-          description: "No saved SWOT analysis found in your browser.",
-        });
-      }
-    } catch (error) {
-      console.error("Failed to load data from localStorage", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Could not load saved data.",
-      });
-    }
+  const handleLoadFromHistory = (entry: HistoryEntry) => {
+    setData(entry.data);
+    setIsHistoryOpen(false);
+    toast({
+      title: "Work Loaded",
+      description: `Loaded version from ${new Date(entry.timestamp).toLocaleString()}`,
+    });
   };
 
   const handleExport = (type: 'PNG' | 'PDF') => {
@@ -187,34 +187,22 @@ export default function SwotCanvas() {
   const handleExportXml = () => {
      toast({ title: "Export Not Available", description: "This feature is coming soon!" });
   }
+  
+  const countTotalItems = (swotData: SwotModel) => {
+    return Object.values(swotData).reduce((sum, array) => sum + array.length, 0);
+  }
 
   return (
     <>
       <div className="mb-4 flex flex-wrap gap-2">
-        <Button variant="outline" onClick={handleSaveToLocal}>
+        <Button variant="outline" onClick={handleSave}>
           <Save className="mr-2 h-4 w-4" />
           Save
         </Button>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="outline">
-              <History className="mr-2 h-4 w-4" />
-              Load Last Saved
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Loading from history will overwrite your current canvas. Make sure you've saved any changes you want to keep.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleLoadFromLocal}>Load</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <Button variant="outline" onClick={() => setIsHistoryOpen(true)}>
+          <History className="mr-2 h-4 w-4" />
+          History
+        </Button>
 
         <input
           type="file"
@@ -240,6 +228,60 @@ export default function SwotCanvas() {
           Export as PDF
         </Button>
       </div>
+      
+      <Dialog open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <History className="h-6 w-6"/>
+              Saved History for "SWOT Analysis"
+            </DialogTitle>
+            <DialogDescription>
+              Load a past version, download your data, or import an XML file to populate the board.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="border rounded-lg p-4">
+             <Button variant="outline" className="w-full" onClick={handleXmlImportClick}>
+              <Upload className="mr-2 h-4 w-4" />
+              Import from XML
+            </Button>
+          </div>
+          
+          <ScrollArea className="h-80 pr-6">
+            <div className="space-y-4">
+              {history.length > 0 ? (
+                history.map((entry) => (
+                  <div key={entry.timestamp} className="p-4 border rounded-lg flex justify-between items-center">
+                    <div>
+                      <p className="font-semibold">{new Date(entry.timestamp).toLocaleString()}</p>
+                      <p className="text-sm text-muted-foreground">{countTotalItems(entry.data)} items</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="secondary" onClick={() => handleLoadFromHistory(entry)}>
+                        <RefreshCw className="mr-2 h-4 w-4" />
+                        Load
+                      </Button>
+                       <Button variant="outline" onClick={handleExportXml}>
+                        <FileDown className="mr-2 h-4 w-4" />
+                        XML
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-muted-foreground text-center py-10">No saved history yet. Click "Save" to create a version.</p>
+              )}
+            </div>
+          </ScrollArea>
+          
+          <DialogFooter className="pt-4 border-t">
+              <p className="text-sm text-muted-foreground">
+                Your data is saved in your browser's local storage.
+              </p>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 items-start">
         {columns.map(column => (
