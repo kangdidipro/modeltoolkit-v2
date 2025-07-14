@@ -47,13 +47,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <SidebarGroup>
               <SidebarGroupLabel>Models</SidebarGroupLabel>
               <SidebarMenuItem>
-                 <SidebarMenuButton
-                    icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
-                  >
-                    Eisenhower Matrix
-                  </SidebarMenuButton>
+                 <Link href="/models/eisenhower-matrix">
+                  <SidebarMenuButton
+                      isActive={isActive("/models/eisenhower-matrix")}
+                      icon={<LayoutGrid />}
+                      tooltip="Eisenhower Matrix"
+                    >
+                      Eisenhower Matrix
+                    </SidebarMenuButton>
+                  </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <Link href="/models/swot">

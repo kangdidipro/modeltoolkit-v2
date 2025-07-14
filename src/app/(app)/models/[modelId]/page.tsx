@@ -1,4 +1,5 @@
 import SwotCanvas from '@/components/swot-canvas';
+import EisenhowerMatrixCanvas from '@/components/eisenhower-matrix-canvas';
 import { modelInfo } from '@/lib/models';
 import { notFound } from 'next/navigation';
 
@@ -20,6 +21,8 @@ export default function ModelPage({ params }: ModelPageProps) {
     switch (modelId) {
       case 'swot':
         return <SwotCanvas />;
+      case 'eisenhower-matrix':
+        return <EisenhowerMatrixCanvas />;
       default:
         return (
           <div className="flex items-center justify-center h-96 border rounded-lg bg-card">

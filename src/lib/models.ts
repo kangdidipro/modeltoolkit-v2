@@ -10,6 +10,13 @@ export type SwotModel = {
   threats: ModelItem[];
 };
 
+export type EisenhowerMatrixModel = {
+  do: ModelItem[];
+  schedule: ModelItem[];
+  delegate: ModelItem[];
+  delete: ModelItem[];
+};
+
 export const initialSwotData: SwotModel = {
   strengths: [
     { id: 's1', content: 'Strong brand recognition' },
@@ -27,17 +34,32 @@ export const initialSwotData: SwotModel = {
   ],
 };
 
+export const initialEisenhowerMatrixData: EisenhowerMatrixModel = {
+  do: [
+    { id: 'd1', content: 'Finish project report' },
+  ],
+  schedule: [
+    { id: 's1', content: 'Plan next quarter goals' },
+  ],
+  delegate: [
+    { id: 'dl1', content: 'Book flights for conference' },
+  ],
+  delete: [
+    { id: 'dt1', content: 'Scroll social media' },
+  ],
+};
+
 export const modelInfo: { [key: string]: { name: string; description: string } } = {
   swot: {
     name: 'SWOT Analysis',
     description: 'Identify strengths, weaknesses, opportunities, and threats to make strategic decisions.',
   },
+  'eisenhower-matrix': {
+    name: 'Eisenhower Matrix',
+    description: 'Prioritize tasks by urgency and importance to focus on what matters.',
+  },
   'business-model-canvas': {
     name: 'Business Model Canvas',
     description: 'Visualize and develop new or existing business models.',
-  },
-  'eisenhower-matrix': {
-    name: 'Eisenhower Matrix',
-    description: 'Prioritize tasks by urgency and importance.',
   },
 };
