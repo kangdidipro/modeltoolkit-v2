@@ -45,6 +45,8 @@ export default function GanttChartCanvas() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
+  const draggedItemIndex = useRef<number | null>(null);
+  const dragOverItemIndex = useRef<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -99,6 +101,39 @@ export default function GanttChartCanvas() {
     }));
     setEditingItemId(null);
     setEditingText("");
+  };
+
+  const handleDragStart = (e: DragEvent<HTMLDivElement>, index: number) => {
+    draggedItemIndex.current = index;
+    e.dataTransfer.effectAllowed = 'move';
+    e.currentTarget.classList.add("opacity-50", "scale-95");
+  };
+
+  const handleDragOver = (e: DragEvent<HTMLDivElement>, index: number) => {
+    e.preventDefault();
+    dragOverItemIndex.current = index;
+    e.dataTransfer.dropEffect = 'move';
+  };
+  
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (draggedItemIndex.current === null || dragOverItemIndex.current === null || draggedItemIndex.current === dragOverItemIndex.current) {
+      return;
+    }
+    
+    setData(prev => {
+      const newTasks = [...prev.tasks];
+      const draggedItem = newTasks.splice(draggedItemIndex.current!, 1)[0];
+      newTasks.splice(dragOverItemIndex.current!, 0, draggedItem);
+      return { ...prev, tasks: newTasks };
+    });
+
+    draggedItemIndex.current = null;
+    dragOverItemIndex.current = null;
+  };
+
+  const handleDragEnd = (e: DragEvent<HTMLDivElement>) => {
+    e.currentTarget.classList.remove("opacity-50", "scale-95");
   };
 
   const handleSave = () => {
@@ -251,13 +286,21 @@ export default function GanttChartCanvas() {
               <Plus className="h-4 w-4" />
             </Button>
           </div>
-          <CardDescription>Add, edit, and manage your project tasks here. Full chart visualization coming soon.</CardDescription>
+          <CardDescription>Add, edit, and reorder your project tasks here. Full chart visualization coming soon.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-2">
-           {data.tasks.map(item => (
+        <CardContent 
+          className="space-y-2"
+          onDrop={handleDrop}
+          onDragOver={(e) => e.preventDefault()}
+        >
+           {data.tasks.map((item, index) => (
             <div
               key={item.id}
-              className="group bg-card/80 dark:bg-card/50 border rounded-lg p-3 shadow-sm transition-all duration-200 ease-in-out"
+              draggable
+              onDragStart={(e) => handleDragStart(e, index)}
+              onDragOver={(e) => handleDragOver(e, index)}
+              onDragEnd={handleDragEnd}
+              className="group bg-card/80 dark:bg-card/50 border rounded-lg p-3 shadow-sm transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
             >
               <div className="flex items-start gap-2">
                 <GripVertical className="h-5 w-5 mt-1 text-muted-foreground/50 shrink-0" />
