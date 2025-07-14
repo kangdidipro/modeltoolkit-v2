@@ -112,6 +112,29 @@ export type FishboneDiagramModel = {
   management: ModelItem[];
 };
 
+export type RaciRole = 'R' | 'A' | 'C' | 'I';
+
+export type RaciAssignment = {
+  personId: string;
+  role: RaciRole;
+}
+
+export type RaciTask = {
+  id: string;
+  description: string;
+  assignments: RaciAssignment[];
+};
+
+export type RaciPerson = {
+  id: string;
+  name: string;
+}
+
+export type RaciMatrixModel = {
+  tasks: RaciTask[];
+  people: RaciPerson[];
+};
+
 
 export const initialSwotData: SwotModel = {
   strengths: [
@@ -241,6 +264,33 @@ export const initialFishboneDiagramData: FishboneDiagramModel = {
   materials: [{ id: 'fb-m1', content: 'Poor quality a-d-s' }],
   environment: [{ id: 'fb-en1', content: 'Noisy call center' }],
   management: [{ id: 'fb-ma1', content: 'Unclear quality standards' }],
+};
+
+export const initialRaciMatrixData: RaciMatrixModel = {
+  people: [
+    { id: 'person-1', name: 'Alice' },
+    { id: 'person-2', name: 'Bob' },
+    { id: 'person-3', name: 'Charlie' },
+  ],
+  tasks: [
+    { 
+      id: 'task-1', 
+      description: 'Develop Feature X', 
+      assignments: [
+        { personId: 'person-1', role: 'A' },
+        { personId: 'person-2', role: 'R' },
+        { personId: 'person-3', role: 'C' },
+      ]
+    },
+    { 
+      id: 'task-2', 
+      description: 'Test Feature X', 
+      assignments: [
+        { personId: 'person-1', role: 'I' },
+        { personId: 'person-3', role: 'R' },
+      ]
+    },
+  ]
 };
 
 
