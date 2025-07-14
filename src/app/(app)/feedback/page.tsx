@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -19,6 +20,8 @@ import { useToast } from "@/hooks/use-toast"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
+import { sendFeedback, type SendFeedbackInput } from "@/ai/flows/send-feedback-flow"
+import { Loader2 } from "lucide-react"
 
 
 const feedbackFormSchema = z.object({
@@ -36,6 +39,7 @@ type FeedbackFormValues = z.infer<typeof feedbackFormSchema>
 
 export default function FeedbackPage() {
   const { toast } = useToast()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const form = useForm<FeedbackFormValues>({
     resolver: zodResolver(feedbackFormSchema),
@@ -44,13 +48,31 @@ export default function FeedbackPage() {
     },
   })
 
-  function onSubmit(data: FeedbackFormValues) {
-    console.log("Feedback submitted:", data)
-    toast({
-      title: "Feedback Submitted!",
-      description: "Thank you for your valuable input. We appreciate you helping us improve.",
-    })
-    form.reset()
+  async function onSubmit(data: FeedbackFormValues) {
+    setIsSubmitting(true);
+    try {
+        const feedbackInput: SendFeedbackInput = {
+            ...data,
+            easeOfUse: data.easeOfUse || "N/A",
+            usefulness: data.usefulness || "N/A",
+            design: data.design || "N/A",
+        };
+      await sendFeedback(feedbackInput);
+      toast({
+        title: "Feedback Submitted!",
+        description: "Thank you for your valuable input. We appreciate you helping us improve.",
+      })
+      form.reset()
+    } catch (error) {
+      console.error("Failed to send feedback:", error)
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem submitting your feedback. Please try again later.",
+      })
+    } finally {
+        setIsSubmitting(false)
+    }
   }
 
   const ratingOptions = [
@@ -169,7 +191,10 @@ export default function FeedbackPage() {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="bg-accent text-accent-foreground hover:bg-accent/90">Submit Feedback</Button>
+                    <Button type="submit" disabled={isSubmitting} className="bg-accent text-accent-foreground hover:bg-accent/90">
+                        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        Submit Feedback
+                    </Button>
                 </form>
             </Form>
         </CardContent>
