@@ -279,15 +279,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </SidebarGroup>
             
             <SidebarGroup>
-              <SidebarGroupLabel>From the Blog</SidebarGroupLabel>
+              <SidebarGroupLabel>About</SidebarGroupLabel>
               <SidebarMenuItem>
-                <Link href="/blog">
+                <Link href="/about">
                   <SidebarMenuButton
-                    isActive={isActive("/blog")}
+                    isActive={isActive("/about")}
                     icon={<Newspaper />}
-                    tooltip="Blog"
+                    tooltip="About"
                   >
-                    Key Features
+                    About Model Toolkit
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
