@@ -1,8 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 const blogPosts = [
-  { no: 1, keyword: "Model Toolkit", title: "Optimizing Your Business with Model Toolkit: A Complete Guide" },
+  { no: 1, keyword: "Model Toolkit", title: "Optimizing Your Business with Model Toolkit: A Complete Guide", href: "/blog/optimizing-your-business-with-model-toolkit" },
   { no: 2, keyword: "Productivity tools", title: "10 Best Productivity Tools to Boost Your Work Efficiency" },
   { no: 3, keyword: "Business models", title: "Understanding Various Business Models for Startup Growth" },
   { no: 4, keyword: "Business strategy", title: "Formulating a Strong Business Strategy: Step-by-Step" },
@@ -45,7 +46,7 @@ const blogPosts = [
   { no: 41, keyword: "Diffusion of Innovations", title: "Understanding How Innovations Spread: The Theory of Diffusion of Innovations" },
   { no: 42, keyword: "Diffusion of Innovations", title: "Innovation Adoption Strategies: Lessons from Diffusion Theory" },
   { no: 43, keyword: "Flow Model", title: "Achieving Flow State for Maximum Productivity" },
-  { no: 44, keyword: "Flow Model", title: "Optimizing User Experience with the Flow Model Concept" },
+  { no: 44, keyword: "FlowModel", title: "Optimizing User Experience with the Flow Model Concept" },
   { no: 45, keyword: "Change Management", title: "Successful Change Management Strategies in the Digital Era" },
   { no: 46, keyword: "Change Management", title: "Keys to Successful Change Management Implementation in Organizations" },
   { no: 47, keyword: "Communication Model", title: "Enhancing Effective Communication: Understanding Various Communication Models" },
@@ -105,6 +106,25 @@ const blogPosts = [
 ];
 
 
+const BlogPostCard = ({ post }: { post: (typeof blogPosts)[0] }) => {
+  const cardContent = (
+    <Card className="flex flex-col h-full transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+      <CardHeader>
+        <Badge variant="secondary" className="w-fit">{post.keyword}</Badge>
+      </CardHeader>
+      <CardContent className="flex-grow">
+        <h2 className="text-lg font-semibold font-headline">{post.title}</h2>
+      </CardContent>
+    </Card>
+  );
+
+  if (post.href) {
+    return <Link href={post.href}>{cardContent}</Link>;
+  }
+
+  return cardContent;
+};
+
 export default function BlogPage() {
   return (
     <div className="space-y-8">
@@ -115,14 +135,7 @@ export default function BlogPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {blogPosts.map((post) => (
-          <Card key={post.no} className="flex flex-col">
-            <CardHeader>
-              <Badge variant="secondary" className="w-fit">{post.keyword}</Badge>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <h2 className="text-lg font-semibold font-headline">{post.title}</h2>
-            </CardContent>
-          </Card>
+          <BlogPostCard key={post.no} post={post} />
         ))}
       </div>
     </div>
