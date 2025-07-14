@@ -11,7 +11,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+
 
 const LOCAL_STORAGE_KEY = 'raci-matrix-history';
 
@@ -133,11 +134,11 @@ export default function RaciMatrixCanvas() {
     }));
   };
 
-  const roleInfo: Record<RaciRole, { label: string, color: string }> = {
-    R: { label: "Responsible", color: "bg-blue-500" },
-    A: { label: "Accountable", color: "bg-green-500" },
-    C: { label: "Consulted", color: "bg-yellow-500" },
-    I: { label: "Informed", color: "bg-purple-500" },
+  const roleInfo: Record<RaciRole, { label: string, color: string, textColor: string }> = {
+    R: { label: "Responsible", color: "bg-blue-200 dark:bg-blue-800", textColor: "text-blue-800 dark:text-blue-100" },
+    A: { label: "Accountable", color: "bg-green-200 dark:bg-green-800", textColor: "text-green-800 dark:text-green-100" },
+    C: { label: "Consulted", color: "bg-yellow-200 dark:bg-yellow-800", textColor: "text-yellow-800 dark:text-yellow-100" },
+    I: { label: "Informed", color: "bg-purple-200 dark:bg-purple-800", textColor: "text-purple-800 dark:text-purple-100" },
   };
 
   return (
@@ -170,8 +171,7 @@ export default function RaciMatrixCanvas() {
       </Dialog>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* People/Roles Column */}
-        <Card className="lg:col-span-1">
+        <Card className="lg:col-span-1 bg-blue-50 dark:bg-blue-900/20">
           <CardHeader>
             <div className="flex justify-between items-center">
               <CardTitle className="flex items-center gap-2"><Users /> People / Roles</CardTitle>
@@ -181,15 +181,14 @@ export default function RaciMatrixCanvas() {
           <CardContent className="space-y-2">
             {data.people.map(person => (
               <div key={person.id} className="flex items-center gap-2">
-                <Input defaultValue={person.name} onBlur={(e) => updatePerson(person.id, e.target.value)} className="flex-grow"/>
+                <Input defaultValue={person.name} onBlur={(e) => updatePerson(person.id, e.target.value)} className="flex-grow bg-card/80 dark:bg-card/50"/>
                 <Button size="icon" variant="ghost" onClick={() => deletePerson(person.id)}><Trash2 className="h-4 w-4"/></Button>
               </div>
             ))}
           </CardContent>
         </Card>
 
-        {/* Tasks Column */}
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 bg-green-50 dark:bg-green-900/20">
           <CardHeader>
             <div className="flex justify-between items-center">
               <CardTitle className="flex items-center gap-2"><ListChecks /> Tasks</CardTitle>
@@ -198,9 +197,9 @@ export default function RaciMatrixCanvas() {
           </CardHeader>
           <CardContent className="space-y-4">
             {data.tasks.map(task => (
-              <div key={task.id} className="p-4 border rounded-lg bg-card-foreground/5">
+              <div key={task.id} className="p-4 border rounded-lg bg-card/80 dark:bg-card/50 shadow-sm">
                 <div className="flex items-center gap-2 mb-3">
-                  <Input defaultValue={task.description} onBlur={e => updateTaskDescription(task.id, e.target.value)} className="text-base font-semibold flex-grow"/>
+                  <Input defaultValue={task.description} onBlur={e => updateTaskDescription(task.id, e.target.value)} className="text-base font-semibold flex-grow bg-background"/>
                   <Button size="icon" variant="ghost" onClick={() => deleteTask(task.id)}><Trash2 className="h-4 w-4"/></Button>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
@@ -219,13 +218,13 @@ export default function RaciMatrixCanvas() {
                             }
                           }}
                         >
-                          <SelectTrigger className="w-16 h-8">
+                          <SelectTrigger className={cn("w-20 h-8 font-bold", assignment ? roleInfo[assignment.role].color : '')}>
                             <SelectValue placeholder="-" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="none">None</SelectItem>
-                            {Object.entries(roleInfo).map(([key, {label}]) => (
-                              <SelectItem key={key} value={key}>{key}</SelectItem>
+                            {Object.entries(roleInfo).map(([key, {label, color, textColor}]) => (
+                              <SelectItem key={key} value={key} className={cn("font-medium", textColor)}>{key}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
