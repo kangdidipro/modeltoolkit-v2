@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
@@ -91,12 +90,14 @@ export default function FishboneDiagramCanvas() {
 
   const handleSaveItemEdit = (category: CategoryKeys) => {
     if (!editingItemId) return;
-    setData(prev => ({
-      ...prev,
-      [category]: prev[category].map(item =>
-        item.id === editingItemId ? { ...item, content: editingText } : item
-      ),
-    }));
+    setData(prev => {
+        const newData = {...prev};
+        const categoryItems = newData[category].map(item =>
+            item.id === editingItemId ? { ...item, content: editingText } : item
+        );
+        newData[category] = categoryItems as ModelItem[];
+        return newData;
+    });
     setEditingItemId(null);
     setEditingText("");
   };
@@ -228,7 +229,7 @@ export default function FishboneDiagramCanvas() {
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); handleSaveItemEdit(category); } }}
                 />
               ) : (
-                <p onClick={() => startEditing(item)} className="flex-grow text-sm w-full min-h-[20px]">
+                <p onClick={() => startEditing(item)} className="flex-grow text-sm w-full min-h-[20px] cursor-text">
                   {item.content}
                 </p>
               )}
@@ -301,30 +302,20 @@ export default function FishboneDiagramCanvas() {
         <div className="flex items-center min-w-[1000px]">
           {/* Categories */}
           <div className="flex-1 grid grid-cols-3 gap-8 py-8 pr-8">
-            <div className="grid grid-rows-2 gap-8">
-              {categories.slice(0, 2).map(cat => (
-                <div key={cat.key} className="relative pl-12">
-                  <div className="absolute top-1/2 left-0 w-12 h-0.5 bg-muted -translate-y-1/2"></div>
-                  <CauseCard category={cat.key} title={cat.title} />
-                </div>
-              ))}
-            </div>
-            <div className="grid grid-rows-2 gap-8">
-              {categories.slice(2, 4).map(cat => (
-                 <div key={cat.key} className="relative pl-12">
-                  <div className="absolute top-1/2 left-0 w-12 h-0.5 bg-muted -translate-y-1/2"></div>
-                  <CauseCard category={cat.key} title={cat.title} />
-                </div>
-              ))}
-            </div>
-            <div className="grid grid-rows-2 gap-8">
-              {categories.slice(4, 6).map(cat => (
-                 <div key={cat.key} className="relative pl-12">
-                  <div className="absolute top-1/2 left-0 w-12 h-0.5 bg-muted -translate-y-1/2"></div>
-                  <CauseCard category={cat.key} title={cat.title} />
-                </div>
-              ))}
-            </div>
+            {/* Top row */}
+            {categories.slice(0,3).map(cat => (
+              <div key={cat.key} className="relative pt-12">
+                <div className="absolute top-0 left-1/2 w-0.5 h-12 bg-muted -translate-x-1/2"></div>
+                <CauseCard category={cat.key} title={cat.title} />
+              </div>
+            ))}
+            {/* Bottom row */}
+            {categories.slice(3,6).map(cat => (
+              <div key={cat.key} className="relative pb-12">
+                <div className="absolute bottom-0 left-1/2 w-0.5 h-12 bg-muted -translate-x-1/2"></div>
+                <CauseCard category={cat.key} title={cat.title} />
+              </div>
+            ))}
           </div>
 
           {/* Main spine */}
@@ -348,7 +339,7 @@ export default function FishboneDiagramCanvas() {
                             className="text-base"
                         />
                     ) : (
-                        <div className="flex items-center justify-between cursor-pointer" onClick={() => setIsEditingEffect(true)}>
+                        <div className="flex items-center justify-between cursor-text" onClick={() => setIsEditingEffect(true)}>
                             <p className="text-base font-semibold">{data.effect}</p>
                             <Button variant="ghost" size="icon" className="h-8 w-8">
                                 <Pencil className="h-4 w-4" />
