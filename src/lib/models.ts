@@ -49,6 +49,14 @@ export type JohariWindowModel = {
   unknown: ModelItem[];
 };
 
+export type BostonMatrixModel = {
+  stars: ModelItem[];
+  questionMarks: ModelItem[];
+  cashCows: ModelItem[];
+  dogs: ModelItem[];
+};
+
+
 export const initialSwotData: SwotModel = {
   strengths: [
     { id: 's1', content: 'Strong brand recognition' },
@@ -116,6 +124,14 @@ export const initialJohariWindowData: JohariWindowModel = {
   hidden: [{ id: 'jw3', content: 'Fear of failure' }],
   unknown: [{ id: 'jw4', content: 'Hidden talents' }],
 };
+
+export const initialBostonMatrixData: BostonMatrixModel = {
+  stars: [{ id: 'bm1', content: 'Product A' }],
+  questionMarks: [{ id: 'bm2', content: 'New Venture B' }],
+  cashCows: [{ id: 'bm3', content: 'Mature Product C' }],
+  dogs: [{ id: 'bm4', content: 'Old Product D' }],
+};
+
 
 export const modelInfo: { [key: string]: { name: string; description: string } } = {
   'eisenhower-matrix': {
