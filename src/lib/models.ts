@@ -145,6 +145,14 @@ export type ScamperModel = {
   reverse: ModelItem[];
 };
 
+export type DiffusionOfInnovationsModel = {
+  innovators: ModelItem[];
+  earlyAdopters: ModelItem[];
+  earlyMajority: ModelItem[];
+  lateMajority: ModelItem[];
+  laggards: ModelItem[];
+};
+
 
 export const initialSwotData: SwotModel = {
   strengths: [
@@ -311,6 +319,14 @@ export const initialScamperModelData: ScamperModel = {
   putToAnotherUse: [{ id: 'scamper-p1', content: 'Can it be used by a different industry?' }],
   eliminate: [{ id: 'scamper-e1', content: 'Remove a feature to simplify' }],
   reverse: [{ id: 'scamper-r1', content: 'Reverse the process' }],
+};
+
+export const initialDiffusionOfInnovationsData: DiffusionOfInnovationsModel = {
+  innovators: [{ id: 'di1', content: 'Tech enthusiasts' }],
+  earlyAdopters: [{ id: 'di2', content: 'Visionaries in the industry' }],
+  earlyMajority: [{ id: 'di3', content: 'Pragmatists who need a proven solution' }],
+  lateMajority: [{ id: 'di4', content: 'Conservatives, risk-averse' }],
+  laggards: [{ id: 'di5', content: 'Skeptics, last to adopt' }],
 };
 
 
