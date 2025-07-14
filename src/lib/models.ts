@@ -56,6 +56,14 @@ export type BostonMatrixModel = {
   dogs: ModelItem[];
 };
 
+export type PortersFiveForcesModel = {
+  threatOfNewEntrants: ModelItem[];
+  bargainingPowerOfBuyers: ModelItem[];
+  bargainingPowerOfSuppliers: ModelItem[];
+  threatOfSubstitutes: ModelItem[];
+  rivalryAmongCompetitors: ModelItem[];
+};
+
 
 export const initialSwotData: SwotModel = {
   strengths: [
@@ -130,6 +138,14 @@ export const initialBostonMatrixData: BostonMatrixModel = {
   questionMarks: [{ id: 'bm2', content: 'New Venture B' }],
   cashCows: [{ id: 'bm3', content: 'Mature Product C' }],
   dogs: [{ id: 'bm4', content: 'Old Product D' }],
+};
+
+export const initialPortersFiveForcesData: PortersFiveForcesModel = {
+  threatOfNewEntrants: [{ id: 'pff1', content: 'Economies of scale' }],
+  bargainingPowerOfBuyers: [{ id: 'pff2', content: 'Buyer concentration' }],
+  bargainingPowerOfSuppliers: [{ id: 'pff3', content: 'Supplier concentration' }],
+  threatOfSubstitutes: [{ id: 'pff4', content: 'Switching costs' }],
+  rivalryAmongCompetitors: [{ id: 'pff5', content: 'Industry growth rate' }],
 };
 
 
