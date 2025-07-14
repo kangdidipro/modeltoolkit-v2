@@ -79,6 +79,16 @@ export type TuckmansStagesModel = {
   adjourning: ModelItem[];
 };
 
+export type Mckinsey7sFrameworkModel = {
+  strategy: ModelItem[];
+  structure: ModelItem[];
+  systems: ModelItem[];
+  sharedValues: ModelItem[];
+  style: ModelItem[];
+  staff: ModelItem[];
+  skills: ModelItem[];
+};
+
 
 export const initialSwotData: SwotModel = {
   strengths: [
@@ -176,6 +186,16 @@ export const initialTuckmansStagesData: TuckmansStagesModel = {
   norming: [{ id: 'ts3', content: 'The team establishes norms and roles.' }],
   performing: [{ id: 'ts4', content: 'The team works cohesively and effectively.' }],
   adjourning: [{ id: 'ts5', content: 'The project ends and the team disbands.' }],
+};
+
+export const initialMckinsey7sFrameworkData: Mckinsey7sFrameworkModel = {
+  strategy: [{ id: 's1', content: 'Our competitive strategy' }],
+  structure: [{ id: 's2', content: 'How we are organized' }],
+  systems: [{ id: 's3', content: 'Key business systems' }],
+  sharedValues: [{ id: 'sv1', content: 'Core values of the company' }],
+  style: [{ id: 's4', content: 'Management style' }],
+  staff: [{ id: 's5', content: 'Employee capabilities' }],
+  skills: [{ id: 's6', content: 'Core competencies' }],
 };
 
 
