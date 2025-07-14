@@ -47,6 +47,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <SidebarGroup>
               <SidebarGroupLabel>Models</SidebarGroupLabel>
               <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    Eisenhower Matrix
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
                 <Link href="/models/swot">
                   <SidebarMenuButton
                     isActive={isActive("/models/swot")}
@@ -63,7 +72,52 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     disabled
                     tooltip="Coming Soon"
                   >
+                    Pareto Principle (80/20)
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
                     Business Model Canvas
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    Maslow's Hierarchy
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    Johari Window
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    Boston Matrix
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    Porter's Five Forces
                   </SidebarMenuButton>
               </SidebarMenuItem>
                <SidebarMenuItem>
@@ -72,13 +126,112 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     disabled
                     tooltip="Coming Soon"
                   >
-                    Eisenhower Matrix
+                    AIDA Model
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    Tuckman's Stages
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    McKinsey 7S Framework
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    ADKAR Model
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    Gantt Chart
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    Fishbone Diagram
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    RACI Matrix
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    SCAMPER Model
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    Diffusion of Innovations
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    Flow Model
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    Change Management
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    icon={<LayoutGrid />}
+                    disabled
+                    tooltip="Coming Soon"
+                  >
+                    Communication Model
                   </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarGroup>
             
             <SidebarGroup>
-              <SidebarGroupLabel>Resources</SidebarGroupLabel>
+              <SidebarGroupLabel>From the Blog</SidebarGroupLabel>
               <SidebarMenuItem>
                 <Link href="/blog">
                   <SidebarMenuButton
@@ -86,7 +239,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<Newspaper />}
                     tooltip="Blog"
                   >
-                    Blog
+                    Key Features
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
