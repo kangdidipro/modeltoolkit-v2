@@ -296,6 +296,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               
               <SidebarGroup>
                 <SidebarGroupLabel>About</SidebarGroupLabel>
+                 <SidebarMenuItem>
+                  <Link href="/blog">
+                    <SidebarMenuButton
+                      isActive={isActive("/blog")}
+                      icon={<Newspaper />}
+                      tooltip="Blog"
+                    >
+                      Blog
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
                 <SidebarMenuItem>
                   <Link href="/about">
                     <SidebarMenuButton
