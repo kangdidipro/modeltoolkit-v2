@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -22,9 +23,9 @@ import {
   LayoutGrid,
   Newspaper,
   MessageCircle,
-  BrainCircuit
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -33,12 +34,21 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     return pathname === path || pathname.startsWith(`${path}/`)
   }
 
+  const Logo = ({ size = 'md' }: { size?: 'sm' | 'md' }) => (
+    <div className={cn(
+        "flex items-center justify-center font-bold text-primary-foreground bg-primary",
+        size === 'md' ? "w-8 h-8 text-sm rounded-lg" : "w-6 h-6 text-xs rounded-md"
+    )}>
+        MT
+    </div>
+  )
+
   return (
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
            <div className="flex items-center gap-2 p-2">
-            <BrainCircuit className="w-8 h-8 text-primary" />
+            <Logo size="md" />
             <h1 className="text-xl font-headline font-semibold">Model Toolkit</h1>
           </div>
         </SidebarHeader>
@@ -305,7 +315,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <div className="p-4 md:p-6">
             <div className="md:hidden flex items-center justify-between mb-4">
                <div className="flex items-center gap-2">
-                 <BrainCircuit className="w-6 h-6 text-primary" />
+                 <Logo size="sm" />
                  <h1 className="text-lg font-headline font-semibold">Model Toolkit</h1>
                </div>
                <SidebarTrigger>
