@@ -1,14 +1,26 @@
 "use client"
 
-import { useState, useMemo, useRef, type DragEvent } from "react"
+import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialSwotData, type SwotModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, Download, Printer, GripVertical } from "lucide-react"
+import { Plus, Trash2, Download, Printer, GripVertical, Save, History, Upload, FileDown } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 type ColumnKeys = keyof SwotModel;
+const LOCAL_STORAGE_KEY = 'swot-model-data';
 
 export default function SwotCanvas() {
   const [data, setData] = useState<SwotModel>(initialSwotData);
@@ -16,7 +28,25 @@ export default function SwotCanvas() {
   const [editingText, setEditingText] = useState("");
   
   const draggedItem = useRef<{ item: ModelItem; from: ColumnKeys } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Load data from localStorage on initial render
+    try {
+      const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (savedData) {
+        setData(JSON.parse(savedData));
+      }
+    } catch (error) {
+      console.error("Failed to load data from localStorage", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not load saved data.",
+      });
+    }
+  }, [toast]);
 
   const columns: { key: ColumnKeys; title: string; bg: string }[] = useMemo(() => [
     { key: "strengths", title: "Strengths", bg: "bg-green-100 dark:bg-green-900/40" },
@@ -93,6 +123,49 @@ export default function SwotCanvas() {
     e.currentTarget.classList.remove("opacity-50", "scale-95");
   }
 
+  const handleSaveToLocal = () => {
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+      toast({
+        title: "Work Saved",
+        description: "Your SWOT analysis has been saved in your browser.",
+      });
+    } catch (error) {
+      console.error("Failed to save data to localStorage", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not save your work.",
+      });
+    }
+  };
+
+  const handleLoadFromLocal = () => {
+    try {
+      const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (savedData) {
+        setData(JSON.parse(savedData));
+        toast({
+          title: "Work Loaded",
+          description: "Your saved SWOT analysis has been loaded.",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "No Saved Data",
+          description: "No saved SWOT analysis found in your browser.",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to load data from localStorage", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not load saved data.",
+      });
+    }
+  };
+
   const handleExport = (type: 'PNG' | 'PDF') => {
     toast({
       title: 'Export not available',
@@ -100,9 +173,64 @@ export default function SwotCanvas() {
     });
   }
 
+  const handleXmlImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    toast({ title: "Import Not Available", description: "This feature is coming soon!" });
+    if (event.target.files) {
+      event.target.value = '';
+    }
+  };
+
+  const handleExportXml = () => {
+     toast({ title: "Export Not Available", description: "This feature is coming soon!" });
+  }
+
   return (
     <>
       <div className="mb-4 flex flex-wrap gap-2">
+        <Button variant="outline" onClick={handleSaveToLocal}>
+          <Save className="mr-2 h-4 w-4" />
+          Save
+        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline">
+              <History className="mr-2 h-4 w-4" />
+              Load Last Saved
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Loading from history will overwrite your current canvas. Make sure you've saved any changes you want to keep.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleLoadFromLocal}>Load</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
+          accept=".xml"
+          onChange={handleFileChange}
+        />
+        <Button variant="outline" onClick={handleXmlImportClick}>
+          <Upload className="mr-2 h-4 w-4" />
+          Import from XML
+        </Button>
+        <Button variant="outline" onClick={handleExportXml}>
+          <FileDown className="mr-2 h-4 w-4" />
+          Export as XML
+        </Button>
         <Button variant="outline" onClick={() => handleExport('PNG')}>
           <Download className="mr-2 h-4 w-4" />
           Export as PNG
