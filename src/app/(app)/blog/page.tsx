@@ -1,37 +1,26 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CheckCircle } from "lucide-react";
 
-const blogPosts = [
+const features = [
   {
-    title: "Mastering SWOT: From Analysis to Action",
-    description: "Learn how to turn your SWOT analysis into a powerful strategic plan that drives real results for your business.",
-    image: "https://placehold.co/600x400.png",
-    aiHint: "strategy business",
-    link: "#"
+    title: "Interactive Canvas",
+    description: "Each model comes with an interactive canvas that allows users to easily add, edit, and delete items within each section of the model. This enables users to populate and customize the models according to their specific needs."
   },
   {
-    title: "The Ultimate Guide to the Business Model Canvas",
-    description: "A step-by-step walkthrough of the Business Model Canvas, helping you map out and innovate your business.",
-    image: "https://placehold.co/600x400.png",
-    aiHint: "business planning",
-    link: "#"
+    title: "Drag & Drop Functionality",
+    description: "Users can seamlessly move items between different blocks within a model using a drag & drop feature to effectively organize their thoughts."
   },
   {
-    title: "Productivity Hacks with the Eisenhower Matrix",
-    description: "Stop procrastinating and start doing. Discover how to prioritize your tasks effectively using a simple yet powerful tool.",
-    image: "https://placehold.co/600x400.png",
-    aiHint: "productivity desk",
-    link: "#"
+    title: "Save & History",
+    description: "User work is saved directly in their browser, allowing easy access to past versions or the ability to load and download as XML. This provides flexibility to revert to previous iterations of a model."
   },
   {
-    title: "Beyond the Buzzword: What is Agile, Really?",
-    description: "An introduction to the Agile methodology and how its principles can transform your team's workflow and project success.",
-    image: "https://placehold.co/600x400.png",
-    aiHint: "team collaboration",
-    link: "#"
+    title: "Import from XML",
+    description: "Users can easily upload their data from an XML file to instantly populate a model. This feature is useful for integrating existing data or working with larger datasets."
+  },
+  {
+    title: "Multiple Export Options",
+    description: "Once completed, users can export their filled-out models to various formats such as PDF, PNG, or XML. These export options cater to diverse needs, from sharing and presentations to archiving."
   },
 ];
 
@@ -39,26 +28,21 @@ export default function BlogPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold font-headline">Productivity Insights</h1>
-        <p className="text-muted-foreground">Articles on business strategy, personal growth, and productivity.</p>
+        <h1 className="text-3xl font-bold font-headline">Key Features of Model Toolkit</h1>
+        <p className="text-muted-foreground">Discover the powerful features that make Model Toolkit the perfect companion for your strategic planning.</p>
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {blogPosts.map((post) => (
-          <Card key={post.title} className="flex flex-col overflow-hidden">
-            <CardHeader className="p-0">
-                <Image src={post.image} alt={post.title} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint={post.aiHint} />
+        {features.map((feature) => (
+          <Card key={feature.title}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 font-headline text-xl">
+                <CheckCircle className="h-6 w-6 text-primary" />
+                {feature.title}
+              </CardTitle>
             </CardHeader>
-            <CardContent className="p-6 flex-grow">
-              <CardTitle className="font-headline text-xl mb-2">{post.title}</CardTitle>
-              <CardDescription>{post.description}</CardDescription>
+            <CardContent>
+              <p className="text-muted-foreground">{feature.description}</p>
             </CardContent>
-            <CardFooter className="p-6 pt-0">
-              <Button asChild variant="link" className="p-0 h-auto">
-                <Link href={post.link}>
-                  Read More <ArrowRight className="inline-block ml-1 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardFooter>
           </Card>
         ))}
       </div>
