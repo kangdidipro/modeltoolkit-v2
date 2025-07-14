@@ -63,15 +63,13 @@ export default function AboutPage() {
         <Card className="overflow-hidden">
           <div className="md:flex">
             <div className="md:w-1/3 bg-secondary/30 flex items-center justify-center p-8">
-              <svg
-                className="w-48 h-48 text-primary"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                <path d="M11.5 16.5L10 22h4l-1.5-5.5-0.5-1.5-0.5 1.5z" />
-              </svg>
+              <Image
+                src="/creator.png"
+                alt="The creator of Model Toolkit"
+                width={192}
+                height={192}
+                className="rounded-full w-48 h-48 object-cover"
+              />
             </div>
             <div className="md:w-2/3 p-8 flex flex-col justify-center">
               <p className="text-muted-foreground">
