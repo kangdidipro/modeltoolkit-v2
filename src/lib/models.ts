@@ -71,6 +71,14 @@ export type AidaModel = {
   action: ModelItem[];
 };
 
+export type TuckmansStagesModel = {
+  forming: ModelItem[];
+  storming: ModelItem[];
+  norming: ModelItem[];
+  performing: ModelItem[];
+  adjourning: ModelItem[];
+};
+
 
 export const initialSwotData: SwotModel = {
   strengths: [
@@ -160,6 +168,14 @@ export const initialAidaModelData: AidaModel = {
   interest: [{ id: 'aida2', content: 'Create engaging blog post' }],
   desire: [{ id: 'aida3', content: 'Showcase customer testimonials' }],
   action: [{ id: 'aida4', content: 'Offer a limited-time discount' }],
+};
+
+export const initialTuckmansStagesData: TuckmansStagesModel = {
+  forming: [{ id: 'ts1', content: 'Team members get to know each other.' }],
+  storming: [{ id: 'ts2', content: 'Disagreements and conflicts arise.' }],
+  norming: [{ id: 'ts3', content: 'The team establishes norms and roles.' }],
+  performing: [{ id: 'ts4', content: 'The team works cohesively and effectively.' }],
+  adjourning: [{ id: 'ts5', content: 'The project ends and the team disbands.' }],
 };
 
 
