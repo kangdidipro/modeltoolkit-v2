@@ -63,7 +63,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       icon={<LayoutGrid />}
                       tooltip="Eisenhower Matrix"
                     >
-                      Eisenhower Matrix
+                      1. Eisenhower Matrix
                     </SidebarMenuButton>
                   </Link>
               </SidebarMenuItem>
@@ -74,7 +74,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="SWOT Analysis"
                   >
-                    SWOT Analysis
+                    2. SWOT Analysis
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -85,7 +85,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="Pareto Principle (80/20)"
                   >
-                    Pareto Principle (80/20)
+                    3. Pareto Principle (80/20)
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -96,7 +96,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                         icon={<LayoutGrid />}
                         tooltip="Business Model Canvas"
                     >
-                        Business Model Canvas
+                        4. Business Model Canvas
                     </SidebarMenuButton>
                  </Link>
               </SidebarMenuItem>
@@ -107,7 +107,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                         icon={<LayoutGrid />}
                         tooltip="Maslow's Hierarchy"
                     >
-                        Maslow's Hierarchy
+                        5. Maslow's Hierarchy
                     </SidebarMenuButton>
                  </Link>
               </SidebarMenuItem>
@@ -118,7 +118,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                         icon={<LayoutGrid />}
                         tooltip="Johari Window"
                     >
-                        Johari Window
+                        6. Johari Window
                     </SidebarMenuButton>
                  </Link>
               </SidebarMenuItem>
@@ -129,7 +129,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="Boston Matrix"
                   >
-                    Boston Matrix
+                    7. Boston Matrix
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -140,7 +140,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="Porter's Five Forces"
                   >
-                    Porter's Five Forces
+                    8. Porter's Five Forces
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -151,7 +151,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="AIDA Model"
                   >
-                    AIDA Model
+                    9. AIDA Model
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -162,7 +162,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="Tuckman's Stages"
                   >
-                    Tuckman's Stages
+                    10. Tuckman's Stages
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -173,7 +173,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="McKinsey 7S Framework"
                   >
-                    McKinsey 7S Framework
+                    11. McKinsey 7S Framework
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -184,7 +184,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="ADKAR Model"
                   >
-                    ADKAR Model
+                    12. ADKAR Model
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -195,7 +195,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="Gantt Chart"
                   >
-                    Gantt Chart
+                    13. Gantt Chart
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -206,7 +206,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="Fishbone Diagram"
                   >
-                    Fishbone Diagram
+                    14. Fishbone Diagram
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -217,7 +217,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="RACI Matrix"
                   >
-                    RACI Matrix
+                    15. RACI Matrix
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -228,7 +228,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="SCAMPER Model"
                   >
-                    SCAMPER Model
+                    16. SCAMPER Model
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -239,7 +239,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="Diffusion of Innovations"
                   >
-                    Diffusion of Innovations
+                    17. Diffusion of Innovations
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -250,7 +250,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="Flow Model"
                   >
-                    Flow Model
+                    18. Flow Model
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -261,7 +261,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="Change Management"
                   >
-                    Change Management
+                    19. Change Management
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
@@ -272,7 +272,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<LayoutGrid />}
                     tooltip="Communication Model"
                   >
-                    Communication Model
+                    20. Communication Model
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
