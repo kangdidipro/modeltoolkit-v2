@@ -1,6 +1,7 @@
 import SwotCanvas from '@/components/swot-canvas';
 import EisenhowerMatrixCanvas from '@/components/eisenhower-matrix-canvas';
 import ParetoPrincipleCanvas from '@/components/pareto-principle-canvas';
+import BusinessModelCanvas from '@/components/business-model-canvas';
 import { modelInfo } from '@/lib/models';
 import { notFound } from 'next/navigation';
 
@@ -26,6 +27,8 @@ export default function ModelPage({ params }: ModelPageProps) {
         return <EisenhowerMatrixCanvas />;
       case 'pareto-principle':
         return <ParetoPrincipleCanvas />;
+      case 'business-model-canvas':
+        return <BusinessModelCanvas />;
       default:
         return (
           <div className="flex items-center justify-center h-96 border rounded-lg bg-card">

@@ -22,6 +22,18 @@ export type ParetoPrincipleModel = {
   usefulMany: ModelItem[];
 };
 
+export type BusinessModelCanvasModel = {
+  keyPartners: ModelItem[];
+  keyActivities: ModelItem[];
+  keyResources: ModelItem[];
+  valuePropositions: ModelItem[];
+  customerRelationships: ModelItem[];
+  channels: ModelItem[];
+  customerSegments: ModelItem[];
+  costStructure: ModelItem[];
+  revenueStreams: ModelItem[];
+};
+
 export const initialSwotData: SwotModel = {
   strengths: [
     { id: 's1', content: 'Strong brand recognition' },
@@ -63,6 +75,17 @@ export const initialParetoPrincipleData: ParetoPrincipleModel = {
   ],
 };
 
+export const initialBusinessModelCanvasData: BusinessModelCanvasModel = {
+  keyPartners: [{ id: 'kp1', content: 'Strategic Alliances' }],
+  keyActivities: [{ id: 'ka1', content: 'Problem Solving' }],
+  keyResources: [{ id: 'kr1', content: 'Intellectual Property' }],
+  valuePropositions: [{ id: 'vp1', content: 'Newness' }],
+  customerRelationships: [{ id: 'cr1', content: 'Personal Assistance' }],
+  channels: [{ id: 'ch1', content: 'Sales Force' }],
+  customerSegments: [{ id: 'cs1', content: 'Mass Market' }],
+  costStructure: [{ id: 'cst1', content: 'Fixed Costs' }],
+  revenueStreams: [{ id: 'rs1', content: 'Asset Sale' }],
+};
 
 export const modelInfo: { [key: string]: { name: string; description: string } } = {
   swot: {

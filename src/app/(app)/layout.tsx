@@ -80,13 +80,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
-                    icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
-                  >
-                    Business Model Canvas
-                  </SidebarMenuButton>
+                 <Link href="/models/business-model-canvas">
+                    <SidebarMenuButton
+                        isActive={isActive("/models/business-model-canvas")}
+                        icon={<LayoutGrid />}
+                        tooltip="Business Model Canvas"
+                    >
+                        Business Model Canvas
+                    </SidebarMenuButton>
+                 </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
                  <SidebarMenuButton
