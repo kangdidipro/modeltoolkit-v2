@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
@@ -58,13 +59,13 @@ export default function FishboneDiagramCanvas() {
     }
   }, [toast]);
 
-  const categories: { key: CategoryKeys; title: string; }[] = useMemo(() => [
-    { key: "people", title: "People / Personnel" },
-    { key: "process", title: "Process / Methods" },
-    { key: "equipment", title: "Equipment / Machines" },
-    { key: "materials", title: "Materials" },
-    { key: "environment", title: "Environment" },
-    { key: "management", title: "Management / Measurement" },
+  const categories: { key: CategoryKeys; title: string; bgColor: string; }[] = useMemo(() => [
+    { key: "people", title: "People / Personnel", bgColor: "bg-blue-100 dark:bg-blue-900/40" },
+    { key: "process", title: "Process / Methods", bgColor: "bg-purple-100 dark:bg-purple-900/40" },
+    { key: "equipment", title: "Equipment / Machines", bgColor: "bg-yellow-100 dark:bg-yellow-900/40" },
+    { key: "materials", title: "Materials", bgColor: "bg-green-100 dark:bg-green-900/40" },
+    { key: "environment", title: "Environment", bgColor: "bg-orange-100 dark:bg-orange-900/40" },
+    { key: "management", title: "Management / Measurement", bgColor: "bg-pink-100 dark:bg-pink-900/40" },
   ], []);
 
   const handleAddItem = (category: CategoryKeys) => {
@@ -194,12 +195,12 @@ export default function FishboneDiagramCanvas() {
     }
   };
 
-  const CauseCard = ({ category, title }: { category: CategoryKeys; title: string }) => (
-    <Card className="flex flex-col bg-card/60 backdrop-blur-sm min-h-[200px]">
+  const CauseCard = ({ categoryInfo }: { categoryInfo: { key: CategoryKeys; title: string; bgColor: string; } }) => (
+    <Card className={`flex flex-col min-h-[200px] ${categoryInfo.bgColor}`}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-medium font-headline">{title}</CardTitle>
-          <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleAddItem(category)}>
+          <CardTitle className="text-base font-medium font-headline">{categoryInfo.title}</CardTitle>
+          <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleAddItem(categoryInfo.key)}>
             <Plus className="h-4 w-4" />
           </Button>
         </div>
@@ -207,15 +208,15 @@ export default function FishboneDiagramCanvas() {
       <CardContent
         className="flex-grow space-y-2 p-4 pt-0"
         onDragOver={handleDragOver}
-        onDrop={(e) => handleDrop(e, category)}
+        onDrop={(e) => handleDrop(e, categoryInfo.key)}
       >
-        {data[category].map(item => (
+        {data[categoryInfo.key].map(item => (
           <div
             key={item.id}
             draggable
-            onDragStart={(e) => handleDragStart(e, item, category)}
+            onDragStart={(e) => handleDragStart(e, item, categoryInfo.key)}
             onDragEnd={handleDragEnd}
-            className="group bg-card/80 dark:bg-card/50 rounded-lg p-2 shadow-sm transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
+            className="group bg-card/80 dark:bg-card/50 backdrop-blur-sm rounded-lg p-2 shadow-sm transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
           >
             <div className="flex items-start gap-1">
               <GripVertical className="h-5 w-5 mt-0.5 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground" />
@@ -223,10 +224,10 @@ export default function FishboneDiagramCanvas() {
                 <Textarea
                   value={editingText}
                   onChange={(e) => setEditingText(e.target.value)}
-                  onBlur={() => handleSaveItemEdit(category)}
+                  onBlur={() => handleSaveItemEdit(categoryInfo.key)}
                   autoFocus
                   className="w-full text-sm resize-none"
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); handleSaveItemEdit(category); } }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); handleSaveItemEdit(categoryInfo.key); } }}
                 />
               ) : (
                 <p onClick={() => startEditing(item)} className="flex-grow text-sm w-full min-h-[20px] cursor-text">
@@ -237,14 +238,14 @@ export default function FishboneDiagramCanvas() {
                 size="icon"
                 variant="ghost"
                 className="h-6 w-6 opacity-0 group-hover:opacity-100 shrink-0"
-                onClick={() => handleDeleteItem(category, item.id)}
+                onClick={() => handleDeleteItem(categoryInfo.key, item.id)}
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </Button>
             </div>
           </div>
         ))}
-        {data[category].length === 0 && (
+        {data[categoryInfo.key].length === 0 && (
           <div className="text-center text-muted-foreground text-xs p-2 border-2 border-dashed rounded-lg">
             Add causes
           </div>
@@ -306,14 +307,14 @@ export default function FishboneDiagramCanvas() {
             {categories.slice(0,3).map(cat => (
               <div key={cat.key} className="relative pt-12">
                 <div className="absolute top-0 left-1/2 w-0.5 h-12 bg-muted -translate-x-1/2"></div>
-                <CauseCard category={cat.key} title={cat.title} />
+                <CauseCard categoryInfo={cat} />
               </div>
             ))}
             {/* Bottom row */}
             {categories.slice(3,6).map(cat => (
               <div key={cat.key} className="relative pb-12">
                 <div className="absolute bottom-0 left-1/2 w-0.5 h-12 bg-muted -translate-x-1/2"></div>
-                <CauseCard category={cat.key} title={cat.title} />
+                <CauseCard categoryInfo={cat} />
               </div>
             ))}
           </div>
@@ -323,7 +324,7 @@ export default function FishboneDiagramCanvas() {
           
           {/* Head (Effect) */}
           <div className="relative flex-shrink-0 w-80">
-             <Card className="bg-blue-100 dark:bg-blue-900/40">
+             <Card className="bg-red-100 dark:bg-red-900/40">
                 <CardHeader>
                     <CardTitle className="font-headline text-lg">Problem / Effect</CardTitle>
                 </CardHeader>
@@ -354,5 +355,3 @@ export default function FishboneDiagramCanvas() {
     </>
   )
 }
-
-    
