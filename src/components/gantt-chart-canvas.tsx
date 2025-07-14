@@ -278,7 +278,7 @@ export default function GanttChartCanvas() {
         </DialogContent>
       </Dialog>
         
-      <Card className="min-h-[600px]">
+      <Card className="min-h-[600px] bg-blue-50 dark:bg-blue-900/20">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Task List</CardTitle>
