@@ -42,6 +42,13 @@ export type MaslowsHierarchyModel = {
   selfActualization: ModelItem[];
 };
 
+export type JohariWindowModel = {
+  open: ModelItem[];
+  blind: ModelItem[];
+  hidden: ModelItem[];
+  unknown: ModelItem[];
+};
+
 export const initialSwotData: SwotModel = {
   strengths: [
     { id: 's1', content: 'Strong brand recognition' },
@@ -103,6 +110,13 @@ export const initialMaslowsHierarchyData: MaslowsHierarchyModel = {
   selfActualization: [{ id: 'se1', content: 'Morality, creativity, problem solving' }],
 };
 
+export const initialJohariWindowData: JohariWindowModel = {
+  open: [{ id: 'jw1', content: 'Friendly' }],
+  blind: [{ id: 'jw2', content: 'Talks too much' }],
+  hidden: [{ id: 'jw3', content: 'Fear of failure' }],
+  unknown: [{ id: 'jw4', content: 'Hidden talents' }],
+};
+
 export const modelInfo: { [key: string]: { name: string; description: string } } = {
   swot: {
     name: 'SWOT Analysis',
@@ -123,5 +137,9 @@ export const modelInfo: { [key: string]: { name: string; description: string } }
   'maslows-hierarchy': {
     name: 'Maslow\'s Hierarchy of Needs',
     description: 'Understand human motivation by fulfilling hierarchical needs.',
+  },
+  'johari-window': {
+    name: 'Johari Window',
+    description: 'A tool for understanding and improving self-awareness and mutual understanding between individuals within a group.',
   },
 };

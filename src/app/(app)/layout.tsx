@@ -102,13 +102,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                  </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
-                    icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
-                  >
-                    Johari Window
-                  </SidebarMenuButton>
+                 <Link href="/models/johari-window">
+                    <SidebarMenuButton
+                        isActive={isActive("/models/johari-window")}
+                        icon={<LayoutGrid />}
+                        tooltip="Johari Window"
+                    >
+                        Johari Window
+                    </SidebarMenuButton>
+                 </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
                  <SidebarMenuButton
