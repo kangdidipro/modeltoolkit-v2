@@ -556,12 +556,12 @@ const SidebarMenuButton = React.forwardRef<
   ) => {
     const Comp = asChild ? Slot : "button"
     const { isMobile, state } = useSidebar()
-    const [isMounted, setIsMounted] = React.useState(false)
+    const [mounted, setMounted] = React.useState(false)
 
     React.useEffect(() => {
-      setIsMounted(true)
+      setMounted(true)
     }, [])
-    
+
     const button = (
       <Comp
         ref={ref}
@@ -572,11 +572,11 @@ const SidebarMenuButton = React.forwardRef<
         {...props}
       />
     )
-
-    if (!tooltip || !isMounted) {
+    
+    if (!tooltip || !mounted) {
       return button
     }
-
+    
     let tooltipContentProps: React.ComponentProps<typeof TooltipContent>
     if (typeof tooltip === "string") {
       tooltipContentProps = { children: tooltip }
