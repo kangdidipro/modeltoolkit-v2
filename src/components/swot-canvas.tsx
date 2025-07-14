@@ -2,9 +2,9 @@
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialSwotData, type SwotModel, type ModelItem } from "@/lib/models"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, Download, Printer, GripVertical, Save, History, Upload, FileDown, X, RefreshCw } from "lucide-react"
+import { Plus, Trash2, Download, Printer, GripVertical, Save, History, Upload, FileDown, RefreshCw } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -16,7 +16,6 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "./ui/separator"
 
 type ColumnKeys = keyof SwotModel;
 const LOCAL_STORAGE_KEY = 'swot-model-history';
@@ -38,13 +37,11 @@ export default function SwotCanvas() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Load history from localStorage on initial render
     try {
       const savedHistory = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (savedHistory) {
         const parsedHistory = JSON.parse(savedHistory);
         setHistory(parsedHistory);
-        // Load the most recent version into the canvas
         if (parsedHistory.length > 0) {
           setData(parsedHistory[0].data);
         }
@@ -120,9 +117,7 @@ export default function SwotCanvas() {
   
     setData(prev => {
       const newData = { ...prev };
-      // Remove from old column
       newData[from] = newData[from].filter(i => i.id !== dragged.id);
-      // Add to new column
       newData[to] = [...newData[to], dragged];
       return newData;
     });
@@ -237,16 +232,9 @@ export default function SwotCanvas() {
               Saved History for "SWOT Analysis"
             </DialogTitle>
             <DialogDescription>
-              Load a past version, download your data, or import an XML file to populate the board.
+              Load a past version of your SWOT analysis.
             </DialogDescription>
           </DialogHeader>
-          
-          <div className="border rounded-lg p-4">
-             <Button variant="outline" className="w-full" onClick={handleXmlImportClick}>
-              <Upload className="mr-2 h-4 w-4" />
-              Import from XML
-            </Button>
-          </div>
           
           <ScrollArea className="h-80 pr-6">
             <div className="space-y-4">
@@ -283,14 +271,16 @@ export default function SwotCanvas() {
         </DialogContent>
       </Dialog>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 items-start">
+      <div className="grid gap-6 md:grid-cols-2 items-start">
         {columns.map(column => (
           <Card key={column.key} className={`${column.bg} flex flex-col min-h-[300px]`}>
-            <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-lg font-medium font-headline">{column.title}</CardTitle>
-              <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleAddItem(column.key)}>
-                <Plus className="h-4 w-4" />
-              </Button>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-medium font-headline">{column.title}</CardTitle>
+                 <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleAddItem(column.key)}>
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
             </CardHeader>
             <CardContent
               className="flex-grow space-y-2 p-4 pt-0"

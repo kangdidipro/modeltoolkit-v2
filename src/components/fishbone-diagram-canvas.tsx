@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
@@ -195,6 +194,10 @@ export default function FishboneDiagramCanvas() {
     }
   };
 
+  const handleExportXml = () => {
+     toast({ title: "Export Not Available", description: "This feature is coming soon!" });
+  }
+
   const CauseCard = ({ categoryInfo }: { categoryInfo: { key: CategoryKeys; title: string; bgColor: string; } }) => (
     <Card className={`flex flex-col min-h-[200px] ${categoryInfo.bgColor}`}>
       <CardHeader className="pb-2">
@@ -260,10 +263,10 @@ export default function FishboneDiagramCanvas() {
         <Button variant="outline" onClick={handleSave}><Save className="mr-2 h-4 w-4" /> Save</Button>
         <Button variant="outline" onClick={() => setIsHistoryOpen(true)}><History className="mr-2 h-4 w-4" /> History</Button>
         <input type="file" ref={fileInputRef} className="hidden" accept=".xml" onChange={handleFileChange} />
-        <Button variant="outline" onClick={handleXmlImportClick}><Upload className="mr-2 h-4 w-4" /> Import XML</Button>
-        <Button variant="outline" onClick={() => handleExport('XML')}><FileDown className="mr-2 h-4 w-4" /> Export XML</Button>
-        <Button variant="outline" onClick={() => handleExport('PNG')}><Download className="mr-2 h-4 w-4" /> Export PNG</Button>
-        <Button variant="outline" onClick={() => handleExport('PDF')}><Printer className="mr-2 h-4 w-4" /> Export PDF</Button>
+        <Button variant="outline" onClick={handleXmlImportClick}><Upload className="mr-2 h-4 w-4" /> Import from XML</Button>
+        <Button variant="outline" onClick={handleExportXml}><FileDown className="mr-2 h-4 w-4" /> Export as XML</Button>
+        <Button variant="outline" onClick={() => handleExport('PNG')}><Download className="mr-2 h-4 w-4" /> Export as PNG</Button>
+        <Button variant="outline" onClick={() => handleExport('PDF')}><Printer className="mr-2 h-4 w-4" /> Export as PDF</Button>
       </div>
       
       <Dialog open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>

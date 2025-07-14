@@ -1,11 +1,10 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
 import { initialRaciMatrixData, type RaciMatrixModel, type RaciTask, type RaciPerson, type RaciRole } from "@/lib/models";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, Save, History, Upload, FileDown, RefreshCw, GripVertical, Users, ListChecks } from "lucide-react";
+import { Plus, Trash2, Save, History, Upload, FileDown, RefreshCw, GripVertical, Users, ListChecks, Download, Printer } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -147,8 +146,10 @@ export default function RaciMatrixCanvas() {
         <Button variant="outline" onClick={handleSave}><Save className="mr-2 h-4 w-4" /> Save</Button>
         <Button variant="outline" onClick={() => setIsHistoryOpen(true)}><History className="mr-2 h-4 w-4" /> History</Button>
         <input type="file" ref={fileInputRef} className="hidden" accept=".xml" onChange={handleFileChange} />
-        <Button variant="outline" onClick={handleXmlImportClick}><Upload className="mr-2 h-4 w-4" /> Import XML</Button>
-        <Button variant="outline" onClick={() => handleExport('XML')}><FileDown className="mr-2 h-4 w-4" /> Export XML</Button>
+        <Button variant="outline" onClick={handleXmlImportClick}><Upload className="mr-2 h-4 w-4" /> Import from XML</Button>
+        <Button variant="outline" onClick={() => handleExport('XML')}><FileDown className="mr-2 h-4 w-4" /> Export as XML</Button>
+        <Button variant="outline" onClick={() => handleExport('PNG')}><Download className="mr-2 h-4 w-4" /> Export as PNG</Button>
+        <Button variant="outline" onClick={() => handleExport('PDF')}><Printer className="mr-2 h-4 w-4" /> Export as PDF</Button>
       </div>
 
       <Dialog open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
