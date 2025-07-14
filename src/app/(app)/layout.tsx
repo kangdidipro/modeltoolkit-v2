@@ -91,13 +91,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                  </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
-                    icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
-                  >
-                    Maslow's Hierarchy
-                  </SidebarMenuButton>
+                 <Link href="/models/maslows-hierarchy">
+                    <SidebarMenuButton
+                        isActive={isActive("/models/maslows-hierarchy")}
+                        icon={<LayoutGrid />}
+                        tooltip="Maslow's Hierarchy"
+                    >
+                        Maslow's Hierarchy
+                    </SidebarMenuButton>
+                 </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
                  <SidebarMenuButton

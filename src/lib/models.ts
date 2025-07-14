@@ -34,6 +34,14 @@ export type BusinessModelCanvasModel = {
   revenueStreams: ModelItem[];
 };
 
+export type MaslowsHierarchyModel = {
+  physiological: ModelItem[];
+  safety: ModelItem[];
+  loveAndBelonging: ModelItem[];
+  esteem: ModelItem[];
+  selfActualization: ModelItem[];
+};
+
 export const initialSwotData: SwotModel = {
   strengths: [
     { id: 's1', content: 'Strong brand recognition' },
@@ -87,6 +95,14 @@ export const initialBusinessModelCanvasData: BusinessModelCanvasModel = {
   revenueStreams: [{ id: 'rs1', content: 'Asset Sale' }],
 };
 
+export const initialMaslowsHierarchyData: MaslowsHierarchyModel = {
+  physiological: [{ id: 'ph1', content: 'Breathing, food, water' }],
+  safety: [{ id: 'sa1', content: 'Employment, resources, health' }],
+  loveAndBelonging: [{ id: 'lb1', content: 'Friendship, family, intimacy' }],
+  esteem: [{ id: 'es1', content: 'Self-esteem, confidence, achievement' }],
+  selfActualization: [{ id: 'se1', content: 'Morality, creativity, problem solving' }],
+};
+
 export const modelInfo: { [key: string]: { name: string; description: string } } = {
   swot: {
     name: 'SWOT Analysis',
@@ -103,5 +119,9 @@ export const modelInfo: { [key: string]: { name: string; description: string } }
   'business-model-canvas': {
     name: 'Business Model Canvas',
     description: 'Visualize and develop new or existing business models.',
+  },
+  'maslows-hierarchy': {
+    name: 'Maslow\'s Hierarchy of Needs',
+    description: 'Understand human motivation by fulfilling hierarchical needs.',
   },
 };
