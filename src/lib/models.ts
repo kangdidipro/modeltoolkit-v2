@@ -97,6 +97,10 @@ export type AdkarModel = {
   reinforcement: ModelItem[];
 };
 
+export type GanttChartModel = {
+  tasks: ModelItem[];
+};
+
 
 export const initialSwotData: SwotModel = {
   strengths: [
@@ -212,6 +216,10 @@ export const initialAdkarModelData: AdkarModel = {
   knowledge: [{ id: 'adkar3', content: 'Provide training and education on new skills.' }],
   ability: [{ id: 'adkar4', content: 'Offer coaching and practice sessions.' }],
   reinforcement: [{ id: 'adkar5', content: 'Recognize and reward successful change adoption.' }],
+};
+
+export const initialGanttChartData: GanttChartModel = {
+  tasks: [{ id: 'gantt1', content: 'Define project scope' }],
 };
 
 
