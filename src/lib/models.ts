@@ -1,4 +1,5 @@
 
+
 export type ModelItem = {
   id: string;
   content: string;
@@ -164,6 +165,14 @@ export type ChangeManagementModel = {
   unfreeze: ModelItem[];
   change: ModelItem[];
   refreeze: ModelItem[];
+};
+
+export type CommunicationModel = {
+  sender: ModelItem[];
+  message: ModelItem[];
+  channel: ModelItem[];
+  receiver: ModelItem[];
+  effect: ModelItem[];
 };
 
 
@@ -355,6 +364,14 @@ export const initialChangeManagementData: ChangeManagementModel = {
   refreeze: [{ id: 'cm3', content: 'Anchor changes in corporate culture' }],
 };
 
+export const initialCommunicationModelData: CommunicationModel = {
+  sender: [{ id: 'comm-s1', content: 'Marketing Team' }],
+  message: [{ id: 'comm-m1', content: 'New product launch announcement' }],
+  channel: [{ id: 'comm-c1', content: 'Email Newsletter' }],
+  receiver: [{ id: 'comm-r1', content: 'Existing Customers' }],
+  effect: [{ id: 'comm-e1', content: 'Increased product awareness and pre-orders' }],
+};
+
 
 export const modelInfo: { [key: string]: { name: string; description: string } } = {
   'eisenhower-matrix': {
@@ -435,7 +452,7 @@ export const modelInfo: { [key: string]: { name: string; description: string } }
   },
   'communication-model': {
     name: 'Communication Model',
-    description: 'Models to explain the process of communication.',
+    description: 'A framework for explaining how the communication process works.',
   },
 };
 
