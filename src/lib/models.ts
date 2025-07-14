@@ -1,3 +1,4 @@
+
 export type ModelItem = {
   id: string;
   content: string;
@@ -99,6 +100,16 @@ export type AdkarModel = {
 
 export type GanttChartModel = {
   tasks: ModelItem[];
+};
+
+export type FishboneDiagramModel = {
+  effect: string;
+  people: ModelItem[];
+  process: ModelItem[];
+  equipment: ModelItem[];
+  materials: ModelItem[];
+  environment: ModelItem[];
+  management: ModelItem[];
 };
 
 
@@ -222,6 +233,16 @@ export const initialGanttChartData: GanttChartModel = {
   tasks: [{ id: 'gantt1', content: 'Define project scope' }],
 };
 
+export const initialFishboneDiagramData: FishboneDiagramModel = {
+  effect: "Low customer satisfaction",
+  people: [{ id: 'fb-p1', content: 'Lack of training' }],
+  process: [{ id: 'fb-pr1', content: 'Complicated checkout process' }],
+  equipment: [{ id: 'fb-e1', content: 'Outdated software' }],
+  materials: [{ id: 'fb-m1', content: 'Poor quality a-d-s' }],
+  environment: [{ id: 'fb-en1', content: 'Noisy call center' }],
+  management: [{ id: 'fb-ma1', content: 'Unclear quality standards' }],
+};
+
 
 export const modelInfo: { [key: string]: { name: string; description: string } } = {
   'eisenhower-matrix': {
@@ -305,3 +326,5 @@ export const modelInfo: { [key: string]: { name: string; description: string } }
     description: 'Models to explain the process of communication.',
   },
 };
+
+    

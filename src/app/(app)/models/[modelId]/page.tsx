@@ -1,3 +1,4 @@
+
 import SwotCanvas from '@/components/swot-canvas';
 import EisenhowerMatrixCanvas from '@/components/eisenhower-matrix-canvas';
 import ParetoPrincipleCanvas from '@/components/pareto-principle-canvas';
@@ -96,3 +97,5 @@ export default function ModelPage({ params }: ModelPageProps) {
     </div>
   );
 }
+
+    
