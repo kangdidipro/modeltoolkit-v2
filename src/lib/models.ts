@@ -135,6 +135,16 @@ export type RaciMatrixModel = {
   people: RaciPerson[];
 };
 
+export type ScamperModel = {
+  substitute: ModelItem[];
+  combine: ModelItem[];
+  adapt: ModelItem[];
+  modify: ModelItem[];
+  putToAnotherUse: ModelItem[];
+  eliminate: ModelItem[];
+  reverse: ModelItem[];
+};
+
 
 export const initialSwotData: SwotModel = {
   strengths: [
@@ -291,6 +301,16 @@ export const initialRaciMatrixData: RaciMatrixModel = {
       ]
     },
   ]
+};
+
+export const initialScamperModelData: ScamperModel = {
+  substitute: [{ id: 'scamper-s1', content: 'Use a different material' }],
+  combine: [{ id: 'scamper-c1', content: 'Merge with another product' }],
+  adapt: [{ id: 'scamper-a1', content: 'Adapt for a new audience' }],
+  modify: [{ id: 'scamper-m1', content: 'Change the size or shape' }],
+  putToAnotherUse: [{ id: 'scamper-p1', content: 'Can it be used by a different industry?' }],
+  eliminate: [{ id: 'scamper-e1', content: 'Remove a feature to simplify' }],
+  reverse: [{ id: 'scamper-r1', content: 'Reverse the process' }],
 };
 
 
