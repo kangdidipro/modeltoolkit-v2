@@ -172,7 +172,7 @@ export default function FishboneDiagramCanvas() {
   const countTotalItems = (diagramData: FishboneDiagramModel) => {
     return Object.values(diagramData)
       .filter(val => Array.isArray(val))
-      .reduce((sum, array) => sum + array.length, 0);
+      .reduce((sum, array) => sum + (array as ModelItem[]).length, 0);
   }
 
   const handleExport = (type: 'PNG' | 'PDF' | 'XML') => {
@@ -197,7 +197,7 @@ export default function FishboneDiagramCanvas() {
     <Card className="flex flex-col bg-card/60 backdrop-blur-sm min-h-[200px]">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-medium font-headline">{title}</CardTitle>
+          <CardTitle className="text-base font-medium font-headline">{title}</CardTitle>
           <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleAddItem(category)}>
             <Plus className="h-4 w-4" />
           </Button>
@@ -225,7 +225,7 @@ export default function FishboneDiagramCanvas() {
                   onBlur={() => handleSaveItemEdit(category)}
                   autoFocus
                   className="w-full text-sm resize-none"
-                  onKeyDown={(e) => { if (e.key === 'Enter') handleSaveItemEdit(category) }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); handleSaveItemEdit(category); } }}
                 />
               ) : (
                 <p onClick={() => startEditing(item)} className="flex-grow text-sm w-full min-h-[20px]">
@@ -279,7 +279,14 @@ export default function FishboneDiagramCanvas() {
                       <p className="font-semibold">{entry.data.effect}</p>
                       <p className="text-sm text-muted-foreground">Saved at {new Date(entry.timestamp).toLocaleString()} with {countTotalItems(entry.data)} items</p>
                     </div>
-                    <Button variant="secondary" onClick={() => handleLoadFromHistory(entry)}><RefreshCw className="mr-2 h-4 w-4" />Load</Button>
+                    <div className="flex gap-2">
+                      <Button variant="secondary" onClick={() => handleLoadFromHistory(entry)}>
+                        <RefreshCw className="mr-2 h-4 w-4" />Load
+                      </Button>
+                      <Button variant="outline" onClick={() => handleExport('XML')}>
+                        <FileDown className="mr-2 h-4 w-4" />XML
+                      </Button>
+                    </div>
                   </div>
                 ))
               ) : (
@@ -290,33 +297,44 @@ export default function FishboneDiagramCanvas() {
         </DialogContent>
       </Dialog>
 
-      <div className="relative overflow-hidden">
-        {/* Main spine */}
-        <div className="absolute top-1/2 left-0 w-full h-2 bg-muted -translate-y-1/2"></div>
-        
-        <div className="flex items-center">
+      <div className="relative overflow-x-auto pb-8">
+        <div className="flex items-center min-w-[1000px]">
           {/* Categories */}
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-8 py-8 pr-8">
-            {categories.slice(0, 3).map(cat => (
-              <div key={cat.key} className="relative pt-12">
-                <div className="absolute top-0 left-1/2 w-2 h-12 bg-muted -translate-x-1/2"></div>
-                <CauseCard category={cat.key} title={cat.title} />
-              </div>
-            ))}
-             {categories.slice(3, 6).map(cat => (
-              <div key={cat.key} className="relative pb-12">
-                <div className="absolute bottom-0 left-1/2 w-2 h-12 bg-muted -translate-x-1/2"></div>
-                <CauseCard category={cat.key} title={cat.title} />
-              </div>
-            ))}
+          <div className="flex-1 grid grid-cols-3 gap-8 py-8 pr-8">
+            <div className="grid grid-rows-2 gap-8">
+              {categories.slice(0, 2).map(cat => (
+                <div key={cat.key} className="relative pl-12">
+                  <div className="absolute top-1/2 left-0 w-12 h-0.5 bg-muted -translate-y-1/2"></div>
+                  <CauseCard category={cat.key} title={cat.title} />
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-rows-2 gap-8">
+              {categories.slice(2, 4).map(cat => (
+                 <div key={cat.key} className="relative pl-12">
+                  <div className="absolute top-1/2 left-0 w-12 h-0.5 bg-muted -translate-y-1/2"></div>
+                  <CauseCard category={cat.key} title={cat.title} />
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-rows-2 gap-8">
+              {categories.slice(4, 6).map(cat => (
+                 <div key={cat.key} className="relative pl-12">
+                  <div className="absolute top-1/2 left-0 w-12 h-0.5 bg-muted -translate-y-1/2"></div>
+                  <CauseCard category={cat.key} title={cat.title} />
+                </div>
+              ))}
+            </div>
           </div>
 
+          {/* Main spine */}
+          <div className="absolute top-1/2 left-0 h-1 bg-muted -translate-y-1/2" style={{width: 'calc(100% - 320px - 2rem)'}}></div>
+          
           {/* Head (Effect) */}
-          <div className="relative flex-shrink-0">
-             <div className="absolute top-1/2 -left-2 w-2 h-16 bg-muted -translate-y-1/2"></div>
-             <Card className="w-80 bg-blue-100 dark:bg-blue-900/40">
+          <div className="relative flex-shrink-0 w-80">
+             <Card className="bg-blue-100 dark:bg-blue-900/40">
                 <CardHeader>
-                    <CardTitle className="font-headline text-xl">Problem / Effect</CardTitle>
+                    <CardTitle className="font-headline text-lg">Problem / Effect</CardTitle>
                 </CardHeader>
                 <CardContent>
                     {isEditingEffect ? (
@@ -327,11 +345,11 @@ export default function FishboneDiagramCanvas() {
                             onBlur={() => setIsEditingEffect(false)}
                             onKeyDown={(e) => { if (e.key === 'Enter') setIsEditingEffect(false) }}
                             autoFocus
-                            className="text-lg"
+                            className="text-base"
                         />
                     ) : (
-                        <div className="flex items-center justify-between" onClick={() => setIsEditingEffect(true)}>
-                            <p className="text-lg font-semibold">{data.effect}</p>
+                        <div className="flex items-center justify-between cursor-pointer" onClick={() => setIsEditingEffect(true)}>
+                            <p className="text-base font-semibold">{data.effect}</p>
                             <Button variant="ghost" size="icon" className="h-8 w-8">
                                 <Pencil className="h-4 w-4" />
                             </Button>
