@@ -113,130 +113,158 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                  </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/boston-matrix">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/boston-matrix")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="Boston Matrix"
                   >
                     Boston Matrix
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/porters-five-forces">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/porters-five-forces")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="Porter's Five Forces"
                   >
                     Porter's Five Forces
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
                <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/aida-model">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/aida-model")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="AIDA Model"
                   >
                     AIDA Model
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/tuckmans-stages">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/tuckmans-stages")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="Tuckman's Stages"
                   >
                     Tuckman's Stages
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/mckinsey-7s-framework">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/mckinsey-7s-framework")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="McKinsey 7S Framework"
                   >
                     McKinsey 7S Framework
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/adkar-model">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/adkar-model")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="ADKAR Model"
                   >
                     ADKAR Model
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/gantt-chart">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/gantt-chart")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="Gantt Chart"
                   >
                     Gantt Chart
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/fishbone-diagram">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/fishbone-diagram")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="Fishbone Diagram"
                   >
                     Fishbone Diagram
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/raci-matrix">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/raci-matrix")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="RACI Matrix"
                   >
                     RACI Matrix
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/scamper-model">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/scamper-model")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="SCAMPER Model"
                   >
                     SCAMPER Model
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/diffusion-of-innovations">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/diffusion-of-innovations")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="Diffusion of Innovations"
                   >
                     Diffusion of Innovations
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/flow-model">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/flow-model")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="Flow Model"
                   >
                     Flow Model
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/change-management">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/change-management")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="Change Management"
                   >
                     Change Management
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                 <SidebarMenuButton
+                <Link href="/models/communication-model">
+                  <SidebarMenuButton
+                    isActive={isActive("/models/communication-model")}
                     icon={<LayoutGrid />}
-                    disabled
-                    tooltip="Coming Soon"
+                    tooltip="Communication Model"
                   >
                     Communication Model
                   </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
             </SidebarGroup>
             

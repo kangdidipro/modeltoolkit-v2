@@ -118,13 +118,13 @@ export const initialJohariWindowData: JohariWindowModel = {
 };
 
 export const modelInfo: { [key: string]: { name: string; description: string } } = {
-  swot: {
-    name: 'SWOT Analysis',
-    description: 'Identify strengths, weaknesses, opportunities, and threats to make strategic decisions.',
-  },
   'eisenhower-matrix': {
     name: 'Eisenhower Matrix',
     description: 'Prioritize tasks by urgency and importance to focus on what matters.',
+  },
+  swot: {
+    name: 'SWOT Analysis',
+    description: 'Identify strengths, weaknesses, opportunities, and threats to make strategic decisions.',
   },
   'pareto-principle': {
     name: 'Pareto Principle (80/20 Rule)',
@@ -141,5 +141,61 @@ export const modelInfo: { [key: string]: { name: string; description: string } }
   'johari-window': {
     name: 'Johari Window',
     description: 'A tool for understanding and improving self-awareness and mutual understanding between individuals within a group.',
+  },
+  'boston-matrix': {
+    name: 'Boston Matrix',
+    description: 'Analyze product portfolio based on market share and growth rate.',
+  },
+  'porters-five-forces': {
+    name: 'Porter\'s Five Forces',
+    description: 'Analyze the competitive environment of an industry.',
+  },
+  'aida-model': {
+    name: 'AIDA Model',
+    description: 'A model that describes the steps a customer goes through in the process of purchasing a product.',
+  },
+  'tuckmans-stages': {
+    name: 'Tuckman\'s Stages',
+    description: 'A model of group development.',
+  },
+  'mckinsey-7s-framework': {
+    name: 'McKinsey 7S Framework',
+    description: 'A model for organizational analysis and effectiveness.',
+  },
+  'adkar-model': {
+    name: 'ADKAR Model',
+    description: 'A goal-oriented change management model.',
+  },
+  'gantt-chart': {
+    name: 'Gantt Chart',
+    description: 'A type of bar chart that illustrates a project schedule.',
+  },
+  'fishbone-diagram': {
+    name: 'Fishbone Diagram',
+    description: 'A cause-and-effect diagram that helps to identify the root causes of a problem.',
+  },
+  'raci-matrix': {
+    name: 'RACI Matrix',
+    description: 'A responsibility assignment chart that maps out every task, milestone or key decision involved in completing a project.',
+  },
+  'scamper-model': {
+    name: 'SCAMPER Model',
+    description: 'A creative thinking technique that helps to generate ideas for new products and services.',
+  },
+  'diffusion-of-innovations': {
+    name: 'Diffusion of Innovations',
+    description: 'A theory that seeks to explain how, why, and at what rate new ideas and technology spread.',
+  },
+  'flow-model': {
+    name: 'Flow Model',
+    description: 'A model describing the mental state of being fully immersed in an activity.',
+  },
+  'change-management': {
+    name: 'Change Management',
+    description: 'Models for managing the process of change in an organization.',
+  },
+  'communication-model': {
+    name: 'Communication Model',
+    description: 'Models to explain the process of communication.',
   },
 };
