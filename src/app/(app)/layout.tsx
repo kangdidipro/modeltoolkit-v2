@@ -328,9 +328,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter>
-              <div className="p-2">
-                <AdBanner />
-              </div>
               <SidebarMenu>
                   <SidebarMenuItem>
                       <Link href="/feedback">
