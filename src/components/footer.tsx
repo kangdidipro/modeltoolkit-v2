@@ -29,7 +29,10 @@ export function Footer({ timestamp }: FooterProps) {
               Feedback
             </Link>
             <Link href="/terms" className="mx-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Terms & Conditions
+              Terms
+            </Link>
+            <Link href="/privacy" className="mx-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Privacy
             </Link>
           </div>
         </div>
