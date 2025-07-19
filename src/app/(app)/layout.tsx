@@ -29,7 +29,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
-function ClientOnly({ children }: { children: React.React.Node }) {
+function ClientOnly({ children }: { children: React.ReactNode }) {
   const [hasMounted, setHasMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -43,6 +43,25 @@ function ClientOnly({ children }: { children: React.React.Node }) {
   return <>{children}</>;
 }
 
+const CollapsibleSidebarGroup = ({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) => (
+    <Collapsible defaultOpen={true} asChild>
+      <SidebarGroup className={cn("p-0 space-y-1", className)}>
+        <CollapsibleTrigger asChild>
+          <div className="flex justify-between items-center cursor-pointer p-2 hover:bg-sidebar-accent rounded-md">
+            <SidebarGroupLabel className="p-0 text-sm">
+              {label}
+            </SidebarGroupLabel>
+            <ChevronDown className="h-4 w-4 transition-transform [&[data-state=open]]:rotate-180" />
+          </div>
+        </CollapsibleTrigger>
+        <CollapsibleContent asChild>
+          <SidebarMenu className="px-2 pb-2">
+            {children}
+          </SidebarMenu>
+        </CollapsibleContent>
+      </SidebarGroup>
+    </Collapsible>
+  );
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -65,24 +84,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     </div>
   )
   
-  const CollapsibleSidebarGroup = ({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) => (
-    <Collapsible defaultOpen={true}>
-      <SidebarGroup className={cn("p-0", className)}>
-        <CollapsibleTrigger className="w-full">
-          <SidebarGroupLabel className="w-full flex justify-between items-center cursor-pointer hover:bg-sidebar-accent rounded-md">
-            <span>{label}</span>
-            <ChevronDown className="h-4 w-4 transition-transform [&[data-state=open]]:rotate-180" />
-          </SidebarGroupLabel>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-            <SidebarMenu className="px-2 pb-2">
-                {children}
-            </SidebarMenu>
-        </CollapsibleContent>
-      </SidebarGroup>
-    </Collapsible>
-  )
-
   return (
     <ClientOnly>
       <SidebarProvider>
