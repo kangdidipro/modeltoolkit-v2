@@ -17,6 +17,8 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import html2canvas from "html2canvas"
+import jsPDF from "jspdf"
 
 const LOCAL_STORAGE_KEY = 'gantt-chart-history';
 
@@ -49,6 +51,7 @@ export default function GanttChartCanvas() {
   const draggedItemIndex = useRef<number | null>(null);
   const dragOverItemIndex = useRef<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -169,11 +172,39 @@ export default function GanttChartCanvas() {
     });
   };
 
-  const handleExport = (type: 'PNG' | 'PDF') => {
-    toast({
-      title: 'Export not available',
-      description: `The ${type} export feature is coming soon!`,
-    });
+  const handleExport = async (type: 'PNG' | 'PDF') => {
+    const canvasElement = canvasRef.current;
+    if (!canvasElement) return;
+
+    toast({ title: "Exporting...", description: `Generating your ${type} file.` });
+
+    try {
+        const canvas = await html2canvas(canvasElement, {
+            backgroundColor: null,
+            scale: 2,
+        });
+
+        if (type === 'PNG') {
+            const dataUrl = canvas.toDataURL("image/png");
+            const link = document.createElement("a");
+            link.download = "gantt-chart.png";
+            link.href = dataUrl;
+            link.click();
+        } else if (type === 'PDF') {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'px',
+                format: [canvas.width, canvas.height]
+            });
+            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+            pdf.save('gantt-chart.pdf');
+        }
+        toast({ title: "Export Successful", description: `Your Gantt Chart has been downloaded as a ${type}.` });
+    } catch (error) {
+        console.error("Export failed", error);
+        toast({ variant: "destructive", title: "Export Failed", description: "Something went wrong while exporting." });
+    }
   }
 
   const handleXmlImportClick = () => {
@@ -332,66 +363,67 @@ export default function GanttChartCanvas() {
         </DialogContent>
       </Dialog>
         
-      <Card className="min-h-[600px] bg-blue-50 dark:bg-blue-900/20">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Task List</CardTitle>
-            <Button size="icon" variant="ghost" className="h-8 w-8" onClick={handleAddItem}>
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-          <CardDescription>Add, edit, and reorder your project tasks here. Full chart visualization coming soon.</CardDescription>
-        </CardHeader>
-        <CardContent 
-          className="space-y-2"
-          onDrop={handleDrop}
-          onDragOver={(e) => e.preventDefault()}
-        >
-           {data.tasks.map((item, index) => (
-            <div
-              key={item.id}
-              draggable
-              onDragStart={(e) => handleDragStart(e, index)}
-              onDragOver={(e) => handleDragOver(e, index)}
-              onDragEnd={handleDragEnd}
-              className="group bg-card/80 dark:bg-card/50 border rounded-lg p-3 shadow-sm transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
-            >
-              <div className="flex items-start gap-2">
-                <GripVertical className="h-5 w-5 mt-1 text-muted-foreground/50 shrink-0" />
-                {editingItemId === item.id ? (
-                  <Textarea
-                    value={editingText}
-                    onChange={(e) => setEditingText(e.target.value)}
-                    onBlur={() => handleSaveEdit()}
-                    autoFocus
-                    className="w-full text-sm resize-none"
-                    onKeyDown={(e) => { if (e.key === 'Enter') handleSaveEdit() }}
-                  />
-                ) : (
-                  <p onClick={() => startEditing(item)} className="flex-grow text-sm w-full min-h-[24px]">
-                    {item.content}
-                  </p>
-                )}
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="h-7 w-7 opacity-0 group-hover:opacity-100 shrink-0"
-                  onClick={() => handleDeleteItem(item.id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+      <div ref={canvasRef} className="bg-background p-4 rounded-lg">
+        <Card className="min-h-[600px] bg-blue-50 dark:bg-blue-900/20">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>Task List</CardTitle>
+              <Button size="icon" variant="ghost" className="h-8 w-8" onClick={handleAddItem}>
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            <CardDescription>Add, edit, and reorder your project tasks here. Full chart visualization coming soon.</CardDescription>
+          </CardHeader>
+          <CardContent 
+            className="space-y-2"
+            onDrop={handleDrop}
+            onDragOver={(e) => e.preventDefault()}
+          >
+             {data.tasks.map((item, index) => (
+              <div
+                key={item.id}
+                draggable
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragOver={(e) => handleDragOver(e, index)}
+                onDragEnd={handleDragEnd}
+                className="group bg-card/80 dark:bg-card/50 border rounded-lg p-3 shadow-sm transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
+              >
+                <div className="flex items-start gap-2">
+                  <GripVertical className="h-5 w-5 mt-1 text-muted-foreground/50 shrink-0" />
+                  {editingItemId === item.id ? (
+                    <Textarea
+                      value={editingText}
+                      onChange={(e) => setEditingText(e.target.value)}
+                      onBlur={() => handleSaveEdit()}
+                      autoFocus
+                      className="w-full text-sm resize-none"
+                      onKeyDown={(e) => { if (e.key === 'Enter') handleSaveEdit() }}
+                    />
+                  ) : (
+                    <p onClick={() => startEditing(item)} className="flex-grow text-sm w-full min-h-[24px]">
+                      {item.content}
+                    </p>
+                  )}
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-7 w-7 opacity-0 group-hover:opacity-100 shrink-0"
+                    onClick={() => handleDeleteItem(item.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
-          ))}
-          {data.tasks.length === 0 && (
-            <div className="text-center text-muted-foreground text-sm p-4 border-2 border-dashed rounded-lg">
-              Click `+` to add your first task.
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            ))}
+            {data.tasks.length === 0 && (
+              <div className="text-center text-muted-foreground text-sm p-4 border-2 border-dashed rounded-lg">
+                Click `+` to add your first task.
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </>
   )
 }
 
-    
