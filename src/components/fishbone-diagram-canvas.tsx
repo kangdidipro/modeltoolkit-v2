@@ -18,6 +18,8 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import html2canvas from "html2canvas"
+import jsPDF from "jspdf"
 
 type CategoryKeys = keyof Omit<FishboneDiagramModel, 'effect'>;
 const LOCAL_STORAGE_KEY = 'fishbone-diagram-history';
@@ -37,6 +39,7 @@ export default function FishboneDiagramCanvas() {
 
   const draggedItem = useRef<{ item: ModelItem; from: CategoryKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -177,11 +180,39 @@ export default function FishboneDiagramCanvas() {
       .reduce((sum, array) => sum + (array as ModelItem[]).length, 0);
   }
 
-  const handleExport = (type: 'PNG' | 'PDF') => {
-    toast({
-      title: 'Not available',
-      description: `The ${type} export feature is coming soon!`,
-    });
+  const handleExport = async (type: 'PNG' | 'PDF') => {
+    const canvasElement = canvasRef.current;
+    if (!canvasElement) return;
+
+    toast({ title: "Exporting...", description: `Generating your ${type} file.` });
+
+    try {
+        const canvas = await html2canvas(canvasElement, {
+            backgroundColor: null,
+            scale: 2,
+        });
+
+        if (type === 'PNG') {
+            const dataUrl = canvas.toDataURL("image/png");
+            const link = document.createElement("a");
+            link.download = "fishbone-diagram.png";
+            link.href = dataUrl;
+            link.click();
+        } else if (type === 'PDF') {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                unit: 'px',
+                format: [canvas.width + 50, canvas.height + 50] // Add some padding
+            });
+            pdf.addImage(imgData, 'PNG', 25, 25, canvas.width, canvas.height);
+            pdf.save('fishbone-diagram.pdf');
+        }
+        toast({ title: "Export Successful", description: `Your Fishbone Diagram has been downloaded as a ${type}.` });
+    } catch (error) {
+        console.error("Export failed", error);
+        toast({ variant: "destructive", title: "Export Failed", description: "Something went wrong while exporting." });
+    }
   };
 
   const handleXmlImportClick = () => {
@@ -250,6 +281,7 @@ export default function FishboneDiagramCanvas() {
     xmlContent += `  <effect>${data.effect.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</effect>\n`;
     for (const [key, items] of Object.entries(data)) {
         if (key === 'effect') continue;
+        xmlContent += `  <${key}>\n`;
         (items as ModelItem[]).forEach(item => {
             xmlContent += `    <item id="${item.id}">${item.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</item>\n`;
         });
@@ -266,64 +298,66 @@ export default function FishboneDiagramCanvas() {
     URL.revokeObjectURL(url);
   }
 
-  const CauseCard = ({ categoryInfo }: { categoryInfo: { key: CategoryKeys; title: string; bgColor: string; } }) => (
-    <Card className={`flex flex-col min-h-[200px] ${categoryInfo.bgColor}`}>
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-medium font-headline">{categoryInfo.title}</CardTitle>
-          <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleAddItem(categoryInfo.key)}>
-            <Plus className="h-4 w-4" />
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent
-        className="flex-grow space-y-2 p-4 pt-0"
-        onDragOver={handleDragOver}
-        onDrop={(e) => handleDrop(e, categoryInfo.key)}
-      >
-        {data[categoryInfo.key].map(item => (
-          <div
-            key={item.id}
-            draggable
-            onDragStart={(e) => handleDragStart(e, item, categoryInfo.key)}
-            onDragEnd={handleDragEnd}
-            className="group bg-card/80 dark:bg-card/50 backdrop-blur-sm rounded-lg p-2 shadow-sm transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
-          >
-            <div className="flex items-start gap-1">
-              <GripVertical className="h-5 w-5 mt-0.5 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground" />
-              {editingItemId === item.id ? (
-                <Textarea
-                  value={editingText}
-                  onChange={(e) => setEditingText(e.target.value)}
-                  onBlur={() => handleSaveItemEdit(categoryInfo.key)}
-                  autoFocus
-                  className="w-full text-sm resize-none"
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); handleSaveItemEdit(categoryInfo.key); } }}
-                />
-              ) : (
-                <p onClick={() => startEditing(item)} className="flex-grow text-sm w-full min-h-[20px] cursor-text">
-                  {item.content}
-                </p>
-              )}
-              <Button
-                size="icon"
-                variant="ghost"
-                className="h-6 w-6 opacity-0 group-hover:opacity-100 shrink-0"
-                onClick={() => handleDeleteItem(categoryInfo.key, item.id)}
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </Button>
+  const CauseCard = ({ categoryInfo }: { categoryInfo: { key: CategoryKeys; title: string; bgColor: string; } }) => {
+    return (
+      <Card className={`flex flex-col min-h-[200px] ${categoryInfo.bgColor}`}>
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-base font-medium font-headline">{categoryInfo.title}</CardTitle>
+            <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleAddItem(categoryInfo.key)}>
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent
+          className="flex-grow space-y-2 p-4 pt-0"
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(e, categoryInfo.key)}
+        >
+          {data[categoryInfo.key].map(item => (
+            <div
+              key={item.id}
+              draggable
+              onDragStart={(e) => handleDragStart(e, item, categoryInfo.key)}
+              onDragEnd={handleDragEnd}
+              className="group bg-card/80 dark:bg-card/50 backdrop-blur-sm rounded-lg p-2 shadow-sm transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
+            >
+              <div className="flex items-start gap-1">
+                <GripVertical className="h-5 w-5 mt-0.5 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground" />
+                {editingItemId === item.id ? (
+                  <Textarea
+                    value={editingText}
+                    onChange={(e) => setEditingText(e.target.value)}
+                    onBlur={() => handleSaveItemEdit(categoryInfo.key)}
+                    autoFocus
+                    className="w-full text-sm resize-none"
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); handleSaveItemEdit(categoryInfo.key); } }}
+                  />
+                ) : (
+                  <p onClick={() => startEditing(item)} className="flex-grow text-sm w-full min-h-[20px] cursor-text">
+                    {item.content}
+                  </p>
+                )}
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-6 w-6 opacity-0 group-hover:opacity-100 shrink-0"
+                  onClick={() => handleDeleteItem(categoryInfo.key, item.id)}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              </div>
             </div>
-          </div>
-        ))}
-        {data[categoryInfo.key].length === 0 && (
-          <div className="text-center text-muted-foreground text-xs p-2 border-2 border-dashed rounded-lg">
-            Add causes
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
+          ))}
+          {data[categoryInfo.key].length === 0 && (
+            <div className="text-center text-muted-foreground text-xs p-2 border-2 border-dashed rounded-lg">
+              Add causes
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <>
@@ -368,7 +402,7 @@ export default function FishboneDiagramCanvas() {
         </DialogContent>
       </Dialog>
 
-      <div className="relative overflow-x-auto pb-8">
+      <div ref={canvasRef} className="relative overflow-x-auto pb-8 bg-background p-4 rounded-lg">
         <div className="flex items-center min-w-[1000px]">
           {/* Categories */}
           <div className="flex-1 grid grid-cols-3 gap-8 py-8 pr-8">
@@ -424,5 +458,3 @@ export default function FishboneDiagramCanvas() {
     </>
   )
 }
-
-    
