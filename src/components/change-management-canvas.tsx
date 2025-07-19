@@ -172,14 +172,76 @@ export default function ChangeManagementCanvas() {
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    toast({ title: "Import Not Available", description: "This feature is coming soon!" });
-    if (event.target.files) {
-      event.target.value = '';
-    }
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const xmlString = e.target?.result as string;
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+
+        const errorNode = xmlDoc.querySelector("parsererror");
+        if (errorNode) {
+          throw new Error("Failed to parse XML.");
+        }
+
+        const newChangeData: ChangeManagementModel = {
+            unfreeze: [], change: [], refreeze: []
+        };
+
+        Object.keys(newChangeData).forEach(key => {
+            const categoryElement = xmlDoc.getElementsByTagName(key)[0];
+            if (categoryElement) {
+                const items = Array.from(categoryElement.getElementsByTagName('item')).map(itemEl => ({
+                    id: itemEl.getAttribute('id') || `imported-${Date.now()}-${Math.random()}`,
+                    content: itemEl.textContent || "",
+                }));
+                newChangeData[key as keyof ChangeManagementModel] = items;
+            }
+        });
+
+        setData(newChangeData);
+        toast({
+          title: "Import Successful",
+          description: "Your Change Management model has been loaded.",
+        });
+
+      } catch (error) {
+        console.error("XML Import Error:", error);
+        toast({
+          variant: "destructive",
+          title: "Import Failed",
+          description: "The selected file could not be parsed. Please check the file format.",
+        });
+      } finally {
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      }
+    };
+    reader.readAsText(file);
   };
 
   const handleExportXml = () => {
-     toast({ title: "Export Not Available", description: "This feature is coming soon!" });
+    let xmlContent = `<change_management>\n`;
+    for (const [key, items] of Object.entries(data)) {
+        xmlContent += `  <${key}>\n`;
+        items.forEach(item => {
+            xmlContent += `    <item id="${item.id}">${item.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</item>\n`;
+        });
+        xmlContent += `  </${key}>\n`;
+    }
+    xmlContent += `</change_management>`;
+
+    const blob = new Blob([xmlContent], { type: 'application/xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'change-management.xml';
+    a.click();
+    URL.revokeObjectURL(url);
   }
   
   const countTotalItems = (modelData: ChangeManagementModel) => {

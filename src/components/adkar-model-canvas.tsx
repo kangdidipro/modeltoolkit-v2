@@ -174,14 +174,76 @@ export default function AdkarModelCanvas() {
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    toast({ title: "Import Not Available", description: "This feature is coming soon!" });
-    if (event.target.files) {
-      event.target.value = '';
-    }
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const xmlString = e.target?.result as string;
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+
+        const errorNode = xmlDoc.querySelector("parsererror");
+        if (errorNode) {
+          throw new Error("Failed to parse XML.");
+        }
+
+        const newAdkarData: AdkarModel = {
+            awareness: [], desire: [], knowledge: [], ability: [], reinforcement: []
+        };
+
+        Object.keys(newAdkarData).forEach(key => {
+            const categoryElement = xmlDoc.getElementsByTagName(key)[0];
+            if (categoryElement) {
+                const items = Array.from(categoryElement.getElementsByTagName('item')).map(itemEl => ({
+                    id: itemEl.getAttribute('id') || `imported-${Date.now()}-${Math.random()}`,
+                    content: itemEl.textContent || "",
+                }));
+                newAdkarData[key as keyof AdkarModel] = items;
+            }
+        });
+
+        setData(newAdkarData);
+        toast({
+          title: "Import Successful",
+          description: "Your ADKAR Model has been loaded from the XML file.",
+        });
+
+      } catch (error) {
+        console.error("XML Import Error:", error);
+        toast({
+          variant: "destructive",
+          title: "Import Failed",
+          description: "The selected file could not be parsed. Please check the file format.",
+        });
+      } finally {
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      }
+    };
+    reader.readAsText(file);
   };
 
   const handleExportXml = () => {
-     toast({ title: "Export Not Available", description: "This feature is coming soon!" });
+    let xmlContent = `<adkar_model>\n`;
+    for (const [key, items] of Object.entries(data)) {
+        xmlContent += `  <${key}>\n`;
+        items.forEach(item => {
+            xmlContent += `    <item id="${item.id}">${item.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</item>\n`;
+        });
+        xmlContent += `  </${key}>\n`;
+    }
+    xmlContent += `</adkar_model>`;
+
+    const blob = new Blob([xmlContent], { type: 'application/xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'adkar-model.xml';
+    a.click();
+    URL.revokeObjectURL(url);
   }
   
   const countTotalItems = (modelData: AdkarModel) => {

@@ -62,14 +62,96 @@ export default function RaciMatrixCanvas() {
     toast({ title: "Work Loaded", description: `Loaded version from ${new Date(entry.timestamp).toLocaleString()}` });
   };
 
-  const handleExport = (type: 'PNG' | 'PDF' | 'XML') => {
+  const handleExport = (type: 'PNG' | 'PDF') => {
     toast({ title: 'Not available', description: `The ${type} export feature is coming soon!` });
   };
+  
+  const handleExportXml = () => {
+    let xmlContent = `<raci_matrix>\n`;
+    xmlContent += `  <people>\n`;
+    data.people.forEach(p => {
+        xmlContent += `    <person id="${p.id}">${p.name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</person>\n`;
+    });
+    xmlContent += `  </people>\n`;
+    xmlContent += `  <tasks>\n`;
+    data.tasks.forEach(t => {
+        xmlContent += `    <task id="${t.id}" description="${t.description.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')}">\n`;
+        t.assignments.forEach(a => {
+            xmlContent += `      <assignment personId="${a.personId}" role="${a.role}" />\n`;
+        });
+        xmlContent += `    </task>\n`;
+    });
+    xmlContent += `  </tasks>\n`;
+    xmlContent += `</raci_matrix>`;
+    
+    const blob = new Blob([xmlContent], { type: 'application/xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'raci-matrix.xml';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   const handleXmlImportClick = () => { fileInputRef.current?.click(); };
+  
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    toast({ title: "Import Not Available", description: "This feature is coming soon!" });
-    if (event.target.files) event.target.value = '';
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const xmlString = e.target?.result as string;
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+
+        const errorNode = xmlDoc.querySelector("parsererror");
+        if (errorNode) {
+          throw new Error("Failed to parse XML.");
+        }
+
+        const peopleElements = Array.from(xmlDoc.getElementsByTagName('person'));
+        const people: RaciPerson[] = peopleElements.map(p => ({
+          id: p.getAttribute('id') || `person-${Math.random()}`,
+          name: p.textContent || 'Unnamed',
+        }));
+
+        const taskElements = Array.from(xmlDoc.getElementsByTagName('task'));
+        const tasks: RaciTask[] = taskElements.map(t => {
+          const assignmentElements = Array.from(t.getElementsByTagName('assignment'));
+          const assignments: RaciAssignment[] = assignmentElements.map(a => ({
+            personId: a.getAttribute('personId')!,
+            role: a.getAttribute('role') as RaciRole,
+          })).filter(a => a.personId && a.role);
+          
+          return {
+            id: t.getAttribute('id') || `task-${Math.random()}`,
+            description: t.getAttribute('description') || 'No description',
+            assignments,
+          };
+        });
+
+        setData({ people, tasks });
+        toast({
+          title: "Import Successful",
+          description: "Your RACI Matrix has been loaded from the XML file.",
+        });
+
+      } catch (error) {
+        console.error("XML Import Error:", error);
+        toast({
+          variant: "destructive",
+          title: "Import Failed",
+          description: "The selected file could not be parsed. Please check the file format.",
+        });
+      } finally {
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      }
+    };
+    reader.readAsText(file);
   };
   
   const addPerson = () => {
@@ -147,7 +229,7 @@ export default function RaciMatrixCanvas() {
         <Button variant="outline" onClick={() => setIsHistoryOpen(true)}><History className="mr-2 h-4 w-4" /> History</Button>
         <input type="file" ref={fileInputRef} className="hidden" accept=".xml" onChange={handleFileChange} />
         <Button variant="outline" onClick={handleXmlImportClick}><Upload className="mr-2 h-4 w-4" /> Import from XML</Button>
-        <Button variant="outline" onClick={() => handleExport('XML')}><FileDown className="mr-2 h-4 w-4" /> Export as XML</Button>
+        <Button variant="outline" onClick={handleExportXml}><FileDown className="mr-2 h-4 w-4" /> Export as XML</Button>
         <Button variant="outline" onClick={() => handleExport('PNG')}><Download className="mr-2 h-4 w-4" /> Export as PNG</Button>
         <Button variant="outline" onClick={() => handleExport('PDF')}><Printer className="mr-2 h-4 w-4" /> Export as PDF</Button>
       </div>

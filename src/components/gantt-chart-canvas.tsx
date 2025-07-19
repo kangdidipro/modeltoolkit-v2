@@ -180,14 +180,67 @@ export default function GanttChartCanvas() {
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    toast({ title: "Import Not Available", description: "This feature is coming soon!" });
-    if (event.target.files) {
-      event.target.value = '';
-    }
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const xmlString = e.target?.result as string;
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+
+        const errorNode = xmlDoc.querySelector("parsererror");
+        if (errorNode) {
+          throw new Error("Failed to parse XML.");
+        }
+
+        const tasksElement = xmlDoc.getElementsByTagName('tasks')[0];
+        if (!tasksElement) {
+          throw new Error("Invalid Gantt Chart XML format.");
+        }
+        
+        const newTasks = Array.from(tasksElement.getElementsByTagName('item')).map(itemEl => ({
+            id: itemEl.getAttribute('id') || `imported-${Date.now()}-${Math.random()}`,
+            content: itemEl.textContent || "",
+        }));
+
+        setData({ tasks: newTasks });
+        toast({
+          title: "Import Successful",
+          description: "Your Gantt Chart has been loaded from the XML file.",
+        });
+
+      } catch (error) {
+        console.error("XML Import Error:", error);
+        toast({
+          variant: "destructive",
+          title: "Import Failed",
+          description: "The selected file could not be parsed. Please check the file format.",
+        });
+      } finally {
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      }
+    };
+    reader.readAsText(file);
   };
 
   const handleExportXml = () => {
-     toast({ title: "Export Not Available", description: "This feature is coming soon!" });
+    let xmlContent = `<gantt_chart>\n  <tasks>\n`;
+    data.tasks.forEach(item => {
+        xmlContent += `    <item id="${item.id}">${item.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</item>\n`;
+    });
+    xmlContent += `  </tasks>\n</gantt_chart>`;
+
+    const blob = new Blob([xmlContent], { type: 'application/xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'gantt-chart.xml';
+    a.click();
+    URL.revokeObjectURL(url);
   }
   
   const countTotalItems = (modelData: GanttChartModel) => {

@@ -176,7 +176,7 @@ export default function FishboneDiagramCanvas() {
       .reduce((sum, array) => sum + (array as ModelItem[]).length, 0);
   }
 
-  const handleExport = (type: 'PNG' | 'PDF' | 'XML') => {
+  const handleExport = (type: 'PNG' | 'PDF') => {
     toast({
       title: 'Not available',
       description: `The ${type} export feature is coming soon!`,
@@ -188,14 +188,82 @@ export default function FishboneDiagramCanvas() {
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    toast({ title: "Import Not Available", description: "This feature is coming soon!" });
-    if (event.target.files) {
-      event.target.value = '';
-    }
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const xmlString = e.target?.result as string;
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+
+        const errorNode = xmlDoc.querySelector("parsererror");
+        if (errorNode) {
+          throw new Error("Failed to parse XML.");
+        }
+
+        const newDiagramData: FishboneDiagramModel = {
+            effect: "", people: [], process: [], equipment: [],
+            materials: [], environment: [], management: []
+        };
+        
+        newDiagramData.effect = xmlDoc.getElementsByTagName('effect')[0]?.textContent || "Problem/Effect";
+
+        Object.keys(newDiagramData).forEach(key => {
+            if (key === 'effect') return;
+            const categoryElement = xmlDoc.getElementsByTagName(key)[0];
+            if (categoryElement) {
+                const items = Array.from(categoryElement.getElementsByTagName('item')).map(itemEl => ({
+                    id: itemEl.getAttribute('id') || `imported-${Date.now()}-${Math.random()}`,
+                    content: itemEl.textContent || "",
+                }));
+                newDiagramData[key as CategoryKeys] = items;
+            }
+        });
+
+        setData(newDiagramData);
+        toast({
+          title: "Import Successful",
+          description: "Your Fishbone Diagram has been loaded.",
+        });
+
+      } catch (error) {
+        console.error("XML Import Error:", error);
+        toast({
+          variant: "destructive",
+          title: "Import Failed",
+          description: "The selected file could not be parsed. Please check the file format.",
+        });
+      } finally {
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      }
+    };
+    reader.readAsText(file);
   };
 
   const handleExportXml = () => {
-     toast({ title: "Export Not Available", description: "This feature is coming soon!" });
+    let xmlContent = `<fishbone_diagram>\n`;
+    xmlContent += `  <effect>${data.effect.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</effect>\n`;
+    for (const [key, items] of Object.entries(data)) {
+        if (key === 'effect') continue;
+        xmlContent += `  <${key}>\n`;
+        (items as ModelItem[]).forEach(item => {
+            xmlContent += `    <item id="${item.id}">${item.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</item>\n`;
+        });
+        xmlContent += `  </${key}>\n`;
+    }
+    xmlContent += `</fishbone_diagram>`;
+
+    const blob = new Blob([xmlContent], { type: 'application/xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'fishbone-diagram.xml';
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   const CauseCard = ({ categoryInfo }: { categoryInfo: { key: CategoryKeys; title: string; bgColor: string; } }) => (
@@ -294,9 +362,7 @@ export default function FishboneDiagramCanvas() {
                     </div>
                   </div>
                 ))
-              ) : (
-                <p className="text-muted-foreground text-center py-10">No saved history yet.</p>
-              )}
+              ) : <p className="text-muted-foreground text-center py-10">No saved history yet.</p>}
             </div>
           </ScrollArea>
         </DialogContent>

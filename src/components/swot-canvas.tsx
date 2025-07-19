@@ -197,10 +197,58 @@ export default function SwotCanvas() {
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    toast({ title: "Import Not Available", description: "This feature is coming soon!" });
-    if (event.target.files) {
-      event.target.value = '';
-    }
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const xmlString = e.target?.result as string;
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+        
+        const errorNode = xmlDoc.querySelector("parsererror");
+        if (errorNode) {
+          throw new Error("Failed to parse XML.");
+        }
+
+        const newSwotData: SwotModel = {
+            strengths: [],
+            weaknesses: [],
+            opportunities: [],
+            threats: [],
+        };
+
+        Object.keys(newSwotData).forEach(key => {
+            const categoryElement = xmlDoc.getElementsByTagName(key)[0];
+            if (categoryElement) {
+                const items = Array.from(categoryElement.getElementsByTagName('item')).map(itemEl => ({
+                    id: itemEl.getAttribute('id') || `imported-${Date.now()}-${Math.random()}`,
+                    content: itemEl.textContent || "",
+                }));
+                newSwotData[key as keyof SwotModel] = items;
+            }
+        });
+
+        setData(newSwotData);
+        toast({
+          title: "Import Successful",
+          description: "Your SWOT analysis has been loaded from the XML file.",
+        });
+      } catch (error) {
+        console.error("XML Import Error:", error);
+        toast({
+          variant: "destructive",
+          title: "Import Failed",
+          description: "The selected file could not be parsed. Please check the file format.",
+        });
+      } finally {
+        if(fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+      }
+    };
+    reader.readAsText(file);
   };
 
   const handleExportXml = () => {
@@ -208,7 +256,7 @@ export default function SwotCanvas() {
     for (const [key, items] of Object.entries(data)) {
         xmlContent += `  <${key}>\n`;
         items.forEach(item => {
-            xmlContent += `    <item id="${item.id}">${item.content}</item>\n`;
+            xmlContent += `    <item id="${item.id}">${item.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</item>\n`;
         });
         xmlContent += `  </${key}>\n`;
     }
