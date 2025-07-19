@@ -25,6 +25,23 @@ import {
 } from "@/components/ui/accordion"
 import {
   LayoutGrid,
+  BarChartBig,
+  LayoutTemplate,
+  Pyramid,
+  Table2,
+  Network,
+  Puzzle,
+  Users,
+  Presentation,
+  GitMerge,
+  Sigma,
+  GanttChartSquare,
+  ClipboardList,
+  MessageCircle,
+  BrainCircuit,
+  Settings,
+  Recycle,
+  Lightbulb,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { modelInfo } from "@/lib/models"
@@ -32,29 +49,50 @@ import { cn } from "@/lib/utils"
 import { Footer } from "@/components/footer"
 
 const categories = [
-    {
-        name: "Strategic Planning & Business Analysis",
-        models: [
-            "swot", "pareto-principle", "business-model-canvas", "maslows-hierarchy",
-            "boston-matrix", "porters-five-forces", "mckinsey-7s-framework"
-        ]
-    },
-    {
-        name: "Communication & Self-Awareness",
-        models: ["johari-window", "communication-model"]
-    },
-    {
-        name: "Project Management & Team Development",
-        models: ["aida-model", "tuckmans-stages", "gantt-chart", "raci-matrix", "scamper-model"]
-    },
-    {
-        name: "Change Management & Adoption",
-        models: ["adkar-model", "change-management", "diffusion-of-innovations"]
-    },
-    {
-        name: "Problem Solving & Diagrammatic Tools",
-        models: ["fishbone-diagram", "flow-model"]
-    }
+  {
+      name: "Strategic Planning & Business Analysis",
+      models: [
+          {id: "swot", icon: <LayoutGrid />},
+          {id: "pareto-principle", icon: <BarChartBig />},
+          {id: "business-model-canvas", icon: <LayoutTemplate />},
+          {id: "maslows-hierarchy", icon: <Pyramid />},
+          {id: "boston-matrix", icon: <Table2 />},
+          {id: "porters-five-forces", icon: <Network />},
+          {id: "mckinsey-7s-framework", icon: <Puzzle />}
+      ]
+  },
+  {
+      name: "Communication & Self-Awareness",
+      models: [
+        {id: "johari-window", icon: <Users />}, 
+        {id: "communication-model", icon: <MessageCircle />}
+      ]
+  },
+  {
+      name: "Project Management & Team Development",
+      models: [
+          {id: "aida-model", icon: <Presentation />},
+          {id: "tuckmans-stages", icon: <Users />},
+          {id: "gantt-chart", icon: <GanttChartSquare />}, 
+          {id: "raci-matrix", icon: <ClipboardList />}, 
+          {id: "scamper-model", icon: <Lightbulb />}
+      ]
+  },
+  {
+      name: "Change Management & Adoption",
+      models: [
+          {id: "adkar-model", icon: <GitMerge />}, 
+          {id: "change-management", icon: <Settings />}, 
+          {id: "diffusion-of-innovations", icon: <Recycle />}
+      ]
+  },
+  {
+      name: "Problem Solving & Diagrammatic Tools",
+      models: [
+        {id: "fishbone-diagram", icon: <Sigma />}, 
+        {id: "flow-model", icon: <BrainCircuit />}
+      ]
+  }
 ];
 
 const defaultOpenCategories = categories.map(category => category.name);
@@ -115,15 +153,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                         </AccordionTrigger>
                         <AccordionContent className="pb-1">
                             <SidebarMenu className="pl-4 border-l ml-2">
-                            {category.models.filter(id => modelInfo[id]).map((id) => (
-                                <SidebarMenuItem key={id}>
-                                    <Link href={`/models/${id}`} className="block">
+                            {category.models.filter(model => modelInfo[model.id]).map((model) => (
+                                <SidebarMenuItem key={model.id}>
+                                    <Link href={`/models/${model.id}`} className="block">
                                         <SidebarMenuButton
-                                            isActive={isActive(`/models/${id}`)}
-                                            icon={<LayoutGrid />}
+                                            isActive={isActive(`/models/${model.id}`)}
+                                            icon={model.icon}
                                             className="h-8"
                                         >
-                                            {modelInfo[id].name}
+                                            {modelInfo[model.id].name}
                                         </SidebarMenuButton>
                                     </Link>
                                 </SidebarMenuItem>
