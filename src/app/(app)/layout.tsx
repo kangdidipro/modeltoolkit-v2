@@ -75,7 +75,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu>
-              <SidebarGroup>
+              <SidebarGroup className="bg-blue-100/50 dark:bg-blue-900/30 rounded-lg">
                 <SidebarGroupLabel>I. Strategic Planning & Business Analysis</SidebarGroupLabel>
                  <SidebarMenuItem>
                   <Link href="/models/swot">
@@ -156,7 +156,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </SidebarMenuItem>
               </SidebarGroup>
 
-              <SidebarGroup>
+              <SidebarGroup className="bg-purple-100/50 dark:bg-purple-900/30 rounded-lg">
                 <SidebarGroupLabel>II. Communication & Self-Awareness</SidebarGroupLabel>
                  <SidebarMenuItem>
                   <Link href="/models/johari-window">
@@ -182,7 +182,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </SidebarMenuItem>
               </SidebarGroup>
 
-              <SidebarGroup>
+              <SidebarGroup className="bg-green-100/50 dark:bg-green-900/30 rounded-lg">
                 <SidebarGroupLabel>III. Project Management & Team Development</SidebarGroupLabel>
                   <SidebarMenuItem>
                   <Link href="/models/aida-model">
@@ -241,7 +241,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </SidebarMenuItem>
               </SidebarGroup>
               
-              <SidebarGroup>
+              <SidebarGroup className="bg-yellow-100/50 dark:bg-yellow-900/30 rounded-lg">
                 <SidebarGroupLabel>IV. Change Management & Adoption</SidebarGroupLabel>
                 <SidebarMenuItem>
                   <Link href="/models/adkar-model">
@@ -278,7 +278,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </SidebarMenuItem>
               </SidebarGroup>
               
-              <SidebarGroup>
+              <SidebarGroup className="bg-orange-100/50 dark:bg-orange-900/30 rounded-lg">
                 <SidebarGroupLabel>V. Problem Solving & Diagrammatic Tools</SidebarGroupLabel>
                  <SidebarMenuItem>
                   <Link href="/models/fishbone-diagram">
