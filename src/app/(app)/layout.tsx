@@ -20,13 +20,12 @@ import {
   SidebarFooter
 } from "@/components/ui/sidebar"
 import {
-  LayoutGrid,
-  Newspaper,
-  MessageCircle
+  LayoutGrid
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { modelInfo } from "@/lib/models"
 import { cn } from "@/lib/utils"
+import { Footer } from "@/components/footer"
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [hasMounted, setHasMounted] = React.useState(false);
@@ -91,69 +90,34 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   </SidebarMenuItem>
                 ))}
               </SidebarGroup>
-              <SidebarGroup>
-                <SidebarGroupLabel>About</SidebarGroupLabel>
-                 <SidebarMenuItem>
-                  <Link href="/blog">
-                    <SidebarMenuButton
-                      isActive={isActive("/blog")}
-                      icon={<Newspaper />}
-                      tooltip="Blog"
-                    >
-                      Blog
-                    </SidebarMenuButton>
-                  </Link>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <Link href="/about">
-                    <SidebarMenuButton
-                      isActive={isActive("/about")}
-                      icon={<Newspaper />}
-                      tooltip="About"
-                    >
-                      About Model Toolkit
-                    </SidebarMenuButton>
-                  </Link>
-                </SidebarMenuItem>
-              </SidebarGroup>
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter>
-              <SidebarMenu>
-                  <SidebarMenuItem>
-                      <Link href="/feedback">
-                      <SidebarMenuButton
-                          isActive={isActive("/feedback")}
-                          icon={<MessageCircle />}
-                          tooltip="Feedback"
-                      >
-                          Give Feedback
-                      </SidebarMenuButton>
-                      </Link>
-                  </SidebarMenuItem>
-              </SidebarMenu>
               <div className="text-center text-xs text-muted-foreground p-2">
                 Update timestamp: {timestamp}
               </div>
           </SidebarFooter>
         </Sidebar>
         <SidebarInset>
-          <main className="min-h-screen">
-            <div className="p-4 md:p-6">
-              <div className="md:hidden flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <Logo size="sm" />
-                  <h1 className="text-lg font-headline font-semibold">Model Toolkit</h1>
+          <div className="flex flex-col min-h-screen">
+            <main className="flex-grow">
+              <div className="p-4 md:p-6">
+                <div className="md:hidden flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <Logo size="sm" />
+                    <h1 className="text-lg font-headline font-semibold">Model Toolkit</h1>
+                  </div>
+                  <SidebarTrigger>
+                      <Button variant="ghost" size="icon">
+                        <LayoutGrid />
+                      </Button>
+                  </SidebarTrigger>
                 </div>
-                <SidebarTrigger>
-                    <Button variant="ghost" size="icon">
-                      <LayoutGrid />
-                    </Button>
-                </SidebarTrigger>
+                {children}
               </div>
-              {children}
-            </div>
-          </main>
+            </main>
+            <Footer />
+          </div>
         </SidebarInset>
       </SidebarProvider>
     </ClientOnly>
