@@ -7,6 +7,8 @@
  * - AnalyzeModelCanvasInput - The input type for the analyzeModelCanvas function.
  * - AnalyzeModelCanvasOutput - The return type for the analyzeModelCanvas function.
  */
+import { config } from 'dotenv';
+config();
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
