@@ -16,8 +16,7 @@ import {
   SidebarTrigger,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupLabel,
-  SidebarFooter
+  SidebarGroupLabel
 } from "@/components/ui/sidebar"
 import {
   LayoutGrid
@@ -92,11 +91,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </SidebarGroup>
             </SidebarMenu>
           </SidebarContent>
-          <SidebarFooter>
-              <div className="text-center text-xs text-muted-foreground p-2">
-                Update timestamp: {timestamp}
-              </div>
-          </SidebarFooter>
         </Sidebar>
         <SidebarInset>
           <div className="flex flex-col min-h-screen">
@@ -116,7 +110,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 {children}
               </div>
             </main>
-            <Footer />
+            <Footer timestamp={timestamp} />
           </div>
         </SidebarInset>
       </SidebarProvider>
