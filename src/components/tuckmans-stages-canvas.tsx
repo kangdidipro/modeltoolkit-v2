@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
@@ -16,6 +17,8 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import html2canvas from "html2canvas"
+import jsPDF from "jspdf"
 
 type StageKeys = keyof TuckmansStagesModel;
 const LOCAL_STORAGE_KEY = 'tuckmans-stages-history';
@@ -34,6 +37,7 @@ export default function TuckmansStagesCanvas() {
 
   const draggedItem = useRef<{ item: ModelItem; from: StageKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -61,7 +65,7 @@ export default function TuckmansStagesCanvas() {
     { key: "storming", title: "Storming", description: "Conflicts arise as members express opinions.", bg: "bg-red-100 dark:bg-red-900/40" },
     { key: "norming", title: "Norming", description: "Consensus develops and roles are clarified.", bg: "bg-yellow-100 dark:bg-yellow-900/40" },
     { key: "performing", title: "Performing", description: "The team works efficiently towards its goals.", bg: "bg-green-100 dark:bg-green-900/40" },
-    { key: "adjourning", title: "Adjourning", description: "The team disbands after project completion.", bg: "bg-gray-100 dark:bg-gray-900/40" },
+    { key: "adjourning", title: "Adjourning", description: "The project ends and the team disbands.", bg: "bg-gray-100 dark:bg-gray-900/40" },
   ], []);
 
   const handleAddItem = (stage: StageKeys) => {
@@ -162,11 +166,39 @@ export default function TuckmansStagesCanvas() {
     });
   };
 
-  const handleExport = (type: 'PNG' | 'PDF') => {
-    toast({
-      title: 'Export not available',
-      description: `The ${type} export feature is coming soon!`,
-    });
+  const handleExport = async (type: 'PNG' | 'PDF') => {
+    const canvasElement = canvasRef.current;
+    if (!canvasElement) return;
+
+    toast({ title: "Exporting...", description: `Generating your ${type} file.` });
+
+    try {
+      const canvas = await html2canvas(canvasElement, {
+        backgroundColor: null,
+        scale: 2,
+      });
+
+      if (type === 'PNG') {
+        const dataUrl = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = "tuckmans-stages.png";
+        link.href = dataUrl;
+        link.click();
+      } else if (type === 'PDF') {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+          orientation: 'landscape',
+          unit: 'px',
+          format: [canvas.width, canvas.height]
+        });
+        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+        pdf.save('tuckmans-stages.pdf');
+      }
+      toast({ title: "Export Successful", description: `Your Tuckman's Stages model has been downloaded as a ${type}.` });
+    } catch (error) {
+      console.error("Export failed", error);
+      toast({ variant: "destructive", title: "Export Failed", description: "Something went wrong while exporting." });
+    }
   }
 
   const handleXmlImportClick = () => {
@@ -334,7 +366,7 @@ export default function TuckmansStagesCanvas() {
         </DialogContent>
       </Dialog>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 items-start">
+      <div ref={canvasRef} className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 items-start bg-background p-4 rounded-lg">
         {stages.map((stage) => (
           <Card key={stage.key} className={`${stage.bg} flex flex-col`}>
             <CardHeader>
