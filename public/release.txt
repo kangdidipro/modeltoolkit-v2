@@ -3,3 +3,4 @@
 2. add google tracking file
 3. add netlify enviroment
 4. add ads publisher dari adsterra
+5. add ads publisher dari skimlinks.com
