@@ -16,6 +16,9 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import html2canvas from "html2canvas"
+import jsPDF from "jspdf"
+
 
 type ColumnKeys = keyof EisenhowerMatrixModel;
 const LOCAL_STORAGE_KEY = 'eisenhower-matrix-history';
@@ -34,6 +37,7 @@ export default function EisenhowerMatrixCanvas() {
 
   const draggedItem = useRef<{ item: ModelItem; from: ColumnKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -161,12 +165,32 @@ export default function EisenhowerMatrixCanvas() {
     });
   };
 
-  const handleExport = (type: 'PNG' | 'PDF') => {
-    toast({
-      title: 'Export not available',
-      description: `The ${type} export feature is coming soon!`,
+  const handleExport = async (type: 'PNG' | 'PDF') => {
+    const canvasElement = canvasRef.current;
+    if (!canvasElement) return;
+
+    const canvas = await html2canvas(canvasElement, {
+      backgroundColor: null,
+      scale: 2,
     });
-  }
+
+    if (type === 'PNG') {
+      const dataUrl = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = "eisenhower-matrix.png";
+      link.href = dataUrl;
+      link.click();
+    } else if (type === 'PDF') {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'px',
+        format: [canvas.width, canvas.height]
+      });
+      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+      pdf.save('eisenhower-matrix.pdf');
+    }
+  };
 
   const handleXmlImportClick = () => {
     fileInputRef.current?.click();
@@ -180,7 +204,23 @@ export default function EisenhowerMatrixCanvas() {
   };
 
   const handleExportXml = () => {
-     toast({ title: "Export Not Available", description: "This feature is coming soon!" });
+     let xmlContent = `<eisenhower_matrix>\n`;
+    for (const [key, items] of Object.entries(data)) {
+        xmlContent += `  <${key}>\n`;
+        items.forEach(item => {
+            xmlContent += `    <item id="${item.id}">${item.content}</item>\n`;
+        });
+        xmlContent += `  </${key}>\n`;
+    }
+    xmlContent += `</eisenhower_matrix>`;
+
+    const blob = new Blob([xmlContent], { type: 'application/xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'eisenhower-matrix.xml';
+    a.click();
+    URL.revokeObjectURL(url);
   }
   
   const countTotalItems = (matrixData: EisenhowerMatrixModel) => {
@@ -271,7 +311,7 @@ export default function EisenhowerMatrixCanvas() {
         </DialogContent>
       </Dialog>
 
-      <div className="grid gap-6 md:grid-cols-2 items-start">
+      <div ref={canvasRef} className="grid gap-6 md:grid-cols-2 items-start bg-background p-4 rounded-lg">
         {columns.map(column => (
           <Card key={column.key} className={`${column.bg} flex flex-col min-h-[300px]`}>
             <CardHeader>
