@@ -26,6 +26,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import AdBanner from "@/components/ad-banner"
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [hasMounted, setHasMounted] = React.useState(false);
@@ -327,6 +328,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter>
+              <div className="p-2">
+                <AdBanner />
+              </div>
               <SidebarMenu>
                   <SidebarMenuItem>
                       <Link href="/feedback">
