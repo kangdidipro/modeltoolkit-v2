@@ -27,6 +27,11 @@ export default function RootLayout({
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6086736525215106"
           crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+        <Script 
+          src="https://s.skimresources.com/js/288878X1775662.skimlinks.js" 
+          strategy="afterInteractive" 
         />
       </head>
       <body className="font-body antialiased">
