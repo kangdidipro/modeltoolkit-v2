@@ -44,6 +44,11 @@ function ClientOnly({ children }: { children: React.ReactNode }) {
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const [timestamp, setTimestamp] = React.useState("");
+
+  React.useEffect(() => {
+    setTimestamp(new Date().toLocaleString());
+  }, []);
 
   const isActive = (path: string) => {
     return pathname === path || pathname.startsWith(`${path}/`)
@@ -336,7 +341,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   </SidebarMenuItem>
               </SidebarMenu>
               <div className="text-center text-xs text-muted-foreground p-2">
-                Deploy 20250719-0001
+                Update timestamp: {timestamp}
               </div>
           </SidebarFooter>
         </Sidebar>
