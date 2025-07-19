@@ -57,6 +57,8 @@ const categories = [
     }
 ];
 
+const defaultOpenCategories = categories.map(category => category.name);
+
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [hasMounted, setHasMounted] = React.useState(false);
 
@@ -103,7 +105,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
           </SidebarHeader>
           <SidebarContent>
-            <Accordion type="multiple" className="w-full px-2">
+            <Accordion type="multiple" className="w-full px-2" defaultValue={defaultOpenCategories}>
                 {categories.map((category) => (
                     <AccordionItem value={category.name} key={category.name} className="border-b-0">
                         <AccordionTrigger className="justify-start text-sm font-semibold text-sidebar-accent-foreground bg-sidebar-accent hover:bg-sidebar-accent/90 p-2 rounded-md hover:no-underline">
