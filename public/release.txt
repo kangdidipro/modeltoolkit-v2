@@ -4,3 +4,4 @@
 3. add netlify enviroment
 4. add ads publisher dari adsterra [hapus] 
 5. add ads publisher dari skimlinks.com
+6. add ads publisher dari ezoic
