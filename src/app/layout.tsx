@@ -19,7 +19,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <Script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js" />
         <Script id="gatekeeper-consent-1" src="https://cmp.gatekeeperconsent.com/min.js" data-cfasync="false" strategy="beforeInteractive" />
         <Script id="gatekeeper-consent-2" src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false" strategy="beforeInteractive" />
         <Script id="ezoic-sa" async src="//www.ezojs.com/ezoic/sa.min.js" strategy="beforeInteractive" />
@@ -54,7 +53,6 @@ export default function RootLayout({
         <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6086736525215106" crossOrigin="anonymous" strategy="afterInteractive" />
       </head>
       <body className="font-body antialiased">
-        <amp-auto-ads type="adsense" data-ad-client="ca-pub-6086736525215106"></amp-auto-ads>
         {children}
         <Toaster />
       </body>
