@@ -28,6 +28,9 @@ export function Footer({ timestamp }: FooterProps) {
             <Link href="/feedback" className="mx-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
               Feedback
             </Link>
+            <Link href="/terms" className="mx-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Terms & Conditions
+            </Link>
           </div>
         </div>
       </div>
