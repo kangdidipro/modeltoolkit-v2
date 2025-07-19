@@ -14,11 +14,12 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.React.Node;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"></script>
         <script src="https://cmp.gatekeeperconsent.com/min.js" data-cfasync="false"></script>
         <script src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false"></script>
         <script async src="//www.ezojs.com/ezoic/sa.min.js"></script>
@@ -50,6 +51,7 @@ export default function RootLayout({
         <script src="https://fpyf8.com/88/tag.min.js" data-zone="158220" async data-cfasync="false"></script>
       </head>
       <body className="font-body antialiased">
+        <amp-auto-ads type="adsense" data-ad-client="ca-pub-6086736525215106"></amp-auto-ads>
         {children}
         <Toaster />
       </body>
