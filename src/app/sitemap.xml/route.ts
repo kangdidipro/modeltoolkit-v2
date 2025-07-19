@@ -11,6 +11,7 @@ function generateSitemap() {
     { url: '/feedback', priority: 0.5 },
     { url: '/blog', priority: 0.7 },
     { url: '/blog/optimizing-your-business-with-model-toolkit', priority: 0.6 },
+    { url: '/blog/10-best-productivity-tools', priority: 0.6 },
     { url: '/terms', priority: 0.3 },
     { url: '/privacy', priority: 0.3 },
   ];
