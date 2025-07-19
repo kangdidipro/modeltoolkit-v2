@@ -19,11 +19,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"></script>
-        <script src="https://cmp.gatekeeperconsent.com/min.js" data-cfasync="false"></script>
-        <script src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false"></script>
-        <script async src="//www.ezojs.com/ezoic/sa.min.js"></script>
-        <script
+        <Script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js" />
+        <Script id="gatekeeper-consent-1" src="https://cmp.gatekeeperconsent.com/min.js" data-cfasync="false" strategy="beforeInteractive" />
+        <Script id="gatekeeper-consent-2" src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false" strategy="beforeInteractive" />
+        <Script id="ezoic-sa" async src="//www.ezojs.com/ezoic/sa.min.js" strategy="beforeInteractive" />
+        <Script
+          id="ezoic-standalone-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
             window.ezstandalone = window.ezstandalone || {};
@@ -49,7 +51,7 @@ export default function RootLayout({
             gtag('config', 'G-N93R56PSP9');
           `}
         </Script>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6086736525215106" crossOrigin="anonymous"></script>
+        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6086736525215106" crossOrigin="anonymous" strategy="afterInteractive" />
       </head>
       <body className="font-body antialiased">
         <amp-auto-ads type="adsense" data-ad-client="ca-pub-6086736525215106"></amp-auto-ads>
