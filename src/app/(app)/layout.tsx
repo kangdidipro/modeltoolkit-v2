@@ -25,7 +25,6 @@ import {
 } from "@/components/ui/accordion"
 import {
   LayoutGrid,
-  ChevronDown
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { modelInfo } from "@/lib/models"
@@ -107,7 +106,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <Accordion type="multiple" className="w-full px-2">
                 {categories.map((category) => (
                     <AccordionItem value={category.name} key={category.name} className="border-b-0">
-                        <AccordionTrigger className="text-sm font-semibold text-muted-foreground hover:no-underline hover:text-foreground p-2 rounded-md hover:bg-sidebar-accent">
+                        <AccordionTrigger className="justify-start text-sm font-semibold text-sidebar-accent-foreground bg-sidebar-accent hover:bg-sidebar-accent/90 p-2 rounded-md hover:no-underline">
                             <div className="flex items-center gap-2">
                                 {category.name}
                             </div>
