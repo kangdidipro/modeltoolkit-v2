@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const blogPosts = [
   { no: 1, keyword: "Model Toolkit", title: "Optimizing Your Business with Model Toolkit: A Complete Guide", href: "/blog/optimizing-your-business-with-model-toolkit" },
-  { no: 2, keyword: "Productivity tools", title: "10 Best Productivity Tools to Boost Your Work Efficiency" },
+  { no: 2, keyword: "Productivity tools", title: "10 Best Productivity Tools to Boost Your Work Efficiency", href: "/blog/10-best-productivity-tools" },
   { no: 3, keyword: "Business models", title: "Understanding Various Business Models for Startup Growth" },
   { no: 4, keyword: "Business strategy", title: "Formulating a Strong Business Strategy: Step-by-Step" },
   { no: 5, keyword: "Innovation", title: "Driving Innovation in Your Company: Frameworks and Ideas" },
