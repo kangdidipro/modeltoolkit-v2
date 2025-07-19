@@ -76,26 +76,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <SidebarContent>
             <SidebarMenu>
               <SidebarGroup>
-                <SidebarGroupLabel>Models</SidebarGroupLabel>
-                <SidebarMenuItem>
-                  <Link href="/models/eisenhower-matrix">
-                    <SidebarMenuButton
-                        isActive={isActive("/models/eisenhower-matrix")}
-                        icon={<LayoutGrid />}
-                        tooltip="Eisenhower Matrix"
-                      >
-                        1. Eisenhower Matrix
-                      </SidebarMenuButton>
-                    </Link>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
+                <SidebarGroupLabel>I. Strategic Planning & Business Analysis</SidebarGroupLabel>
+                 <SidebarMenuItem>
                   <Link href="/models/swot">
                     <SidebarMenuButton
                       isActive={isActive("/models/swot")}
                       icon={<LayoutGrid />}
                       tooltip="SWOT Analysis"
                     >
-                      2. SWOT Analysis
+                      SWOT Analysis
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
@@ -106,7 +95,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       icon={<LayoutGrid />}
                       tooltip="Pareto Principle (80/20)"
                     >
-                      3. Pareto Principle (80/20)
+                      Pareto Principle (80/20)
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
@@ -117,7 +106,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                           icon={<LayoutGrid />}
                           tooltip="Business Model Canvas"
                       >
-                          4. Business Model Canvas
+                          Business Model Canvas
                       </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
@@ -128,29 +117,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                           icon={<LayoutGrid />}
                           tooltip="Maslow's Hierarchy"
                       >
-                          5. Maslow's Hierarchy
+                          Maslow's Hierarchy
                       </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <Link href="/models/johari-window">
-                      <SidebarMenuButton
-                          isActive={isActive("/models/johari-window")}
-                          icon={<LayoutGrid />}
-                          tooltip="Johari Window"
-                      >
-                          6. Johari Window
-                      </SidebarMenuButton>
-                  </Link>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
+                 <SidebarMenuItem>
                   <Link href="/models/boston-matrix">
                     <SidebarMenuButton
                       isActive={isActive("/models/boston-matrix")}
                       icon={<LayoutGrid />}
                       tooltip="Boston Matrix"
                     >
-                      7. Boston Matrix
+                      Boston Matrix
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
@@ -161,18 +139,59 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       icon={<LayoutGrid />}
                       tooltip="Porter's Five Forces"
                     >
-                      8. Porter's Five Forces
+                      Porter's Five Forces
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
-                <SidebarMenuItem>
+                 <SidebarMenuItem>
+                  <Link href="/models/mckinsey-7s-framework">
+                    <SidebarMenuButton
+                      isActive={isActive("/models/mckinsey-7s-framework")}
+                      icon={<LayoutGrid />}
+                      tooltip="McKinsey 7S Framework"
+                    >
+                      McKinsey 7S Framework
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+              </SidebarGroup>
+
+              <SidebarGroup>
+                <SidebarGroupLabel>II. Communication & Self-Awareness</SidebarGroupLabel>
+                 <SidebarMenuItem>
+                  <Link href="/models/johari-window">
+                      <SidebarMenuButton
+                          isActive={isActive("/models/johari-window")}
+                          icon={<LayoutGrid />}
+                          tooltip="Johari Window"
+                      >
+                          Johari Window
+                      </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                  <Link href="/models/communication-model">
+                    <SidebarMenuButton
+                      isActive={isActive("/models/communication-model")}
+                      icon={<LayoutGrid />}
+                      tooltip="Communication Model"
+                    >
+                      Communication Model
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+              </SidebarGroup>
+
+              <SidebarGroup>
+                <SidebarGroupLabel>III. Project Management & Team Development</SidebarGroupLabel>
+                  <SidebarMenuItem>
                   <Link href="/models/aida-model">
                     <SidebarMenuButton
                       isActive={isActive("/models/aida-model")}
                       icon={<LayoutGrid />}
                       tooltip="AIDA Model"
                     >
-                      9. AIDA Model
+                      AIDA Model
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
@@ -183,51 +202,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       icon={<LayoutGrid />}
                       tooltip="Tuckman's Stages"
                     >
-                      10. Tuckman's Stages
+                      Tuckman's Stages
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <Link href="/models/mckinsey-7s-framework">
-                    <SidebarMenuButton
-                      isActive={isActive("/models/mckinsey-7s-framework")}
-                      icon={<LayoutGrid />}
-                      tooltip="McKinsey 7S Framework"
-                    >
-                      11. McKinsey 7S Framework
-                    </SidebarMenuButton>
-                  </Link>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <Link href="/models/adkar-model">
-                    <SidebarMenuButton
-                      isActive={isActive("/models/adkar-model")}
-                      icon={<LayoutGrid />}
-                      tooltip="ADKAR Model"
-                    >
-                      12. ADKAR Model
-                    </SidebarMenuButton>
-                  </Link>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
+                 <SidebarMenuItem>
                   <Link href="/models/gantt-chart">
                     <SidebarMenuButton
                       isActive={isActive("/models/gantt-chart")}
                       icon={<LayoutGrid />}
                       tooltip="Gantt Chart"
                     >
-                      13. Gantt Chart
-                    </SidebarMenuButton>
-                  </Link>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <Link href="/models/fishbone-diagram">
-                    <SidebarMenuButton
-                      isActive={isActive("/models/fishbone-diagram")}
-                      icon={<LayoutGrid />}
-                      tooltip="Fishbone Diagram"
-                    >
-                      14. Fishbone Diagram
+                      Gantt Chart
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
@@ -238,7 +224,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       icon={<LayoutGrid />}
                       tooltip="RACI Matrix"
                     >
-                      15. RACI Matrix
+                      RACI Matrix
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
@@ -249,29 +235,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       icon={<LayoutGrid />}
                       tooltip="SCAMPER Model"
                     >
-                      16. SCAMPER Model
+                      SCAMPER Model
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
+              </SidebarGroup>
+              
+              <SidebarGroup>
+                <SidebarGroupLabel>IV. Change Management & Adoption</SidebarGroupLabel>
                 <SidebarMenuItem>
-                  <Link href="/models/diffusion-of-innovations">
+                  <Link href="/models/adkar-model">
                     <SidebarMenuButton
-                      isActive={isActive("/models/diffusion-of-innovations")}
+                      isActive={isActive("/models/adkar-model")}
                       icon={<LayoutGrid />}
-                      tooltip="Diffusion of Innovations"
+                      tooltip="ADKAR Model"
                     >
-                      17. Diffusion of Innovations
-                    </SidebarMenuButton>
-                  </Link>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <Link href="/models/flow-model">
-                    <SidebarMenuButton
-                      isActive={isActive("/models/flow-model")}
-                      icon={<LayoutGrid />}
-                      tooltip="Flow Model"
-                    >
-                      18. Flow Model
+                      ADKAR Model
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
@@ -282,23 +261,49 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       icon={<LayoutGrid />}
                       tooltip="Change Management"
                     >
-                      19. Change Management
+                      Change Management
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <Link href="/models/communication-model">
+                 <SidebarMenuItem>
+                  <Link href="/models/diffusion-of-innovations">
                     <SidebarMenuButton
-                      isActive={isActive("/models/communication-model")}
+                      isActive={isActive("/models/diffusion-of-innovations")}
                       icon={<LayoutGrid />}
-                      tooltip="Communication Model"
+                      tooltip="Diffusion of Innovations"
                     >
-                      20. Communication Model
+                      Diffusion of Innovations
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
               </SidebarGroup>
               
+              <SidebarGroup>
+                <SidebarGroupLabel>V. Problem Solving & Diagrammatic Tools</SidebarGroupLabel>
+                 <SidebarMenuItem>
+                  <Link href="/models/fishbone-diagram">
+                    <SidebarMenuButton
+                      isActive={isActive("/models/fishbone-diagram")}
+                      icon={<LayoutGrid />}
+                      tooltip="Fishbone Diagram"
+                    >
+                      Fishbone Diagram
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+                 <SidebarMenuItem>
+                  <Link href="/models/flow-model">
+                    <SidebarMenuButton
+                      isActive={isActive("/models/flow-model")}
+                      icon={<LayoutGrid />}
+                      tooltip="Flow Model"
+                    >
+                      Flow Model
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+              </SidebarGroup>
+
               <SidebarGroup>
                 <SidebarGroupLabel>About</SidebarGroupLabel>
                  <SidebarMenuItem>
