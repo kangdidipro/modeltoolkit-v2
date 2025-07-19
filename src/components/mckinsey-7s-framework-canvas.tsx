@@ -16,6 +16,8 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import html2canvas from "html2canvas"
+import jsPDF from "jspdf"
 
 type ElementKeys = keyof Mckinsey7sFrameworkModel;
 const LOCAL_STORAGE_KEY = 'mckinsey-7s-framework-history';
@@ -34,6 +36,7 @@ export default function Mckinsey7sFrameworkCanvas() {
 
   const draggedItem = useRef<{ item: ModelItem; from: ElementKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -164,11 +167,39 @@ export default function Mckinsey7sFrameworkCanvas() {
     });
   };
 
-  const handleExport = (type: 'PNG' | 'PDF') => {
-    toast({
-      title: 'Export not available',
-      description: `The ${type} export feature is coming soon!`,
-    });
+  const handleExport = async (type: 'PNG' | 'PDF') => {
+    const canvasElement = canvasRef.current;
+    if (!canvasElement) return;
+
+    toast({ title: "Exporting...", description: `Generating your ${type} file.` });
+
+    try {
+      const canvas = await html2canvas(canvasElement, {
+        backgroundColor: null,
+        scale: 2,
+      });
+
+      if (type === 'PNG') {
+        const dataUrl = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = "mckinsey-7s-framework.png";
+        link.href = dataUrl;
+        link.click();
+      } else if (type === 'PDF') {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'px',
+          format: [canvas.width, canvas.height]
+        });
+        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+        pdf.save('mckinsey-7s-framework.pdf');
+      }
+      toast({ title: "Export Successful", description: `Your McKinsey 7S Framework has been downloaded as a ${type}.` });
+    } catch (error) {
+      console.error("Export failed", error);
+      toast({ variant: "destructive", title: "Export Failed", description: "Something went wrong while exporting." });
+    }
   }
 
   const handleXmlImportClick = () => {
@@ -401,7 +432,8 @@ export default function Mckinsey7sFrameworkCanvas() {
       </Dialog>
 
       <div 
-        className="grid gap-4"
+        ref={canvasRef}
+        className="grid gap-4 bg-background p-4 rounded-lg"
         style={{
             gridTemplateAreas: `
                 ". strategy ."
