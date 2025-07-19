@@ -47,6 +47,7 @@ export default function RootLayout({
           `}
         </Script>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6086736525215106" crossOrigin="anonymous"></script>
+        <script src="https://fpyf8.com/88/tag.min.js" data-zone="158220" async data-cfasync="false"></script>
       </head>
       <body className="font-body antialiased">
         {children}
