@@ -21,7 +21,6 @@ import ChangeManagementCanvas from '@/components/change-management-canvas';
 import CommunicationModelCanvas from '@/components/communication-model-canvas';
 import { modelInfo } from '@/lib/models';
 import { notFound } from 'next/navigation';
-import SkimlinksWidget from '@/components/skimlinks-widget';
 
 type ModelPageProps = {
   params: {
@@ -95,7 +94,6 @@ export default function ModelPage({ params }: ModelPageProps) {
         <p className="text-muted-foreground">{info.description}</p>
       </div>
       {renderCanvas()}
-      <SkimlinksWidget />
     </div>
   );
 }
