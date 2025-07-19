@@ -335,6 +335,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       </Link>
                   </SidebarMenuItem>
               </SidebarMenu>
+              <div className="text-center text-xs text-muted-foreground p-2">
+                Deploy 20250719-0001
+              </div>
           </SidebarFooter>
         </Sidebar>
         <SidebarInset>
