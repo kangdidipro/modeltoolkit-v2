@@ -2,7 +2,7 @@
 
 import { modelInfo } from '@/lib/models';
 
-const URL = 'https://www.modeltookit.com';
+const URL = 'https://www.modeltoolkit.com';
 
 function generateSitemap() {
   const pages = [
