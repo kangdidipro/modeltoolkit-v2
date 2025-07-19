@@ -1,3 +1,6 @@
+===202507===
+1. add page term and privacy
+
 ===20250719===
 1. add email for submit feddback form
 2. add google tracking file
