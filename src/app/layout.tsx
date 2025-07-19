@@ -46,6 +46,7 @@ export default function RootLayout({
             gtag('config', 'G-N93R56PSP9');
           `}
         </Script>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6086736525215106" crossOrigin="anonymous"></script>
       </head>
       <body className="font-body antialiased">
         {children}
