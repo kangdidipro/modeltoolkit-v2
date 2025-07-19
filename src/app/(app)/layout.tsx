@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import * as React from "react"
@@ -15,16 +16,47 @@ import {
   SidebarInset,
   SidebarTrigger,
   SidebarContent,
-  SidebarGroup,
-  SidebarGroupLabel
 } from "@/components/ui/sidebar"
 import {
-  LayoutGrid
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import {
+  LayoutGrid,
+  ChevronDown
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { modelInfo } from "@/lib/models"
 import { cn } from "@/lib/utils"
 import { Footer } from "@/components/footer"
+
+const categories = [
+    {
+        name: "Strategic Planning & Business Analysis",
+        models: [
+            "swot", "pareto-principle", "business-model-canvas", "maslows-hierarchy",
+            "boston-matrix", "porters-five-forces", "mckinsey-7s-framework"
+        ]
+    },
+    {
+        name: "Communication & Self-Awareness",
+        models: ["johari-window", "communication-model"]
+    },
+    {
+        name: "Project Management & Team Development",
+        models: ["aida-model", "tuckmans-stages", "gantt-chart", "raci-matrix", "scamper-model"]
+    },
+    {
+        name: "Change Management & Adoption",
+        models: ["adkar-model", "change-management", "diffusion-of-innovations"]
+    },
+    {
+        name: "Problem Solving & Diagrammatic Tools",
+        models: ["fishbone-diagram", "flow-model"]
+    }
+];
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [hasMounted, setHasMounted] = React.useState(false);
@@ -72,24 +104,34 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
           </SidebarHeader>
           <SidebarContent>
-            <SidebarMenu>
-              <SidebarGroup>
-                <SidebarGroupLabel>Models</SidebarGroupLabel>
-                {Object.entries(modelInfo).map(([id, { name }]) => (
-                  <SidebarMenuItem key={id}>
-                    <Link href={`/models/${id}`}>
-                      <SidebarMenuButton
-                        isActive={isActive(`/models/${id}`)}
-                        icon={<LayoutGrid />}
-                        tooltip={name}
-                      >
-                        {name}
-                      </SidebarMenuButton>
-                    </Link>
-                  </SidebarMenuItem>
+            <Accordion type="multiple" className="w-full px-2">
+                {categories.map((category) => (
+                    <AccordionItem value={category.name} key={category.name} className="border-b-0">
+                        <AccordionTrigger className="text-sm font-semibold text-muted-foreground hover:no-underline hover:text-foreground p-2 rounded-md hover:bg-sidebar-accent">
+                            <div className="flex items-center gap-2">
+                                {category.name}
+                            </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="pb-1">
+                            <SidebarMenu className="pl-4 border-l ml-2">
+                            {category.models.filter(id => modelInfo[id]).map((id) => (
+                                <SidebarMenuItem key={id}>
+                                    <Link href={`/models/${id}`} className="block">
+                                        <SidebarMenuButton
+                                            isActive={isActive(`/models/${id}`)}
+                                            icon={<LayoutGrid />}
+                                            className="h-8"
+                                        >
+                                            {modelInfo[id].name}
+                                        </SidebarMenuButton>
+                                    </Link>
+                                </SidebarMenuItem>
+                            ))}
+                            </SidebarMenu>
+                        </AccordionContent>
+                    </AccordionItem>
                 ))}
-              </SidebarGroup>
-            </SidebarMenu>
+            </Accordion>
           </SidebarContent>
         </Sidebar>
         <SidebarInset>
