@@ -23,11 +23,13 @@ import {
   LayoutGrid,
   Newspaper,
   MessageCircle,
+  ChevronDown
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
-function ClientOnly({ children }: { children: React.ReactNode }) {
+function ClientOnly({ children }: { children: React.React.Node }) {
   const [hasMounted, setHasMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -62,6 +64,24 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         MT
     </div>
   )
+  
+  const CollapsibleSidebarGroup = ({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) => (
+    <Collapsible defaultOpen={true}>
+      <SidebarGroup className={cn("p-0", className)}>
+        <CollapsibleTrigger className="w-full">
+          <SidebarGroupLabel className="w-full flex justify-between items-center cursor-pointer hover:bg-sidebar-accent rounded-md">
+            <span>{label}</span>
+            <ChevronDown className="h-4 w-4 transition-transform [&[data-state=open]]:rotate-180" />
+          </SidebarGroupLabel>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+            <SidebarMenu className="px-2 pb-2">
+                {children}
+            </SidebarMenu>
+        </CollapsibleContent>
+      </SidebarGroup>
+    </Collapsible>
+  )
 
   return (
     <ClientOnly>
@@ -75,8 +95,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu>
-              <SidebarGroup className="bg-blue-100/50 dark:bg-blue-900/30 rounded-lg">
-                <SidebarGroupLabel>I. Strategic Planning & Business Analysis</SidebarGroupLabel>
+              <CollapsibleSidebarGroup label="I. Strategic Planning & Business Analysis" className="bg-blue-100/50 dark:bg-blue-900/30 rounded-lg">
                  <SidebarMenuItem>
                   <Link href="/models/swot">
                     <SidebarMenuButton
@@ -154,10 +173,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
-              </SidebarGroup>
+              </CollapsibleSidebarGroup>
 
-              <SidebarGroup className="bg-purple-100/50 dark:bg-purple-900/30 rounded-lg">
-                <SidebarGroupLabel>II. Communication & Self-Awareness</SidebarGroupLabel>
+              <CollapsibleSidebarGroup label="II. Communication & Self-Awareness" className="bg-purple-100/50 dark:bg-purple-900/30 rounded-lg">
                  <SidebarMenuItem>
                   <Link href="/models/johari-window">
                       <SidebarMenuButton
@@ -180,10 +198,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
-              </SidebarGroup>
+              </CollapsibleSidebarGroup>
 
-              <SidebarGroup className="bg-green-100/50 dark:bg-green-900/30 rounded-lg">
-                <SidebarGroupLabel>III. Project Management & Team Development</SidebarGroupLabel>
+              <CollapsibleSidebarGroup label="III. Project Management & Team Development" className="bg-green-100/50 dark:bg-green-900/30 rounded-lg">
                   <SidebarMenuItem>
                   <Link href="/models/aida-model">
                     <SidebarMenuButton
@@ -239,10 +256,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
-              </SidebarGroup>
+              </CollapsibleSidebarGroup>
               
-              <SidebarGroup className="bg-yellow-100/50 dark:bg-yellow-900/30 rounded-lg">
-                <SidebarGroupLabel>IV. Change Management & Adoption</SidebarGroupLabel>
+              <CollapsibleSidebarGroup label="IV. Change Management & Adoption" className="bg-yellow-100/50 dark:bg-yellow-900/30 rounded-lg">
                 <SidebarMenuItem>
                   <Link href="/models/adkar-model">
                     <SidebarMenuButton
@@ -276,10 +292,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
-              </SidebarGroup>
+              </CollapsibleSidebarGroup>
               
-              <SidebarGroup className="bg-orange-100/50 dark:bg-orange-900/30 rounded-lg">
-                <SidebarGroupLabel>V. Problem Solving & Diagrammatic Tools</SidebarGroupLabel>
+              <CollapsibleSidebarGroup label="V. Problem Solving & Diagrammatic Tools" className="bg-orange-100/50 dark:bg-orange-900/30 rounded-lg">
                  <SidebarMenuItem>
                   <Link href="/models/fishbone-diagram">
                     <SidebarMenuButton
@@ -302,7 +317,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
-              </SidebarGroup>
+              </CollapsibleSidebarGroup>
 
               <SidebarGroup>
                 <SidebarGroupLabel>About</SidebarGroupLabel>
