@@ -1,6 +1,7 @@
 ===202507===
 1. add page term and privacy
 2. change menu style and add category
+3. add new article 10 Strategic Models to Boost Your Productivity.jpg
 
 ===20250719===
 1. add email for submit feddback form
