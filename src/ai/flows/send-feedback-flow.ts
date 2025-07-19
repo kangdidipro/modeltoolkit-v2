@@ -29,10 +29,11 @@ const sendFeedbackFlow = ai.defineFlow(
     outputSchema: z.void(),
   },
   async (input) => {
-    const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM, FEEDBACK_RECIPIENT_EMAIL } = process.env;
+    const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM } = process.env;
+    const FEEDBACK_RECIPIENT_EMAIL = "modetoolkitcom@gmail.com";
 
-    if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS || !SMTP_FROM || !FEEDBACK_RECIPIENT_EMAIL) {
-      throw new Error('SMTP environment variables are not configured.');
+    if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS || !SMTP_FROM) {
+      throw new Error('SMTP environment variables are not fully configured.');
     }
 
     const transporter = nodemailer.createTransport({
