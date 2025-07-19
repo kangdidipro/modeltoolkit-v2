@@ -2,5 +2,5 @@
 1. add email for submit feddback form
 2. add google tracking file
 3. add netlify enviroment
-4. add ads publisher dari adsterra
+4. add ads publisher dari adsterra [hapus] 
 5. add ads publisher dari skimlinks.com
