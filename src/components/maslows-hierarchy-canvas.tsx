@@ -16,6 +16,8 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import html2canvas from "html2canvas"
+import jsPDF from "jspdf"
 
 type LevelKeys = keyof MaslowsHierarchyModel;
 const LOCAL_STORAGE_KEY = 'maslows-hierarchy-history';
@@ -34,6 +36,7 @@ export default function MaslowsHierarchyCanvas() {
 
   const draggedItem = useRef<{ item: ModelItem; from: LevelKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -162,12 +165,32 @@ export default function MaslowsHierarchyCanvas() {
     });
   };
 
-  const handleExport = (type: 'PNG' | 'PDF') => {
-    toast({
-      title: 'Export not available',
-      description: `The ${type} export feature is coming soon!`,
+  const handleExport = async (type: 'PNG' | 'PDF') => {
+    const canvasElement = canvasRef.current;
+    if (!canvasElement) return;
+
+    const canvas = await html2canvas(canvasElement, {
+        backgroundColor: null,
+        scale: 2,
     });
-  }
+
+    if (type === 'PNG') {
+        const dataUrl = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = "maslows-hierarchy.png";
+        link.href = dataUrl;
+        link.click();
+    } else if (type === 'PDF') {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'px',
+            format: [canvas.width, canvas.height]
+        });
+        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+        pdf.save('maslows-hierarchy.pdf');
+    }
+  };
 
   const handleXmlImportClick = () => {
     fileInputRef.current?.click();
@@ -334,68 +357,70 @@ export default function MaslowsHierarchyCanvas() {
         </DialogContent>
       </Dialog>
 
-      <div className="flex flex-col-reverse items-center space-y-reverse space-y-4">
-        {levels.map((level, index) => (
-            <div key={level.key} className="w-full" style={{ maxWidth: `${100 - index * 10}%` }}>
-                <Card className={`${level.bg} flex flex-col min-h-[150px]`}>
-                    <CardHeader>
-                    <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg font-medium font-headline">{level.title}</CardTitle>
-                        <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleAddItem(level.key)}>
-                        <Plus className="h-4 w-4" />
-                        </Button>
-                    </div>
-                    <CardDescription>{level.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent
-                    className="flex-grow space-y-2 p-4 pt-0"
-                    onDragOver={handleDragOver}
-                    onDrop={(e) => handleDrop(e, level.key)}
-                    >
-                    {data[level.key].map(item => (
-                        <div
-                        key={item.id}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, item, level.key)}
-                        onDragEnd={handleDragEnd}
-                        className="group bg-card/80 dark:bg-card/50 backdrop-blur-sm rounded-lg p-3 shadow transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
-                        >
-                        <div className="flex items-start gap-2">
-                            <GripVertical className="h-5 w-5 mt-1 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground" />
-                            {editingItemId === item.id ? (
-                            <Textarea
-                                value={editingText}
-                                onChange={(e) => setEditingText(e.target.value)}
-                                onBlur={() => handleSaveEdit(level.key)}
-                                autoFocus
-                                className="w-full text-sm resize-none"
-                                onKeyDown={(e) => { if (e.key === 'Enter') handleSaveEdit(level.key) }}
-                            />
-                            ) : (
-                            <p onClick={() => startEditing(item)} className="flex-grow text-sm w-full min-h-[24px]">
-                                {item.content}
-                            </p>
-                            )}
-                            <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-7 w-7 opacity-0 group-hover:opacity-100 shrink-0"
-                            onClick={() => handleDeleteItem(level.key, item.id)}
-                            >
-                            <Trash2 className="h-4 w-4" />
-                            </Button>
-                        </div>
-                        </div>
-                    ))}
-                    {data[level.key].length === 0 && (
-                        <div className="text-center text-muted-foreground text-sm p-4 border-2 border-dashed rounded-lg">
-                        Drop items here or click `+` to add.
-                        </div>
-                    )}
-                    </CardContent>
-                </Card>
-            </div>
-        ))}
+      <div ref={canvasRef} className="bg-background p-4 rounded-lg">
+        <div className="flex flex-col-reverse items-center space-y-reverse space-y-4">
+          {levels.map((level, index) => (
+              <div key={level.key} className="w-full" style={{ maxWidth: `${100 - index * 10}%` }}>
+                  <Card className={`${level.bg} flex flex-col min-h-[150px]`}>
+                      <CardHeader>
+                      <div className="flex items-center justify-between">
+                          <CardTitle className="text-lg font-medium font-headline">{level.title}</CardTitle>
+                          <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleAddItem(level.key)}>
+                          <Plus className="h-4 w-4" />
+                          </Button>
+                      </div>
+                      <CardDescription>{level.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent
+                      className="flex-grow space-y-2 p-4 pt-0"
+                      onDragOver={handleDragOver}
+                      onDrop={(e) => handleDrop(e, level.key)}
+                      >
+                      {data[level.key].map(item => (
+                          <div
+                          key={item.id}
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, item, level.key)}
+                          onDragEnd={handleDragEnd}
+                          className="group bg-card/80 dark:bg-card/50 backdrop-blur-sm rounded-lg p-3 shadow transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
+                          >
+                          <div className="flex items-start gap-2">
+                              <GripVertical className="h-5 w-5 mt-1 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground" />
+                              {editingItemId === item.id ? (
+                              <Textarea
+                                  value={editingText}
+                                  onChange={(e) => setEditingText(e.target.value)}
+                                  onBlur={() => handleSaveEdit(level.key)}
+                                  autoFocus
+                                  className="w-full text-sm resize-none"
+                                  onKeyDown={(e) => { if (e.key === 'Enter') handleSaveEdit(level.key) }}
+                              />
+                              ) : (
+                              <p onClick={() => startEditing(item)} className="flex-grow text-sm w-full min-h-[24px]">
+                                  {item.content}
+                              </p>
+                              )}
+                              <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-7 w-7 opacity-0 group-hover:opacity-100 shrink-0"
+                              onClick={() => handleDeleteItem(level.key, item.id)}
+                              >
+                              <Trash2 className="h-4 w-4" />
+                              </Button>
+                          </div>
+                          </div>
+                      ))}
+                      {data[level.key].length === 0 && (
+                          <div className="text-center text-muted-foreground text-sm p-4 border-2 border-dashed rounded-lg">
+                          Drop items here or click `+` to add.
+                          </div>
+                      )}
+                      </CardContent>
+                  </Card>
+              </div>
+          ))}
+        </div>
       </div>
     </>
   )
