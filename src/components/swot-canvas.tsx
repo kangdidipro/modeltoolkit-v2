@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialSwotData, type SwotModel, type ModelItem } from "@/lib/models"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Plus, Trash2, Download, Printer, GripVertical, Save, History, Upload, FileDown, RefreshCw } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
@@ -169,26 +169,34 @@ export default function SwotCanvas() {
     const canvasElement = canvasRef.current;
     if (!canvasElement) return;
 
-    const canvas = await html2canvas(canvasElement, {
-      backgroundColor: null,
-      scale: 2, 
-    });
+    toast({ title: "Exporting...", description: `Generating your ${type} file.` });
 
-    if (type === 'PNG') {
-      const dataUrl = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.download = "swot-analysis.png";
-      link.href = dataUrl;
-      link.click();
-    } else if (type === 'PDF') {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'px',
-        format: [canvas.width, canvas.height]
+    try {
+      const canvas = await html2canvas(canvasElement, {
+        backgroundColor: null,
+        scale: 2, 
       });
-      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-      pdf.save('swot-analysis.pdf');
+
+      if (type === 'PNG') {
+        const dataUrl = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = "swot-analysis.png";
+        link.href = dataUrl;
+        link.click();
+      } else if (type === 'PDF') {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+          orientation: 'landscape',
+          unit: 'px',
+          format: [canvas.width, canvas.height]
+        });
+        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+        pdf.save('swot-analysis.pdf');
+      }
+      toast({ title: "Export Successful", description: `Your SWOT Analysis has been downloaded as a ${type}.` });
+    } catch(error) {
+        console.error("Export failed", error);
+        toast({ variant: "destructive", title: "Export Failed", description: "Something went wrong while exporting." });
     }
   }
 
@@ -392,7 +400,7 @@ export default function SwotCanvas() {
                         onBlur={() => handleSaveEdit(column.key)}
                         autoFocus
                         className="w-full text-sm resize-none"
-                        onKeyDown={(e) => { if (e.key === 'Enter') handleSaveEdit(column.key) }}
+                        onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSaveEdit(column.key); } }}
                       />
                     ) : (
                       <p onClick={() => startEditing(item)} className="flex-grow text-sm w-full min-h-[24px]">
