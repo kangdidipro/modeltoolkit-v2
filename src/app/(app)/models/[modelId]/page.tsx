@@ -21,7 +21,6 @@ import ChangeManagementCanvas from '@/components/change-management-canvas';
 import CommunicationModelCanvas from '@/components/communication-model-canvas';
 import { modelInfo } from '@/lib/models';
 import { notFound } from 'next/navigation';
-import AdBanner from '@/components/ad-banner';
 import SkimlinksWidget from '@/components/skimlinks-widget';
 
 type ModelPageProps = {
@@ -91,9 +90,6 @@ export default function ModelPage({ params }: ModelPageProps) {
 
   return (
     <div className="space-y-4">
-      <div className="mb-4">
-        <AdBanner />
-      </div>
       <div>
         <h1 className="text-3xl font-bold font-headline">{info.name}</h1>
         <p className="text-muted-foreground">{info.description}</p>
