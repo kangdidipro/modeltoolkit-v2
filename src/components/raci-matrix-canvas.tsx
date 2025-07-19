@@ -1,7 +1,8 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { initialRaciMatrixData, type RaciMatrixModel, type RaciTask, type RaciPerson, type RaciRole } from "@/lib/models";
+import { initialRaciMatrixData, type RaciMatrixModel, type RaciTask, type RaciPerson, type RaciRole, type RaciAssignment } from "@/lib/models";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2, Save, History, Upload, FileDown, RefreshCw, GripVertical, Users, ListChecks, Download, Printer } from "lucide-react";
@@ -11,7 +12,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 const LOCAL_STORAGE_KEY = 'raci-matrix-history';
 
@@ -25,6 +27,7 @@ export default function RaciMatrixCanvas() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -62,8 +65,39 @@ export default function RaciMatrixCanvas() {
     toast({ title: "Work Loaded", description: `Loaded version from ${new Date(entry.timestamp).toLocaleString()}` });
   };
 
-  const handleExport = (type: 'PNG' | 'PDF') => {
-    toast({ title: 'Not available', description: `The ${type} export feature is coming soon!` });
+  const handleExport = async (type: 'PNG' | 'PDF') => {
+    const canvasElement = canvasRef.current;
+    if (!canvasElement) return;
+
+    toast({ title: "Exporting...", description: `Generating your ${type} file.` });
+
+    try {
+        const canvas = await html2canvas(canvasElement, {
+            backgroundColor: null,
+            scale: 2,
+        });
+
+        if (type === 'PNG') {
+            const dataUrl = canvas.toDataURL("image/png");
+            const link = document.createElement("a");
+            link.download = "raci-matrix.png";
+            link.href = dataUrl;
+            link.click();
+        } else if (type === 'PDF') {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                unit: 'px',
+                format: [canvas.width, canvas.height]
+            });
+            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+            pdf.save('raci-matrix.pdf');
+        }
+        toast({ title: "Export Successful", description: `Your RACI Matrix has been downloaded as a ${type}.` });
+    } catch (error) {
+        console.error("Export failed", error);
+        toast({ variant: "destructive", title: "Export Failed", description: "Something went wrong while exporting." });
+    }
   };
   
   const handleExportXml = () => {
@@ -253,73 +287,77 @@ export default function RaciMatrixCanvas() {
         </DialogContent>
       </Dialog>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-1 bg-blue-50 dark:bg-blue-900/20">
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle className="flex items-center gap-2"><Users /> People / Roles</CardTitle>
-              <Button size="icon" variant="ghost" onClick={addPerson}><Plus /></Button>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {data.people.map(person => (
-              <div key={person.id} className="flex items-center gap-2">
-                <Input defaultValue={person.name} onBlur={(e) => updatePerson(person.id, e.target.value)} className="flex-grow bg-card/80 dark:bg-card/50"/>
-                <Button size="icon" variant="ghost" onClick={() => deletePerson(person.id)}><Trash2 className="h-4 w-4"/></Button>
+      <div ref={canvasRef} className="bg-background p-4 rounded-lg">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="lg:col-span-1 bg-blue-50 dark:bg-blue-900/20">
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center gap-2"><Users /> People / Roles</CardTitle>
+                <Button size="icon" variant="ghost" onClick={addPerson}><Plus /></Button>
               </div>
-            ))}
-          </CardContent>
-        </Card>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {data.people.map(person => (
+                <div key={person.id} className="flex items-center gap-2">
+                  <Input defaultValue={person.name} onBlur={(e) => updatePerson(person.id, e.target.value)} className="flex-grow bg-card/80 dark:bg-card/50"/>
+                  <Button size="icon" variant="ghost" onClick={() => deletePerson(person.id)}><Trash2 className="h-4 w-4"/></Button>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
 
-        <Card className="lg:col-span-2 bg-green-50 dark:bg-green-900/20">
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle className="flex items-center gap-2"><ListChecks /> Tasks</CardTitle>
-              <Button size="icon" variant="ghost" onClick={addTask}><Plus /></Button>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {data.tasks.map(task => (
-              <div key={task.id} className="p-4 border rounded-lg bg-card/80 dark:bg-card/50 shadow-sm">
-                <div className="flex items-center gap-2 mb-3">
-                  <Input defaultValue={task.description} onBlur={e => updateTaskDescription(task.id, e.target.value)} className="text-base font-semibold flex-grow bg-background"/>
-                  <Button size="icon" variant="ghost" onClick={() => deleteTask(task.id)}><Trash2 className="h-4 w-4"/></Button>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                  {data.people.map(person => {
-                    const assignment = task.assignments.find(a => a.personId === person.id);
-                    return (
-                      <div key={`${task.id}-${person.id}`} className="flex items-center gap-2 p-2 rounded-md border bg-background">
-                        <span className="text-sm font-medium flex-grow truncate">{person.name}</span>
-                        <Select
-                          value={assignment?.role}
-                          onValueChange={(role) => {
-                            if (role === 'none') {
-                              removeAssignment(task.id, person.id);
-                            } else {
-                              updateAssignment(task.id, person.id, role as RaciRole);
-                            }
-                          }}
-                        >
-                          <SelectTrigger className={cn("w-20 h-8 font-bold", assignment ? roleInfo[assignment.role].color : '')}>
-                            <SelectValue placeholder="-" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="none">None</SelectItem>
-                            {Object.entries(roleInfo).map(([key, {label, color, textColor}]) => (
-                              <SelectItem key={key} value={key} className={cn("font-medium", textColor)}>{key}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    );
-                  })}
-                </div>
+          <Card className="lg:col-span-2 bg-green-50 dark:bg-green-900/20">
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center gap-2"><ListChecks /> Tasks</CardTitle>
+                <Button size="icon" variant="ghost" onClick={addTask}><Plus /></Button>
               </div>
-            ))}
-          </CardContent>
-        </Card>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {data.tasks.map(task => (
+                <div key={task.id} className="p-4 border rounded-lg bg-card/80 dark:bg-card/50 shadow-sm">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Input defaultValue={task.description} onBlur={e => updateTaskDescription(task.id, e.target.value)} className="text-base font-semibold flex-grow bg-background"/>
+                    <Button size="icon" variant="ghost" onClick={() => deleteTask(task.id)}><Trash2 className="h-4 w-4"/></Button>
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                    {data.people.map(person => {
+                      const assignment = task.assignments.find(a => a.personId === person.id);
+                      return (
+                        <div key={`${task.id}-${person.id}`} className="flex items-center gap-2 p-2 rounded-md border bg-background">
+                          <span className="text-sm font-medium flex-grow truncate">{person.name}</span>
+                          <Select
+                            value={assignment?.role}
+                            onValueChange={(role) => {
+                              if (role === 'none') {
+                                removeAssignment(task.id, person.id);
+                              } else {
+                                updateAssignment(task.id, person.id, role as RaciRole);
+                              }
+                            }}
+                          >
+                            <SelectTrigger className={cn("w-20 h-8 font-bold", assignment ? roleInfo[assignment.role].color : '')}>
+                              <SelectValue placeholder="-" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="none">None</SelectItem>
+                              {Object.entries(roleInfo).map(([key, {label, color, textColor}]) => (
+                                <SelectItem key={key} value={key} className={cn("font-medium", textColor)}>{key}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </>
   );
 }
+
+    
