@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
@@ -249,7 +250,6 @@ export default function FishboneDiagramCanvas() {
     xmlContent += `  <effect>${data.effect.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</effect>\n`;
     for (const [key, items] of Object.entries(data)) {
         if (key === 'effect') continue;
-        xmlContent += `  <${key}>\n`;
         (items as ModelItem[]).forEach(item => {
             xmlContent += `    <item id="${item.id}">${item.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</item>\n`;
         });
@@ -356,7 +356,7 @@ export default function FishboneDiagramCanvas() {
                       <Button variant="secondary" onClick={() => handleLoadFromHistory(entry)}>
                         <RefreshCw className="mr-2 h-4 w-4" />Load
                       </Button>
-                      <Button variant="outline" onClick={() => handleExport('XML')}>
+                      <Button variant="outline" onClick={() => handleExportXml()}>
                         <FileDown className="mr-2 h-4 w-4" />XML
                       </Button>
                     </div>
@@ -424,3 +424,5 @@ export default function FishboneDiagramCanvas() {
     </>
   )
 }
+
+    

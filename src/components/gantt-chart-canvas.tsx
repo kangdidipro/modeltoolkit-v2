@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
@@ -392,3 +393,5 @@ export default function GanttChartCanvas() {
     </>
   )
 }
+
+    
