@@ -5,3 +5,4 @@
 4. add ads publisher dari adsterra [hapus] 
 5. add ads publisher dari skimlinks.com
 6. add ads publisher dari ezoic
+7. add ads publisher dari monetag
