@@ -376,86 +376,87 @@ export const initialCommunicationModelData: CommunicationModel = {
 export const modelInfo: { [key: string]: { name: string; description: string } } = {
   'eisenhower-matrix': {
     name: 'Eisenhower Matrix',
-    description: 'Prioritize tasks by urgency and importance to focus on what matters.',
+    description: 'A free tool to prioritize tasks by urgency and importance to focus on what matters.',
   },
   swot: {
     name: 'SWOT Analysis',
-    description: 'Identify strengths, weaknesses, opportunities, and threats to make strategic decisions.',
+    description: 'A free tool to identify strengths, weaknesses, opportunities, and threats to make strategic decisions.',
   },
   'pareto-principle': {
     name: 'Pareto Principle (80/20 Rule)',
-    description: 'Identify the 20% of inputs that create 80% of the results.',
+    description: 'A free tool to identify the 20% of inputs that create 80% of the results.',
   },
   'business-model-canvas': {
     name: 'Business Model Canvas',
-    description: 'Visualize and develop new or existing business models.',
+    description: 'A free tool to visualize and develop new or existing business models.',
   },
   'maslows-hierarchy': {
     name: 'Maslow\'s Hierarchy of Needs',
-    description: 'Understand human motivation by fulfilling hierarchical needs.',
+    description: 'A free tool to understand human motivation by fulfilling hierarchical needs.',
   },
   'johari-window': {
     name: 'Johari Window',
-    description: 'A tool for understanding and improving self-awareness and mutual understanding between individuals within a group.',
+    description: 'A free tool for understanding and improving self-awareness and mutual understanding between individuals within a group.',
   },
   'boston-matrix': {
     name: 'Boston Matrix',
-    description: 'Analyze product portfolio based on market share and growth rate.',
+    description: 'A free tool to analyze product portfolio based on market share and growth rate.',
   },
   'porters-five-forces': {
     name: 'Porter\'s Five Forces',
-    description: 'Analyze the competitive environment of an industry.',
+    description: 'A free tool to analyze the competitive environment of an industry.',
   },
   'aida-model': {
     name: 'AIDA Model',
-    description: 'A model that describes the steps a customer goes through in the process of purchasing a product.',
+    description: 'A free model that describes the steps a customer goes through in the process of purchasing a product.',
   },
   'tuckmans-stages': {
     name: 'Tuckman\'s Stages',
-    description: 'A model of group development.',
+    description: 'A free model of group development.',
   },
   'mckinsey-7s-framework': {
     name: 'McKinsey 7S Framework',
-    description: 'A model for organizational analysis and effectiveness.',
+    description: 'A free model for organizational analysis and effectiveness.',
   },
   'adkar-model': {
     name: 'ADKAR Model',
-    description: 'A goal-oriented change management model.',
+    description: 'A free goal-oriented change management model.',
   },
   'gantt-chart': {
     name: 'Gantt Chart',
-    description: 'A type of bar chart that illustrates a project schedule.',
+    description: 'A free tool that illustrates a project schedule.',
   },
   'fishbone-diagram': {
     name: 'Fishbone Diagram',
-    description: 'A cause-and-effect diagram that helps to identify the root causes of a problem.',
+    description: 'A free cause-and-effect diagram that helps to identify the root causes of a problem.',
   },
   'raci-matrix': {
     name: 'RACI Matrix',
-    description: 'A responsibility assignment chart that maps out every task, milestone or key decision involved in completing a project.',
+    description: 'A free responsibility assignment chart that maps out every task, milestone or key decision involved in completing a project.',
   },
   'scamper-model': {
     name: 'SCAMPER Model',
-    description: 'A creative thinking technique that helps to generate ideas for new products and services.',
+    description: 'A free creative thinking technique that helps to generate ideas for new products and services.',
   },
   'diffusion-of-innovations': {
     name: 'Diffusion of Innovations',
-    description: 'A theory that seeks to explain how, why, and at what rate new ideas and technology spread.',
+    description: 'A free theory that seeks to explain how, why, and at what rate new ideas and technology spread.',
   },
   'flow-model': {
     name: 'Flow Model',
-    description: 'A model describing the mental state of being fully immersed in an activity.',
+    description: 'A free model describing the mental state of being fully immersed in an activity.',
   },
   'change-management': {
     name: 'Change Management',
-    description: 'Models for managing the process of change in an organization.',
+    description: 'Free models for managing the process of change in an organization.',
   },
   'communication-model': {
     name: 'Communication Model',
-    description: 'A framework for explaining how the communication process works.',
+    description: 'A free framework for explaining how the communication process works.',
   },
 };
 
     
 
     
+
