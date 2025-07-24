@@ -24,12 +24,11 @@ export default function ModelsPage() {
 
       <Card className="overflow-hidden shadow-lg">
         <Image 
-          src="https://placehold.co/1200x400.png"
+          src="/ModelToolkitHero.jpg"
           alt="Team collaborating on a project"
           width={1200}
           height={400}
           className="w-full object-cover"
-          data-ai-hint="team collaboration"
           priority
         />
       </Card>
