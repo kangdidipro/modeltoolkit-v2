@@ -5,7 +5,7 @@ import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialFishboneDiagramData, type FishboneDiagramModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Pencil } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Pencil, Printer } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
@@ -261,6 +261,25 @@ export default function FishboneDiagramCanvas() {
     URL.revokeObjectURL(url);
   }
 
+  const handleExportCsv = () => {
+    let csvContent = "data:text/csv;charset=utf-8,Category,Cause,Effect\n";
+    const effect = `"${data.effect.replace(/"/g, '""')}"`;
+    for (const [key, items] of Object.entries(data)) {
+        if (key === 'effect') continue;
+        (items as ModelItem[]).forEach(item => {
+            const content = `"${item.content.replace(/"/g, '""')}"`;
+            csvContent += `${key},${content},${effect}\n`;
+        });
+    }
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "fishbone-diagram.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   const CauseCard = ({ categoryInfo }: { categoryInfo: { key: CategoryKeys; title: string; bgColor: string; } }) => {
     return (
       <Card className={`flex flex-col min-h-[200px] ${categoryInfo.bgColor}`}>
@@ -324,12 +343,20 @@ export default function FishboneDiagramCanvas() {
 
   return (
     <>
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="canvas-controls mb-4 flex flex-wrap gap-2">
         <Button variant="outline" onClick={handleSave}><Save className="mr-2 h-4 w-4" /> Save</Button>
         <Button variant="outline" onClick={() => setIsHistoryOpen(true)}><History className="mr-2 h-4 w-4" /> History</Button>
         <input type="file" ref={fileInputRef} className="hidden" accept=".xml" onChange={handleFileChange} />
         <Button variant="outline" onClick={handleXmlImportClick}><Upload className="mr-2 h-4 w-4" /> Import from XML</Button>
         <Button variant="outline" onClick={handleExportXml}><FileDown className="mr-2 h-4 w-4" /> Export as XML</Button>
+        <Button variant="outline" onClick={handleExportCsv}>
+            <FileDown className="mr-2 h-4 w-4" />
+            Export as CSV
+        </Button>
+        <Button variant="outline" onClick={() => window.print()}>
+          <Printer className="mr-2 h-4 w-4" />
+          Print
+        </Button>
       </div>
       
       <Dialog open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
@@ -363,7 +390,7 @@ export default function FishboneDiagramCanvas() {
         </DialogContent>
       </Dialog>
 
-      <div ref={canvasRef} className="relative overflow-x-auto pb-8 bg-background p-4 rounded-lg">
+      <div ref={canvasRef} className="printable-canvas relative overflow-x-auto pb-8 bg-background p-4 rounded-lg">
         <div className="flex items-center min-w-[1000px]">
           {/* Categories */}
           <div className="flex-1 grid grid-cols-3 gap-8 py-8 pr-8">
@@ -419,3 +446,5 @@ export default function FishboneDiagramCanvas() {
     </>
   )
 }
+
+    
