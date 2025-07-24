@@ -5,7 +5,7 @@ import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialMckinsey7sFrameworkData, type Mckinsey7sFrameworkModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Printer } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -243,6 +243,23 @@ export default function Mckinsey7sFrameworkCanvas() {
     a.click();
     URL.revokeObjectURL(url);
   }
+
+  const handleExportCsv = () => {
+    let csvContent = "data:text/csv;charset=utf-8,Category,Content\n";
+    for (const [key, items] of Object.entries(data)) {
+        items.forEach(item => {
+            const content = `"${item.content.replace(/"/g, '""')}"`;
+            csvContent += `${key},${content}\n`;
+        });
+    }
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "mckinsey-7s-framework.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
   
   const countTotalItems = (modelData: Mckinsey7sFrameworkModel) => {
     return Object.values(modelData).reduce((sum, array) => sum + array.length, 0);
@@ -313,7 +330,7 @@ export default function Mckinsey7sFrameworkCanvas() {
 
   return (
     <>
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="canvas-controls mb-4 flex flex-wrap gap-2">
         <Button variant="outline" onClick={handleSave}>
           <Save className="mr-2 h-4 w-4" />
           Save
@@ -337,6 +354,14 @@ export default function Mckinsey7sFrameworkCanvas() {
         <Button variant="outline" onClick={handleExportXml}>
           <FileDown className="mr-2 h-4 w-4" />
           Export as XML
+        </Button>
+        <Button variant="outline" onClick={handleExportCsv}>
+            <FileDown className="mr-2 h-4 w-4" />
+            Export as CSV
+        </Button>
+        <Button variant="outline" onClick={() => window.print()}>
+          <Printer className="mr-2 h-4 w-4" />
+          Print
         </Button>
       </div>
       
@@ -389,7 +414,7 @@ export default function Mckinsey7sFrameworkCanvas() {
 
       <div 
         ref={canvasRef}
-        className="grid gap-4 bg-background p-4 rounded-lg"
+        className="printable-canvas grid gap-4 bg-background p-4 rounded-lg"
         style={{
             gridTemplateAreas: `
                 ". strategy ."
