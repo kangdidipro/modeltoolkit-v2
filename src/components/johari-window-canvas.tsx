@@ -238,6 +238,23 @@ export default function JohariWindowCanvas() {
     URL.revokeObjectURL(url);
   }
   
+  const handleExportCsv = () => {
+    let csvContent = "data:text/csv;charset=utf-8,Category,Content\n";
+    for (const [key, items] of Object.entries(data)) {
+        items.forEach(item => {
+            const content = `"${item.content.replace(/"/g, '""')}"`;
+            csvContent += `${key},${content}\n`;
+        });
+    }
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "johari-window.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   const countTotalItems = (modelData: JohariWindowModel) => {
     return Object.values(modelData).reduce((sum, array) => sum + array.length, 0);
   }
@@ -268,6 +285,10 @@ export default function JohariWindowCanvas() {
         <Button variant="outline" onClick={handleExportXml}>
           <FileDown className="mr-2 h-4 w-4" />
           Export as XML
+        </Button>
+        <Button variant="outline" onClick={handleExportCsv}>
+            <FileDown className="mr-2 h-4 w-4" />
+            Export as CSV
         </Button>
         <Button variant="outline" onClick={() => window.print()}>
           <Printer className="mr-2 h-4 w-4" />
