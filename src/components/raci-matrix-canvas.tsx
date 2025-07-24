@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { initialRaciMatrixData, type RaciMatrixModel, type RaciTask, type RaciPerson, type RaciRole, type RaciAssignment } from "@/lib/models";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, Save, History, Upload, FileDown, RefreshCw, GripVertical, Users, ListChecks } from "lucide-react";
+import { Plus, Trash2, Save, History, Upload, FileDown, RefreshCw, GripVertical, Users, ListChecks, Printer } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -151,6 +151,28 @@ export default function RaciMatrixCanvas() {
     reader.readAsText(file);
   };
   
+  const handleExportCsv = () => {
+    let csvContent = "data:text/csv;charset=utf-8,Task,Person,Role\n";
+    data.tasks.forEach(task => {
+        task.assignments.forEach(assignment => {
+            const person = data.people.find(p => p.id === assignment.personId);
+            if (person) {
+                const taskDesc = `"${task.description.replace(/"/g, '""')}"`;
+                const personName = `"${person.name.replace(/"/g, '""')}"`;
+                csvContent += `${taskDesc},${personName},${assignment.role}\n`;
+            }
+        });
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "raci-matrix.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const addPerson = () => {
     const newPerson: RaciPerson = { id: `person-${Date.now()}`, name: "New Person" };
     setData(prev => ({ ...prev, people: [...prev.people, newPerson] }));
@@ -221,12 +243,20 @@ export default function RaciMatrixCanvas() {
 
   return (
     <>
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="canvas-controls mb-4 flex flex-wrap gap-2">
         <Button variant="outline" onClick={handleSave}><Save className="mr-2 h-4 w-4" /> Save</Button>
         <Button variant="outline" onClick={() => setIsHistoryOpen(true)}><History className="mr-2 h-4 w-4" /> History</Button>
         <input type="file" ref={fileInputRef} className="hidden" accept=".xml" onChange={handleFileChange} />
         <Button variant="outline" onClick={handleXmlImportClick}><Upload className="mr-2 h-4 w-4" /> Import from XML</Button>
         <Button variant="outline" onClick={handleExportXml}><FileDown className="mr-2 h-4 w-4" /> Export as XML</Button>
+        <Button variant="outline" onClick={handleExportCsv}>
+            <FileDown className="mr-2 h-4 w-4" />
+            Export as CSV
+        </Button>
+        <Button variant="outline" onClick={() => window.print()}>
+          <Printer className="mr-2 h-4 w-4" />
+          Print
+        </Button>
       </div>
 
       <Dialog open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
@@ -248,7 +278,7 @@ export default function RaciMatrixCanvas() {
         </DialogContent>
       </Dialog>
       
-      <div ref={canvasRef} className="bg-background p-4 rounded-lg">
+      <div ref={canvasRef} className="printable-canvas bg-background p-4 rounded-lg">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-1 bg-blue-50 dark:bg-blue-900/20">
             <CardHeader>
