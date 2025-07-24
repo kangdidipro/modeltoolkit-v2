@@ -1,4 +1,7 @@
-===202507===
+===20250724===
+1. add ads infolinks.com/
+
+===20250720===
 1. add page term and privacy
 2. change menu style and add category
 3. add new article 10 Strategic Models to Boost Your Productivity.jpg
