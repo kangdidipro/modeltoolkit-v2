@@ -5,7 +5,7 @@ import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Printer } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -237,6 +237,21 @@ export default function GanttChartCanvas() {
     a.click();
     URL.revokeObjectURL(url);
   }
+
+  const handleExportCsv = () => {
+    let csvContent = "data:text/csv;charset=utf-8,Task\n";
+    data.tasks.forEach(item => {
+        const content = `"${item.content.replace(/"/g, '""')}"`;
+        csvContent += `${content}\n`;
+    });
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "gantt-chart.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
   
   const countTotalItems = (modelData: GanttChartModel) => {
     return modelData.tasks.length;
@@ -244,7 +259,7 @@ export default function GanttChartCanvas() {
 
   return (
     <>
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="canvas-controls mb-4 flex flex-wrap gap-2">
         <Button variant="outline" onClick={handleSave}>
           <Save className="mr-2 h-4 w-4" />
           Save
@@ -268,6 +283,14 @@ export default function GanttChartCanvas() {
         <Button variant="outline" onClick={handleExportXml}>
           <FileDown className="mr-2 h-4 w-4" />
           Export as XML
+        </Button>
+        <Button variant="outline" onClick={handleExportCsv}>
+            <FileDown className="mr-2 h-4 w-4" />
+            Export as CSV
+        </Button>
+        <Button variant="outline" onClick={() => window.print()}>
+          <Printer className="mr-2 h-4 w-4" />
+          Print
         </Button>
       </div>
       
@@ -318,7 +341,7 @@ export default function GanttChartCanvas() {
         </DialogContent>
       </Dialog>
         
-      <div ref={canvasRef} className="bg-background p-4 rounded-lg">
+      <div ref={canvasRef} className="printable-canvas bg-background p-4 rounded-lg">
         <Card className="min-h-[600px] bg-blue-50 dark:bg-blue-900/20">
           <CardHeader>
             <div className="flex items-center justify-between">
