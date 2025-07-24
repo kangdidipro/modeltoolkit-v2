@@ -24,6 +24,7 @@ export default function BlogPostPage() {
               width={1200}
               height={600}
               className="w-full object-cover"
+              priority
             />
           </CardContent>
         </Card>
