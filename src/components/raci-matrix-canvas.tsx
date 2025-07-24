@@ -5,15 +5,13 @@ import { useState, useEffect, useRef } from "react";
 import { initialRaciMatrixData, type RaciMatrixModel, type RaciTask, type RaciPerson, type RaciRole, type RaciAssignment } from "@/lib/models";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, Save, History, Upload, FileDown, RefreshCw, GripVertical, Users, ListChecks, Download, Printer } from "lucide-react";
+import { Plus, Trash2, Save, History, Upload, FileDown, RefreshCw, GripVertical, Users, ListChecks } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 
 const LOCAL_STORAGE_KEY = 'raci-matrix-history';
 
@@ -63,41 +61,6 @@ export default function RaciMatrixCanvas() {
     setData(entry.data);
     setIsHistoryOpen(false);
     toast({ title: "Work Loaded", description: `Loaded version from ${new Date(entry.timestamp).toLocaleString()}` });
-  };
-
-  const handleExport = async (type: 'PNG' | 'PDF') => {
-    const canvasElement = canvasRef.current;
-    if (!canvasElement) return;
-
-    toast({ title: "Exporting...", description: `Generating your ${type} file.` });
-
-    try {
-        const canvas = await html2canvas(canvasElement, {
-            backgroundColor: null,
-            scale: 2,
-        });
-
-        if (type === 'PNG') {
-            const dataUrl = canvas.toDataURL("image/png");
-            const link = document.createElement("a");
-            link.download = "raci-matrix.png";
-            link.href = dataUrl;
-            link.click();
-        } else if (type === 'PDF') {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF({
-                orientation: 'landscape',
-                unit: 'px',
-                format: [canvas.width, canvas.height]
-            });
-            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-            pdf.save('raci-matrix.pdf');
-        }
-        toast({ title: "Export Successful", description: `Your RACI Matrix has been downloaded as a ${type}.` });
-    } catch (error) {
-        console.error("Export failed", error);
-        toast({ variant: "destructive", title: "Export Failed", description: "Something went wrong while exporting." });
-    }
   };
   
   const handleExportXml = () => {
@@ -264,8 +227,6 @@ export default function RaciMatrixCanvas() {
         <input type="file" ref={fileInputRef} className="hidden" accept=".xml" onChange={handleFileChange} />
         <Button variant="outline" onClick={handleXmlImportClick}><Upload className="mr-2 h-4 w-4" /> Import from XML</Button>
         <Button variant="outline" onClick={handleExportXml}><FileDown className="mr-2 h-4 w-4" /> Export as XML</Button>
-        <Button variant="outline" onClick={() => handleExport('PNG')}><Download className="mr-2 h-4 w-4" /> Export as PNG</Button>
-        <Button variant="outline" onClick={() => handleExport('PDF')}><Printer className="mr-2 h-4 w-4" /> Export as PDF</Button>
       </div>
 
       <Dialog open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
@@ -359,5 +320,3 @@ export default function RaciMatrixCanvas() {
     </>
   );
 }
-
-    

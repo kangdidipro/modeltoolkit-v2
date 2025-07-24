@@ -1,10 +1,11 @@
+
 "use client"
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialMckinsey7sFrameworkData, type Mckinsey7sFrameworkModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, Download, Printer, GripVertical, Save, History, Upload, FileDown, RefreshCw } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -16,8 +17,6 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import html2canvas from "html2canvas"
-import jsPDF from "jspdf"
 
 type ElementKeys = keyof Mckinsey7sFrameworkModel;
 const LOCAL_STORAGE_KEY = 'mckinsey-7s-framework-history';
@@ -166,41 +165,6 @@ export default function Mckinsey7sFrameworkCanvas() {
       description: `Loaded version from ${new Date(entry.timestamp).toLocaleString()}`,
     });
   };
-
-  const handleExport = async (type: 'PNG' | 'PDF') => {
-    const canvasElement = canvasRef.current;
-    if (!canvasElement) return;
-
-    toast({ title: "Exporting...", description: `Generating your ${type} file.` });
-
-    try {
-      const canvas = await html2canvas(canvasElement, {
-        backgroundColor: null,
-        scale: 2,
-      });
-
-      if (type === 'PNG') {
-        const dataUrl = canvas.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.download = "mckinsey-7s-framework.png";
-        link.href = dataUrl;
-        link.click();
-      } else if (type === 'PDF') {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF({
-          orientation: 'portrait',
-          unit: 'px',
-          format: [canvas.width, canvas.height]
-        });
-        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-        pdf.save('mckinsey-7s-framework.pdf');
-      }
-      toast({ title: "Export Successful", description: `Your McKinsey 7S Framework has been downloaded as a ${type}.` });
-    } catch (error) {
-      console.error("Export failed", error);
-      toast({ variant: "destructive", title: "Export Failed", description: "Something went wrong while exporting." });
-    }
-  }
 
   const handleXmlImportClick = () => {
     fileInputRef.current?.click();
@@ -373,14 +337,6 @@ export default function Mckinsey7sFrameworkCanvas() {
         <Button variant="outline" onClick={handleExportXml}>
           <FileDown className="mr-2 h-4 w-4" />
           Export as XML
-        </Button>
-        <Button variant="outline" onClick={() => handleExport('PNG')}>
-          <Download className="mr-2 h-4 w-4" />
-          Export as PNG
-        </Button>
-        <Button variant="outline" onClick={() => handleExport('PDF')}>
-          <Printer className="mr-2 h-4 w-4" />
-          Export as PDF
         </Button>
       </div>
       
