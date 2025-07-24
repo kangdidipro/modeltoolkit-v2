@@ -1,4 +1,24 @@
-
+import {
+  LayoutGrid,
+  BarChartBig,
+  LayoutTemplate,
+  Pyramid,
+  Table2,
+  Network,
+  Puzzle,
+  Users,
+  Presentation,
+  GitMerge,
+  Sigma,
+  GanttChartSquare,
+  ClipboardList,
+  MessageCircle,
+  BrainCircuit,
+  Settings,
+  Recycle,
+  Lightbulb,
+} from "lucide-react"
+import type { LucideIcon } from "lucide-react"
 
 export type ModelItem = {
   id: string;
@@ -373,90 +393,159 @@ export const initialCommunicationModelData: CommunicationModel = {
 };
 
 
-export const modelInfo: { [key: string]: { name: string; description: string } } = {
+export const modelInfo: { [key: string]: { name: string; description: string, icon: React.ComponentType<any> } } = {
   'eisenhower-matrix': {
     name: 'Eisenhower Matrix',
     description: 'A free tool to prioritize tasks by urgency and importance to focus on what matters.',
+    icon: GanttChartSquare,
   },
   swot: {
     name: 'SWOT Analysis',
     description: 'A free tool to identify strengths, weaknesses, opportunities, and threats to make strategic decisions.',
+    icon: LayoutGrid,
   },
   'pareto-principle': {
     name: 'Pareto Principle (80/20 Rule)',
     description: 'A free tool to identify the 20% of inputs that create 80% of the results.',
+    icon: BarChartBig,
   },
   'business-model-canvas': {
     name: 'Business Model Canvas',
     description: 'A free tool to visualize and develop new or existing business models.',
+    icon: LayoutTemplate,
   },
   'maslows-hierarchy': {
     name: 'Maslow\'s Hierarchy of Needs',
     description: 'A free tool to understand human motivation by fulfilling hierarchical needs.',
+    icon: Pyramid,
   },
   'johari-window': {
     name: 'Johari Window',
     description: 'A free tool for understanding and improving self-awareness and mutual understanding between individuals within a group.',
+    icon: Users,
   },
   'boston-matrix': {
     name: 'Boston Matrix',
     description: 'A free tool to analyze product portfolio based on market share and growth rate.',
+    icon: Table2,
   },
   'porters-five-forces': {
     name: 'Porter\'s Five Forces',
     description: 'A free tool to analyze the competitive environment of an industry.',
+    icon: Network,
   },
   'aida-model': {
     name: 'AIDA Model',
     description: 'A free model that describes the steps a customer goes through in the process of purchasing a product.',
+    icon: Presentation,
   },
   'tuckmans-stages': {
     name: 'Tuckman\'s Stages',
     description: 'A free model of group development.',
+    icon: Users,
   },
   'mckinsey-7s-framework': {
     name: 'McKinsey 7S Framework',
     description: 'A free model for organizational analysis and effectiveness.',
+    icon: Puzzle,
   },
   'adkar-model': {
     name: 'ADKAR Model',
     description: 'A free goal-oriented change management model.',
+    icon: GitMerge,
   },
   'gantt-chart': {
     name: 'Gantt Chart',
     description: 'A free tool that illustrates a project schedule.',
+    icon: GanttChartSquare,
   },
   'fishbone-diagram': {
     name: 'Fishbone Diagram',
     description: 'A free cause-and-effect diagram that helps to identify the root causes of a problem.',
+    icon: Sigma,
   },
   'raci-matrix': {
     name: 'RACI Matrix',
     description: 'A free responsibility assignment chart that maps out every task, milestone or key decision involved in completing a project.',
+    icon: ClipboardList,
   },
   'scamper-model': {
     name: 'SCAMPER Model',
     description: 'A free creative thinking technique that helps to generate ideas for new products and services.',
+    icon: Lightbulb,
   },
   'diffusion-of-innovations': {
     name: 'Diffusion of Innovations',
     description: 'A free theory that seeks to explain how, why, and at what rate new ideas and technology spread.',
+    icon: Recycle,
   },
   'flow-model': {
     name: 'Flow Model',
     description: 'A free model describing the mental state of being fully immersed in an activity.',
+    icon: BrainCircuit,
   },
   'change-management': {
     name: 'Change Management',
     description: 'Free models for managing the process of change in an organization.',
+    icon: Settings,
   },
   'communication-model': {
     name: 'Communication Model',
     description: 'A free framework for explaining how the communication process works.',
+    icon: MessageCircle,
   },
 };
 
-    
+type ModelCategory = {
+  name: string;
+  models: {
+    id: keyof typeof modelInfo;
+  }[];
+}
 
-    
-
+export const categories: ModelCategory[] = [
+  {
+      name: "Strategic Planning & Business Analysis",
+      models: [
+          {id: "swot"},
+          {id: "pareto-principle"},
+          {id: "business-model-canvas"},
+          {id: "maslows-hierarchy"},
+          {id: "boston-matrix"},
+          {id: "porters-five-forces"},
+          {id: "mckinsey-7s-framework"}
+      ]
+  },
+  {
+      name: "Communication & Self-Awareness",
+      models: [
+        {id: "johari-window"}, 
+        {id: "communication-model"}
+      ]
+  },
+  {
+      name: "Project Management & Team Development",
+      models: [
+          {id: "aida-model"},
+          {id: "tuckmans-stages"},
+          {id: "gantt-chart"}, 
+          {id: "raci-matrix"}, 
+          {id: "scamper-model"}
+      ]
+  },
+  {
+      name: "Change Management & Adoption",
+      models: [
+          {id: "adkar-model"}, 
+          {id: "change-management"}, 
+          {id: "diffusion-of-innovations"}
+      ]
+  },
+  {
+      name: "Problem Solving & Diagrammatic Tools",
+      models: [
+        {id: "fishbone-diagram"}, 
+        {id: "flow-model"}
+      ]
+  }
+];
