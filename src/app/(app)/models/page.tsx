@@ -15,6 +15,13 @@ export default function ModelsPage() {
         </p>
       </div>
 
+      <div className="max-w-3xl mx-auto text-center">
+        <blockquote className="italic text-muted-foreground border-l-4 pl-4">
+          "My method is different. I do not rush into actual work. When I get an idea, I start at once building it up in my imagination. I change the construction, make improvements and operate the device in my mind."
+        </blockquote>
+        <p className="mt-2 text-sm font-semibold text-foreground">- Nikola Tesla</p>
+      </div>
+
       <Card className="overflow-hidden shadow-lg">
         <Image 
           src="https://placehold.co/1200x400.png"
