@@ -1,6 +1,7 @@
 ===20250724===
 1. add ads infolinks.com/
 2. bug fix mobile menu to auto hide
+3. add landing page as default first load
 
 ===20250720===
 1. add page term and privacy
