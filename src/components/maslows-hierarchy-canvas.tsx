@@ -1,11 +1,10 @@
-
 "use client"
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialMaslowsHierarchyData, type MaslowsHierarchyModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Printer } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -35,7 +34,6 @@ export default function MaslowsHierarchyCanvas() {
 
   const draggedItem = useRef<{ item: ModelItem; from: LevelKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const canvasRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -247,7 +245,7 @@ export default function MaslowsHierarchyCanvas() {
 
   return (
     <>
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="canvas-controls mb-4 flex flex-wrap gap-2">
         <Button variant="outline" onClick={handleSave}>
           <Save className="mr-2 h-4 w-4" />
           Save
@@ -271,6 +269,10 @@ export default function MaslowsHierarchyCanvas() {
         <Button variant="outline" onClick={handleExportXml}>
           <FileDown className="mr-2 h-4 w-4" />
           Export as XML
+        </Button>
+        <Button variant="outline" onClick={() => window.print()}>
+          <Printer className="mr-2 h-4 w-4" />
+          Print
         </Button>
       </div>
       
@@ -321,7 +323,7 @@ export default function MaslowsHierarchyCanvas() {
         </DialogContent>
       </Dialog>
 
-      <div ref={canvasRef} className="bg-background p-4 rounded-lg">
+      <div className="printable-canvas bg-background p-4 rounded-lg">
         <div className="flex flex-col-reverse items-center space-y-reverse space-y-4">
           {levels.map((level, index) => (
               <div key={level.key} className="w-full" style={{ maxWidth: `${100 - index * 10}%` }}>

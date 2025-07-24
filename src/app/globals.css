@@ -86,3 +86,29 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+  [data-sidebar="sidebar"],
+  [data-sidebar="trigger"],
+  .canvas-controls,
+  .footer,
+  .md\:hidden {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+  }
+  .printable-canvas {
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  .printable-canvas .card {
+    border-color: #ddd !important;
+    box-shadow: none !important;
+  }
+}

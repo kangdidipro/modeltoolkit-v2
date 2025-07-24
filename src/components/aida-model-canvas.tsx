@@ -1,11 +1,10 @@
-
 "use client"
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialAidaModelData, type AidaModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Printer } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -35,7 +34,6 @@ export default function AidaModelCanvas() {
 
   const draggedItem = useRef<{ item: ModelItem; from: StageKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const canvasRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -246,7 +244,7 @@ export default function AidaModelCanvas() {
 
   return (
     <>
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="canvas-controls mb-4 flex flex-wrap gap-2">
         <Button variant="outline" onClick={handleSave}>
           <Save className="mr-2 h-4 w-4" />
           Save
@@ -270,6 +268,10 @@ export default function AidaModelCanvas() {
         <Button variant="outline" onClick={handleExportXml}>
           <FileDown className="mr-2 h-4 w-4" />
           Export as XML
+        </Button>
+        <Button variant="outline" onClick={() => window.print()}>
+          <Printer className="mr-2 h-4 w-4" />
+          Print
         </Button>
       </div>
       
@@ -320,7 +322,7 @@ export default function AidaModelCanvas() {
         </DialogContent>
       </Dialog>
 
-      <div ref={canvasRef} className="space-y-4 bg-background p-4 rounded-lg">
+      <div className="printable-canvas space-y-4 bg-background p-4 rounded-lg">
         {stages.map((stage) => (
           <Card key={stage.key} className={`${stage.bg} flex flex-col`}>
             <CardHeader>
