@@ -5,7 +5,7 @@ import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialScamperModelData, type ScamperModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Printer } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -244,13 +244,30 @@ export default function ScamperModelCanvas() {
     URL.revokeObjectURL(url);
   }
   
+  const handleExportCsv = () => {
+    let csvContent = "data:text/csv;charset=utf-8,Category,Content\n";
+    for (const [key, items] of Object.entries(data)) {
+        items.forEach(item => {
+            const content = `"${item.content.replace(/"/g, '""')}"`;
+            csvContent += `${key},${content}\n`;
+        });
+    }
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "scamper-model.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   const countTotalItems = (modelData: ScamperModel) => {
     return Object.values(modelData).reduce((sum, array) => sum + array.length, 0);
   }
 
   return (
     <>
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="canvas-controls mb-4 flex flex-wrap gap-2">
         <Button variant="outline" onClick={handleSave}>
           <Save className="mr-2 h-4 w-4" />
           Save
@@ -274,6 +291,14 @@ export default function ScamperModelCanvas() {
         <Button variant="outline" onClick={handleExportXml}>
           <FileDown className="mr-2 h-4 w-4" />
           Export as XML
+        </Button>
+        <Button variant="outline" onClick={handleExportCsv}>
+            <FileDown className="mr-2 h-4 w-4" />
+            Export as CSV
+        </Button>
+        <Button variant="outline" onClick={() => window.print()}>
+          <Printer className="mr-2 h-4 w-4" />
+          Print
         </Button>
       </div>
       
@@ -329,7 +354,7 @@ export default function ScamperModelCanvas() {
         </DialogContent>
       </Dialog>
 
-      <div ref={canvasRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-start bg-background p-4 rounded-lg">
+      <div ref={canvasRef} className="printable-canvas grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-start bg-background p-4 rounded-lg">
         {stages.map((stage) => (
           <Card key={stage.key} className={`${stage.bg} flex flex-col`}>
             <CardHeader>
