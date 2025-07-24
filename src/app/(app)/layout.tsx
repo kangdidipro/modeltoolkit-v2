@@ -16,6 +16,7 @@ import {
   SidebarInset,
   SidebarTrigger,
   SidebarContent,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import {
   Accordion,
@@ -99,6 +100,7 @@ const defaultOpenCategories = categories.map(category => category.name);
 
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [hasMounted, setHasMounted] = React.useState(false);
+  const { setOpenMobile } = useSidebar();
 
   React.useEffect(() => {
     setHasMounted(true);
@@ -107,11 +109,16 @@ function ClientOnly({ children }: { children: React.ReactNode }) {
   if (!hasMounted) {
     return null;
   }
+  
+  const handleLinkClick = () => {
+    setOpenMobile(false);
+  }
 
-  return <>{children}</>;
+  // Pass handleLinkClick to children
+  return React.cloneElement(children as React.ReactElement, { handleLinkClick });
 }
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+function AppLayoutContent({ children, handleLinkClick }: { children: React.ReactNode, handleLinkClick: () => void }) {
   const pathname = usePathname()
   const [timestamp, setTimestamp] = React.useState("");
 
@@ -133,68 +140,76 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   )
   
   return (
-    <ClientOnly>
-      <SidebarProvider>
-        <Sidebar>
-          <SidebarHeader>
-            <div className="flex items-center gap-2 p-2">
-              <Logo size="md" />
-              <h1 className="text-xl font-headline font-semibold">Model Toolkit</h1>
-            </div>
-          </SidebarHeader>
-          <SidebarContent>
-            <Accordion type="multiple" className="w-full px-2" defaultValue={defaultOpenCategories}>
-                {categories.map((category) => (
-                    <AccordionItem value={category.name} key={category.name} className="border-b-0">
-                        <AccordionTrigger className="justify-start text-sm font-semibold text-sidebar-accent-foreground bg-sidebar-accent hover:bg-sidebar-accent/90 p-2 rounded-md hover:no-underline">
-                            <div className="flex items-center gap-2">
-                                {category.name}
-                            </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="pb-1">
-                            <SidebarMenu className="pl-4 border-l ml-2">
-                            {category.models.filter(model => modelInfo[model.id]).map((model) => (
-                                <SidebarMenuItem key={model.id}>
-                                    <Link href={`/models/${model.id}`} className="block">
-                                        <SidebarMenuButton
-                                            isActive={isActive(`/models/${model.id}`)}
-                                            icon={model.icon}
-                                            className="h-8"
-                                        >
-                                            {modelInfo[model.id].name}
-                                        </SidebarMenuButton>
-                                    </Link>
-                                </SidebarMenuItem>
-                            ))}
-                            </SidebarMenu>
-                        </AccordionContent>
-                    </AccordionItem>
-                ))}
-            </Accordion>
-          </SidebarContent>
-        </Sidebar>
-        <SidebarInset>
-          <div className="flex flex-col min-h-screen">
-            <main className="flex-grow">
-              <div className="p-4 md:p-6">
-                <div className="md:hidden flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <Logo size="sm" />
-                    <h1 className="text-lg font-headline font-semibold">Model Toolkit</h1>
-                  </div>
-                  <SidebarTrigger>
-                      <Button variant="ghost" size="icon">
-                        <LayoutGrid />
-                      </Button>
-                  </SidebarTrigger>
-                </div>
-                {children}
-              </div>
-            </main>
-            <Footer timestamp={timestamp} />
+    <>
+      <Sidebar>
+        <SidebarHeader>
+          <div className="flex items-center gap-2 p-2">
+            <Logo size="md" />
+            <h1 className="text-xl font-headline font-semibold">Model Toolkit</h1>
           </div>
-        </SidebarInset>
-      </SidebarProvider>
-    </ClientOnly>
+        </SidebarHeader>
+        <SidebarContent>
+          <Accordion type="multiple" className="w-full px-2" defaultValue={defaultOpenCategories}>
+              {categories.map((category) => (
+                  <AccordionItem value={category.name} key={category.name} className="border-b-0">
+                      <AccordionTrigger className="justify-start text-sm font-semibold text-sidebar-accent-foreground bg-sidebar-accent hover:bg-sidebar-accent/90 p-2 rounded-md hover:no-underline">
+                          <div className="flex items-center gap-2">
+                              {category.name}
+                          </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="pb-1">
+                          <SidebarMenu className="pl-4 border-l ml-2">
+                          {category.models.filter(model => modelInfo[model.id]).map((model) => (
+                              <SidebarMenuItem key={model.id}>
+                                  <Link href={`/models/${model.id}`} className="block" onClick={handleLinkClick}>
+                                      <SidebarMenuButton
+                                          isActive={isActive(`/models/${model.id}`)}
+                                          icon={model.icon}
+                                          className="h-8"
+                                      >
+                                          {modelInfo[model.id].name}
+                                      </SidebarMenuButton>
+                                  </Link>
+                              </SidebarMenuItem>
+                          ))}
+                          </SidebarMenu>
+                      </AccordionContent>
+                  </AccordionItem>
+              ))}
+          </Accordion>
+        </SidebarContent>
+      </Sidebar>
+      <SidebarInset>
+        <div className="flex flex-col min-h-screen">
+          <main className="flex-grow">
+            <div className="p-4 md:p-6">
+              <div className="md:hidden flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Logo size="sm" />
+                  <h1 className="text-lg font-headline font-semibold">Model Toolkit</h1>
+                </div>
+                <SidebarTrigger>
+                    <Button variant="ghost" size="icon">
+                      <LayoutGrid />
+                    </Button>
+                </SidebarTrigger>
+              </div>
+              {children}
+            </div>
+          </main>
+          <Footer timestamp={timestamp} />
+        </div>
+      </SidebarInset>
+    </>
+  );
+}
+
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <SidebarProvider>
+      <ClientOnly>
+        <AppLayoutContent>{children}</AppLayoutContent>
+      </ClientOnly>
+    </SidebarProvider>
   )
 }

@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import * as React from "react"
@@ -575,7 +576,7 @@ const SidebarMenuButton = React.forwardRef<
         {...props}
       >
         {icon}
-        {children}
+        <span className="truncate group-data-[collapsible=icon]:hidden">{children}</span>
       </Comp>
     )
     
