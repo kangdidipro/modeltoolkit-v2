@@ -24,6 +24,7 @@ function generateSitemap() {
     { url: '/blog/a-complete-guide-to-strategic-planning-for-small-businesses', priority: 0.6 },
     { url: '/terms', priority: 0.3 },
     { url: '/privacy', priority: 0.3 },
+    { url: '/coffee', priority: 0.4 },
   ];
 
   const modelPages = Object.keys(modelInfo).map(modelId => ({

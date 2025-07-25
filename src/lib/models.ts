@@ -17,6 +17,7 @@ import {
   Settings,
   Recycle,
   Lightbulb,
+  Coffee,
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
@@ -495,6 +496,11 @@ export const modelInfo: { [key: string]: { name: string; description: string, ic
     description: 'A free framework for explaining how the communication process works.',
     icon: MessageCircle,
   },
+  'coffee': {
+    name: 'Buy Me a Coffee',
+    description: 'Support the development of Model Toolkit.',
+    icon: Coffee,
+  },
 };
 
 type ModelCategory = {
@@ -547,6 +553,12 @@ export const categories: ModelCategory[] = [
       models: [
         {id: "fishbone-diagram"}, 
         {id: "flow-model"}
+      ]
+  },
+  {
+      name: "Support",
+      models: [
+        {id: "coffee"}
       ]
   }
 ];
