@@ -10,16 +10,16 @@ export default function CoffeePage() {
         </div>
         <h1 className="text-4xl font-bold font-headline">Support Model Toolkit</h1>
         <p className="text-xl text-muted-foreground">
-          Jika Anda merasa toolkit ini bermanfaat, mohon pertimbangkan untuk mendukung pengembangannya.
+          If you find this toolkit helpful, please consider supporting its development.
         </p>
       </div>
       <Card>
         <CardHeader>
-            <CardTitle>Dukungan Anda Sangat Berarti</CardTitle>
+            <CardTitle>Your Support Means a Lot</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-muted-foreground">
-            Model Toolkit adalah proyek pribadi yang didedikasikan untuk menyediakan alat strategis gratis dan dapat diakses untuk semua orang. Kontribusi Anda membantu menutupi biaya server, pemeliharaan, dan memungkinkan pengembangan fitur dan model baru.
+            Model Toolkit is a personal project dedicated to providing free and accessible strategic tools for everyone. Your contribution helps cover server costs, maintenance, and allows for the development of new features and models.
           </p>
           <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
             <input type="hidden" name="cmd" value="_s-xclick" />
