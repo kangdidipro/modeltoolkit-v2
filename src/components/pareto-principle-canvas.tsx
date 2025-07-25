@@ -24,6 +24,7 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip as ChartTooltip, Pi
 import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltipContent } from "@/components/ui/chart"
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
 import { Label } from "./ui/label"
+import { cn } from "@/lib/utils"
 
 type ParetoItem = ModelItem & { value: number };
 type ParetoData = {
@@ -100,19 +101,20 @@ export default function ParetoPrincipleCanvas() {
     });
   }, [data]);
   
-  const pieChartConfig = {
-    value: {
-      label: "Value",
-    },
-    vitalFew: {
-      label: "Vital Few",
-      color: "hsl(var(--chart-1))",
-    },
-    usefulMany: {
-      label: "Useful Many",
-      color: "hsl(var(--chart-2))",
-    },
-  }
+  const calculateTotal = (items: ParetoItem[]) => items.reduce((sum, item) => sum + item.value, 0);
+  
+  const vitalFewTotal = calculateTotal(data.vitalFew);
+  const usefulManyTotal = calculateTotal(data.usefulMany);
+  const grandTotal = vitalFewTotal + usefulManyTotal;
+
+  const pieChartData = useMemo(() => {
+    if (grandTotal === 0) return [];
+    return [
+      { name: 'Vital Few', value: vitalFewTotal, fill: 'hsl(var(--chart-1))' },
+      { name: 'Useful Many', value: usefulManyTotal, fill: 'hsl(var(--chart-2))' },
+    ]
+  }, [vitalFewTotal, usefulManyTotal, grandTotal]);
+
 
   const columns: { key: ColumnKeys; title: string; description: string; bg: string }[] = useMemo(() => [
     { key: "vitalFew", title: "Vital Few (20%)", description: "The small number of inputs that produce the majority of results.", bg: "bg-blue-100 dark:bg-blue-900/40" },
@@ -170,7 +172,7 @@ export default function ParetoPrincipleCanvas() {
   
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
+    e.dataTransfer.dropEffect = 'move';
   };
   
   const handleDrop = (e: DragEvent<HTMLDivElement>, to: ColumnKeys) => {
@@ -346,11 +348,6 @@ export default function ParetoPrincipleCanvas() {
     return Object.values(paretoData).reduce((sum, array) => sum + array.length, 0);
   }
 
-  const calculateTotal = (items: ParetoItem[]) => items.reduce((sum, item) => sum + item.value, 0);
-
-  const vitalFewTotal = calculateTotal(data.vitalFew);
-  const usefulManyTotal = calculateTotal(data.usefulMany);
-  const grandTotal = vitalFewTotal + usefulManyTotal;
 
   return (
     <TooltipProvider>
@@ -592,13 +589,27 @@ export default function ParetoPrincipleCanvas() {
                 </BarChart>
                 </ChartContainer>
             ) : (
-                <ChartContainer config={pieChartConfig} className="h-[400px] w-full">
+                <ChartContainer config={{}} className="h-[400px] w-full">
                     <PieChart>
                         <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
-                        <Legend content={<ChartLegendContent />} />
-                        <Pie data={chartData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={150} label={({ name, value }) => `${name}: ${value}`}>
-                            {chartData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.category === 'vitalFew' ? "hsl(var(--chart-1))" : "hsl(var(--chart-2))"} />
+                        <Legend content={({ payload }) => {
+                            return (
+                                <div className="flex justify-center gap-6">
+                                {payload?.map((entry, index) => (
+                                    <div key={`item-${index}`} className="flex items-center gap-2">
+                                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }}></div>
+                                    <div>
+                                        <p className="font-semibold">{entry.value}</p>
+                                        <p className="text-sm text-muted-foreground">{grandTotal > 0 ? ((entry.payload.value / grandTotal) * 100).toFixed(1) : 0}%</p>
+                                    </div>
+                                    </div>
+                                ))}
+                                </div>
+                            );
+                        }} />
+                        <Pie data={pieChartData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={120} labelLine={false} label={({ name, value }) => `${name}: ${value}`}>
+                            {pieChartData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.fill} />
                             ))}
                         </Pie>
                     </PieChart>
