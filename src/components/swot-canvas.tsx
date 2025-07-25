@@ -42,7 +42,7 @@ export default function SwotCanvas() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isAiAnalysisRunning, setIsAiAnalysisRunning] = useState(false);
   const [aiAnalysisResult, setAiAnalysisResult] = useState<AnalyzeModelCanvasOutput | null>(null);
-  const [businessIdea, setBusinessIdea] = useState("A lemonade stand run by kids");
+  const [businessIdea, setBusinessIdea] = useState("A subscription box for eco-friendly products");
   const [businessInsights, setBusinessInsights] = useState("");
 
   const draggedItem = useRef<{ item: ModelItem; from: ColumnKeys } | null>(null);
