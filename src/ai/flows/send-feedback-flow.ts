@@ -33,7 +33,7 @@ const sendFeedbackFlow = ai.defineFlow(
   },
   async (input) => {
     const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM } = process.env;
-    const FEEDBACK_RECIPIENT_EMAIL = "modetoolkitcom@gmail.com";
+    const FEEDBACK_RECIPIENT_EMAIL = "modeltoolkitcom@gmail.com";
 
     if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS || !SMTP_FROM) {
       throw new Error('SMTP environment variables are not fully configured.');
