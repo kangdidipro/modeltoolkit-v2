@@ -3,7 +3,7 @@
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialParetoPrincipleData, type ParetoPrincipleModel, type ModelItem } from "@/lib/models"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Image as ImageIcon } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter
+  DialogFooter as DialogFooterComponent
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -448,11 +448,11 @@ export default function ParetoPrincipleCanvas() {
             </div>
           </ScrollArea>
           
-          <DialogFooter className="pt-4 border-t">
+          <DialogFooterComponent className="pt-4 border-t">
               <p className="text-sm text-muted-foreground">
                 Your data is saved in your browser's local storage.
               </p>
-          </DialogFooter>
+          </DialogFooterComponent>
         </DialogContent>
       </Dialog>
     <div ref={canvasRef} className="printable-canvas bg-background p-4 rounded-lg">
