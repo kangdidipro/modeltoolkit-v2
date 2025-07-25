@@ -42,7 +42,7 @@ export default function SwotCanvas() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isAiAnalysisRunning, setIsAiAnalysisRunning] = useState(false);
   const [aiAnalysisResult, setAiAnalysisResult] = useState<AnalyzeModelCanvasOutput | null>(null);
-  const [businessIdea, setBusinessIdea] = useState("A subscription box for eco-friendly products");
+  const [businessIdea, setBusinessIdea] = useState("Menjual perhiasan home made di market place");
   const [businessInsights, setBusinessInsights] = useState("");
 
   const draggedItem = useRef<{ item: ModelItem; from: ColumnKeys } | null>(null);
@@ -399,7 +399,7 @@ export default function SwotCanvas() {
         <CardContent>
             <div className="flex flex-col sm:flex-row gap-2">
                 <Input 
-                    placeholder="e.g., A subscription box for eco-friendly products"
+                    placeholder="e.g., Menjual perhiasan home made di market place"
                     value={businessIdea}
                     onChange={(e) => setBusinessIdea(e.target.value)}
                     onKeyDown={(e) => { if(e.key === 'Enter') handleGenerateSwot()}}
