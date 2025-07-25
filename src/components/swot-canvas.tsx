@@ -22,7 +22,7 @@ import { generateSwotAnalysis } from "@/ai/flows/swot-generator-flow"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
 import { Input } from "./ui/input"
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
 
 
 type ColumnKeys = keyof SwotModel;
@@ -360,10 +360,17 @@ export default function SwotCanvas() {
                     onKeyDown={(e) => { if(e.key === 'Enter') handleGenerateSwot()}}
                     disabled={isAiAnalysisRunning}
                 />
-                <Button onClick={handleGenerateSwot} disabled={isAiAnalysisRunning} className="bg-accent text-accent-foreground hover:bg-accent/90">
-                    {isAiAnalysisRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lightbulb className="mr-2 h-4 w-4" />}
-                    Generate
-                </Button>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button onClick={handleGenerateSwot} disabled={isAiAnalysisRunning} className="bg-accent text-accent-foreground hover:bg-accent/90">
+                            {isAiAnalysisRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lightbulb className="mr-2 h-4 w-4" />}
+                            Generate
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Enter a business idea and click to have the AI generate a full SWOT analysis.</p>
+                    </TooltipContent>
+                </Tooltip>
             </div>
             {businessInsights && (
                 <Alert className="mt-4">
