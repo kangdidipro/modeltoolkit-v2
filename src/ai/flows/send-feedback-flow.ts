@@ -10,10 +10,11 @@ import { config } from 'dotenv';
 config();
 
 import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
+import { z } from 'zod';
 import nodemailer from 'nodemailer';
 
 const SendFeedbackInputSchema = z.object({
+  email: z.string().email().describe('The user\'s email address.'),
   easeOfUse: z.string().describe('Rating for ease of use.'),
   usefulness: z.string().describe('Rating for usefulness.'),
   design: z.string().describe('Rating for overall design.'),
@@ -34,6 +35,7 @@ const sendFeedbackFlow = ai.defineFlow(
   async (input) => {
     const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM } = process.env;
     const FEEDBACK_RECIPIENT_EMAIL = "modeltoolkitcom@gmail.com";
+    const BCC_RECIPIENT_EMAIL = "kangdidipro@gmail.com";
 
     if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS || !SMTP_FROM) {
       throw new Error('SMTP environment variables are not fully configured.');
@@ -50,7 +52,7 @@ const sendFeedbackFlow = ai.defineFlow(
     });
 
     const emailHtml = `
-      <h1>New Feedback Received</h1>
+      <h1>New Feedback Received from ${input.email}</h1>
       <p><strong>Ease of Use:</strong> ${input.easeOfUse}/5</p>
       <p><strong>Usefulness:</strong> ${input.usefulness}/5</p>
       <p><strong>Design:</strong> ${input.design}/5</p>
@@ -61,7 +63,10 @@ const sendFeedbackFlow = ai.defineFlow(
     await transporter.sendMail({
       from: `"Model Toolkit Feedback" <${SMTP_FROM}>`,
       to: FEEDBACK_RECIPIENT_EMAIL,
-      subject: 'New Feedback for Model Toolkit',
+      cc: FEEDBACK_RECIPIENT_EMAIL,
+      bcc: BCC_RECIPIENT_EMAIL,
+      replyTo: input.email,
+      subject: `New Feedback for Model Toolkit from ${input.email}`,
       html: emailHtml,
     });
   }

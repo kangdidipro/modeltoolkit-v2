@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -25,6 +26,7 @@ import { Loader2 } from "lucide-react"
 
 
 const feedbackFormSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email address." }),
   easeOfUse: z.string().optional(),
   usefulness: z.string().optional(),
   design: z.string().optional(),
@@ -44,6 +46,7 @@ export default function FeedbackPage() {
   const form = useForm<FeedbackFormValues>({
     resolver: zodResolver(feedbackFormSchema),
     defaultValues: {
+      email: "",
       comments: "",
     },
   })
@@ -92,6 +95,22 @@ export default function FeedbackPage() {
         <CardContent>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Your Email</FormLabel>
+                            <FormControl>
+                                <Input placeholder="you@example.com" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                                We'll use this to follow up if needed. We won't share your email.
+                            </FormDescription>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                     <FormField
                         control={form.control}
                         name="easeOfUse"
