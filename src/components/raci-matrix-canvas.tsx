@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const LOCAL_STORAGE_KEY = 'raci-matrix-history';
 
@@ -244,19 +245,80 @@ export default function RaciMatrixCanvas() {
   return (
     <>
       <div className="canvas-controls mb-4 flex flex-wrap gap-2">
-        <Button variant="outline" onClick={handleSave}><Save className="mr-2 h-4 w-4" /> Save</Button>
-        <Button variant="outline" onClick={() => setIsHistoryOpen(true)}><History className="mr-2 h-4 w-4" /> History</Button>
-        <input type="file" ref={fileInputRef} className="hidden" accept=".xml" onChange={handleFileChange} />
-        <Button variant="outline" onClick={handleXmlImportClick}><Upload className="mr-2 h-4 w-4" /> Import from XML</Button>
-        <Button variant="outline" onClick={handleExportXml}><FileDown className="mr-2 h-4 w-4" /> Export as XML</Button>
-        <Button variant="outline" onClick={handleExportCsv}>
-            <FileDown className="mr-2 h-4 w-4" />
-            Export as CSV
-        </Button>
-        <Button variant="outline" onClick={() => window.print()}>
-          <Printer className="mr-2 h-4 w-4" />
-          Print
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={handleSave}>
+              <Save className="mr-2 h-4 w-4" />
+              Save
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Save your current work to browser history.</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={() => setIsHistoryOpen(true)}>
+              <History className="mr-2 h-4 w-4" />
+              History
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>View and load past saved versions.</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
+          accept=".xml"
+          onChange={handleFileChange}
+        />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={handleXmlImportClick}>
+              <Upload className="mr-2 h-4 w-4" />
+              Import from XML
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Load a canvas from an XML file.</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={handleExportXml}>
+              <FileDown className="mr-2 h-4 w-4" />
+              Export as XML
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Save your canvas as an XML file.</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={handleExportCsv}>
+                <FileDown className="mr-2 h-4 w-4" />
+                Export as CSV
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Save your canvas as a CSV file.</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={() => window.print()}>
+              <Printer className="mr-2 h-4 w-4" />
+              Print
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Print or save your canvas as a PDF.</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       <Dialog open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>

@@ -386,14 +386,28 @@ export default function SwotCanvas() {
 
 
       <div className="canvas-controls mb-4 flex flex-wrap gap-2">
-        <Button variant="outline" onClick={handleSave}>
-          <Save className="mr-2 h-4 w-4" />
-          Save
-        </Button>
-        <Button variant="outline" onClick={() => setIsHistoryOpen(true)}>
-          <History className="mr-2 h-4 w-4" />
-          History
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={handleSave}>
+              <Save className="mr-2 h-4 w-4" />
+              Save
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Save your current work to browser history.</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={() => setIsHistoryOpen(true)}>
+              <History className="mr-2 h-4 w-4" />
+              History
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>View and load past saved versions.</p>
+          </TooltipContent>
+        </Tooltip>
 
         <input
           type="file"
@@ -402,22 +416,50 @@ export default function SwotCanvas() {
           accept=".xml"
           onChange={handleFileChange}
         />
-        <Button variant="outline" onClick={handleXmlImportClick}>
-          <Upload className="mr-2 h-4 w-4" />
-          Import from XML
-        </Button>
-        <Button variant="outline" onClick={handleExportXml}>
-          <FileDown className="mr-2 h-4 w-4" />
-          Export as XML
-        </Button>
-        <Button variant="outline" onClick={handleExportCsv}>
-            <FileDown className="mr-2 h-4 w-4" />
-            Export as CSV
-        </Button>
-        <Button variant="outline" onClick={() => window.print()}>
-          <Printer className="mr-2 h-4 w-4" />
-          Print
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={handleXmlImportClick}>
+              <Upload className="mr-2 h-4 w-4" />
+              Import from XML
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Load a canvas from an XML file.</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={handleExportXml}>
+              <FileDown className="mr-2 h-4 w-4" />
+              Export as XML
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Save your canvas as an XML file.</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={handleExportCsv}>
+                <FileDown className="mr-2 h-4 w-4" />
+                Export as CSV
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Save your canvas as a CSV file.</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={() => window.print()}>
+              <Printer className="mr-2 h-4 w-4" />
+              Print
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Print or save your canvas as a PDF.</p>
+          </TooltipContent>
+        </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="secondary" onClick={handleAiAnalysis} disabled={isAiAnalysisRunning || countTotalItems(data) === 0}>
