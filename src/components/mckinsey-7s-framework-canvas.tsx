@@ -5,7 +5,7 @@ import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialMckinsey7sFrameworkData, type Mckinsey7sFrameworkModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Image as ImageIcon } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -17,7 +17,8 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import html2canvas from "html2canvas"
 
 type ElementKeys = keyof Mckinsey7sFrameworkModel;
 const LOCAL_STORAGE_KEY = 'mckinsey-7s-framework-history';
@@ -261,6 +262,25 @@ export default function Mckinsey7sFrameworkCanvas() {
     link.click();
     document.body.removeChild(link);
   }
+
+  const handleExportPng = () => {
+    if (canvasRef.current) {
+      toast({
+        title: "Exporting as PNG",
+        description: "Your canvas is being prepared for download.",
+      });
+      html2canvas(canvasRef.current, {
+        useCORS: true,
+        scale: 2,
+        backgroundColor: window.getComputedStyle(document.body).backgroundColor,
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'mckinsey-7s-framework.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+  };
   
   const countTotalItems = (modelData: Mckinsey7sFrameworkModel) => {
     return Object.values(modelData).reduce((sum, array) => sum + array.length, 0);
@@ -273,7 +293,7 @@ export default function Mckinsey7sFrameworkCanvas() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-medium font-headline">{element.title}</CardTitle>
-             <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => handleAddItem(element.key)}>
+             <Button size="icon" variant="ghost" className="h-7 w-7 no-print" onClick={() => handleAddItem(element.key)}>
               <Plus className="h-4 w-4" />
             </Button>
           </div>
@@ -293,7 +313,7 @@ export default function Mckinsey7sFrameworkCanvas() {
               className="group bg-card/80 dark:bg-card/50 backdrop-blur-sm rounded-lg p-2 shadow-sm transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
             >
               <div className="flex items-start gap-1">
-                <GripVertical className="h-5 w-5 mt-0.5 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground" />
+                <GripVertical className="h-5 w-5 mt-0.5 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground no-print" />
                 {editingItemId === item.id ? (
                   <Textarea
                     value={editingText}
@@ -311,7 +331,7 @@ export default function Mckinsey7sFrameworkCanvas() {
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="h-6 w-6 opacity-0 group-hover:opacity-100 shrink-0"
+                  className="h-6 w-6 opacity-0 group-hover:opacity-100 shrink-0 no-print"
                   onClick={() => handleDeleteItem(element.key, item.id)}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
@@ -330,7 +350,7 @@ export default function Mckinsey7sFrameworkCanvas() {
   }
 
   return (
-    <>
+    <TooltipProvider>
       <div className="canvas-controls mb-4 flex flex-wrap gap-2">
         <Tooltip>
           <TooltipTrigger asChild>
@@ -393,6 +413,17 @@ export default function Mckinsey7sFrameworkCanvas() {
           </TooltipTrigger>
           <TooltipContent>
             <p>Save your canvas as a CSV file.</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={handleExportPng}>
+              <ImageIcon className="mr-2 h-4 w-4" />
+              Export as PNG
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Save your canvas as a high-quality PNG image.</p>
           </TooltipContent>
         </Tooltip>
       </div>
@@ -459,6 +490,6 @@ export default function Mckinsey7sFrameworkCanvas() {
         >
           {elements.map(el => <ElementCard key={el.key} elKey={el.key} />)}
       </div>
-    </>
+    </TooltipProvider>
   )
 }
