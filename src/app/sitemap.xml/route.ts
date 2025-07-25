@@ -10,6 +10,7 @@ function generateSitemap() {
     { url: '/about', priority: 0.8 },
     { url: '/feedback', priority: 0.5 },
     { url: '/blog', priority: 0.7 },
+    { url: '/blog/prioritize-your-tasks-a-guide-to-mastering-the-eisenhower-matrix', priority: 0.6 },
     { url: '/blog/optimizing-your-business-with-model-toolkit', priority: 0.6 },
     { url: '/blog/10-best-productivity-tools', priority: 0.6 },
     { url: '/blog/understanding-various-business-models-for-startup-growth', priority: 0.6 },
