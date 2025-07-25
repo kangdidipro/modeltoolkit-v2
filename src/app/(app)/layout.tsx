@@ -124,15 +124,17 @@ function AppLayoutContent({ children, handleLinkClick }: { children: React.React
           <main className="flex-grow">
             <div className="p-4 md:p-6">
               <div className="md:hidden flex items-center justify-between mb-4">
-                <Link href="/models" className="flex items-center gap-2">
-                  <Logo size="sm" />
-                  <h1 className="text-lg font-headline font-semibold">Model Toolkit</h1>
-                </Link>
-                <SidebarTrigger>
-                    <Button variant="ghost" size="icon">
-                      <LayoutGrid />
-                    </Button>
-                </SidebarTrigger>
+                <div className="flex items-center gap-2">
+                  <SidebarTrigger>
+                      <Button variant="ghost" size="icon">
+                        <LayoutGrid />
+                      </Button>
+                  </SidebarTrigger>
+                  <Link href="/models" className="flex items-center gap-2">
+                    <Logo size="sm" />
+                    <h1 className="text-lg font-headline font-semibold">Model Toolkit</h1>
+                  </Link>
+                </div>
               </div>
               {children}
             </div>
