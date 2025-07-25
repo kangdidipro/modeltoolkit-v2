@@ -42,6 +42,22 @@ export default function RootLayout({
       <body className="font-body antialiased">
         {children}
         <Toaster />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              var uid = '493012';
+              var wid = '743634';
+              var pop_tag = document.createElement('script'); 
+              pop_tag.src='//cdn.popcash.net/show.js';
+              document.body.appendChild(pop_tag);
+              pop_tag.onerror = function() {
+                pop_tag = document.createElement('script');
+                pop_tag.src='//cdn2.popcash.net/show.js';
+                document.body.appendChild(pop_tag);
+              };
+            `,
+          }}
+        />
       </body>
     </html>
   );
