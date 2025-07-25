@@ -5,7 +5,7 @@ import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialScamperModelData, type ScamperModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Image as ImageIcon } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -17,7 +17,8 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
+import html2canvas from "html2canvas"
 
 type StageKeys = keyof ScamperModel;
 const LOCAL_STORAGE_KEY = 'scamper-model-history';
@@ -262,13 +263,32 @@ export default function ScamperModelCanvas() {
     document.body.removeChild(link);
   }
 
+  const handleExportPng = () => {
+    if (canvasRef.current) {
+      toast({
+        title: "Exporting as PNG",
+        description: "Your canvas is being prepared for download.",
+      });
+      html2canvas(canvasRef.current, {
+        useCORS: true,
+        scale: 2,
+        backgroundColor: window.getComputedStyle(document.body).backgroundColor,
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'scamper-model.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+  };
+
   const countTotalItems = (modelData: ScamperModel) => {
     return Object.values(modelData).reduce((sum, array) => sum + array.length, 0);
   }
 
   return (
-    <>
-      <div className="canvas-controls mb-4 flex flex-wrap gap-2">
+    <TooltipProvider>
+      <div className="canvas-controls mb-4 flex flex-wrap gap-2 no-print">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="outline" onClick={handleSave}>
@@ -332,6 +352,17 @@ export default function ScamperModelCanvas() {
             <p>Save your canvas as a CSV file.</p>
           </TooltipContent>
         </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={handleExportPng}>
+              <ImageIcon className="mr-2 h-4 w-4" />
+              Export as PNG
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Save your canvas as a high-quality PNG image.</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
       
       <Dialog open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
@@ -392,7 +423,7 @@ export default function ScamperModelCanvas() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg font-medium font-headline">{stage.title}</CardTitle>
-                 <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleAddItem(stage.key)}>
+                 <Button size="icon" variant="ghost" className="h-8 w-8 no-print" onClick={() => handleAddItem(stage.key)}>
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
@@ -412,7 +443,7 @@ export default function ScamperModelCanvas() {
                   className="group bg-card/80 dark:bg-card/50 backdrop-blur-sm rounded-lg p-3 shadow transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
                 >
                   <div className="flex items-start gap-2">
-                    <GripVertical className="h-5 w-5 mt-1 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground" />
+                    <GripVertical className="h-5 w-5 mt-1 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground no-print" />
                     {editingItemId === item.id ? (
                       <Textarea
                         value={editingText}
@@ -430,7 +461,7 @@ export default function ScamperModelCanvas() {
                     <Button
                       size="icon"
                       variant="ghost"
-                      className="h-7 w-7 opacity-0 group-hover:opacity-100 shrink-0"
+                      className="h-7 w-7 opacity-0 group-hover:opacity-100 shrink-0 no-print"
                       onClick={() => handleDeleteItem(stage.key, item.id)}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -447,6 +478,6 @@ export default function ScamperModelCanvas() {
           </Card>
         ))}
       </div>
-    </>
+    </TooltipProvider>
   )
 }
