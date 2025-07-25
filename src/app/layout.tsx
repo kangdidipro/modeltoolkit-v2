@@ -31,7 +31,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <head>
-        {/* <!-- Bidvertiser2101087 --> */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              <!-- Bidvertiser2101087 -->
+            `,
+          }}
+        />
       </head>
       <body className="font-body antialiased">
         {children}
