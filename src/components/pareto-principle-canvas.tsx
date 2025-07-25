@@ -20,8 +20,10 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import html2canvas from "html2canvas"
 import { Input } from "./ui/input"
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip as ChartTooltip } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip as ChartTooltip, PieChart, Pie, Cell } from "recharts"
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart"
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
+import { Label } from "./ui/label"
 
 type ParetoItem = ModelItem & { value: number };
 type ParetoData = {
@@ -50,6 +52,7 @@ export default function ParetoPrincipleCanvas() {
   const [editingText, setEditingText] = useState("");
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [chartType, setChartType] = useState<'bar' | 'pie'>('bar');
 
   const draggedItem = useRef<{ item: ParetoItem; from: ColumnKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -534,22 +537,56 @@ export default function ParetoPrincipleCanvas() {
       {chartData.length > 0 && grandTotal > 0 && (
         <Card className="mt-6">
           <CardHeader>
-            <CardTitle>Pareto Chart</CardTitle>
-            <CardDescription>Visual representation of your items sorted by value.</CardDescription>
+            <div className="flex justify-between items-center">
+                <div>
+                    <CardTitle>Pareto Chart</CardTitle>
+                    <CardDescription>Visual representation of your items sorted by value.</CardDescription>
+                </div>
+                <RadioGroup
+                    value={chartType}
+                    onValueChange={(value) => setChartType(value as 'bar' | 'pie')}
+                    className="flex items-center gap-4"
+                >
+                    <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="bar" id="bar-chart" />
+                        <Label htmlFor="bar-chart">Bar</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="pie" id="pie-chart" />
+                        <Label htmlFor="pie-chart">Pie</Label>
+                    </div>
+                </RadioGroup>
+            </div>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={{
-                value: { label: "Value", color: "hsl(var(--chart-1))" },
-                cumulative: { label: "Cumulative %", color: "hsl(var(--chart-2))" },
-            }} className="h-[400px] w-full">
-              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 12 }} angle={-45} textAnchor="end" height={60}/>
-                <YAxis />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="value" fill="var(--color-value)" radius={4} />
-              </BarChart>
-            </ChartContainer>
+            {chartType === 'bar' ? (
+                <ChartContainer config={{
+                    value: { label: "Value", color: "hsl(var(--chart-1))" },
+                    cumulative: { label: "Cumulative %", color: "hsl(var(--chart-2))" },
+                }} className="h-[400px] w-full">
+                <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis dataKey="name" tick={{ fontSize: 12 }} angle={-45} textAnchor="end" height={60}/>
+                    <YAxis />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Bar dataKey="value" fill="var(--color-value)" radius={4} />
+                </BarChart>
+                </ChartContainer>
+            ) : (
+                <ChartContainer config={{
+                    value: { label: "Value" },
+                    ...chartData.reduce((acc, item) => ({...acc, [item.name]: {label: item.name}}), {})
+                }} className="h-[400px] w-full">
+                    <PieChart>
+                        <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
+                        <Pie data={chartData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={150} label>
+                            {chartData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={`hsl(var(--chart-${(index % 5) + 1}))`} />
+                            ))}
+                        </Pie>
+                    </PieChart>
+                </ChartContainer>
+            )}
           </CardContent>
         </Card>
       )}
