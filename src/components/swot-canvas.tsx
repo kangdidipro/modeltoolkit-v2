@@ -42,7 +42,6 @@ export default function SwotCanvas() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isAiAnalysisRunning, setIsAiAnalysisRunning] = useState(false);
   const [aiAnalysisResult, setAiAnalysisResult] = useState<AnalyzeModelCanvasOutput | null>(null);
-  const [isAiResultOpen, setIsAiResultOpen] = useState(false);
   const [businessIdea, setBusinessIdea] = useState("A lemonade stand run by kids");
   const [businessInsights, setBusinessInsights] = useState("");
 
@@ -335,28 +334,6 @@ export default function SwotCanvas() {
     return Object.values(swotData).reduce((sum, array) => sum + array.length, 0);
   }
 
-  const handleAiAnalysis = async () => {
-    setIsAiAnalysisRunning(true);
-    setAiAnalysisResult(null);
-    try {
-      const result = await analyzeModelCanvas({
-        modelType: "SWOT",
-        modelCanvasState: JSON.stringify(data),
-      });
-      setAiAnalysisResult(result);
-      setIsAiResultOpen(true);
-    } catch (error) {
-      console.error("AI Analysis failed", error);
-      toast({
-        variant: "destructive",
-        title: "AI Analysis Failed",
-        description: "There was an error analyzing your SWOT canvas. Please try again.",
-      });
-    } finally {
-      setIsAiAnalysisRunning(false);
-    }
-  };
-
   const handleGenerateSwot = async () => {
     if (!businessIdea) {
         toast({
@@ -368,26 +345,40 @@ export default function SwotCanvas() {
     }
     setIsAiAnalysisRunning(true);
     setBusinessInsights("");
+    setAiAnalysisResult(null);
     try {
-        const result = await generateSwotAnalysis({ businessIdea });
+        // Step 1: Generate SWOT
+        const swotResult = await generateSwotAnalysis({ businessIdea });
         const newSwotData: SwotModel = {
-            strengths: result.strengths.map((s, i) => ({ id: `s-${i}-${Date.now()}`, content: s })),
-            weaknesses: result.weaknesses.map((w, i) => ({ id: `w-${i}-${Date.now()}`, content: w })),
-            opportunities: result.opportunities.map((o, i) => ({ id: `o-${i}-${Date.now()}`, content: o })),
-            threats: result.threats.map((t, i) => ({ id: `t-${i}-${Date.now()}`, content: t })),
+            strengths: swotResult.strengths.map((s, i) => ({ id: `s-${i}-${Date.now()}`, content: s })),
+            weaknesses: swotResult.weaknesses.map((w, i) => ({ id: `w-${i}-${Date.now()}`, content: w })),
+            opportunities: swotResult.opportunities.map((o, i) => ({ id: `o-${i}-${Date.now()}`, content: o })),
+            threats: swotResult.threats.map((t, i) => ({ id: `t-${i}-${Date.now()}`, content: t })),
         };
         setData(newSwotData);
-        setBusinessInsights(result.businessInsights);
+        setBusinessInsights(swotResult.businessInsights);
         toast({
             title: 'SWOT Analysis Generated',
-            description: 'The AI has successfully populated the SWOT canvas for your idea.',
+            description: 'The AI has populated the SWOT canvas. Now generating strategic insights...',
         });
+
+        // Step 2: Generate Strategic Insights from the new SWOT data
+        const analysisResult = await analyzeModelCanvas({
+          modelType: "SWOT",
+          modelCanvasState: JSON.stringify(newSwotData),
+        });
+        setAiAnalysisResult(analysisResult);
+        toast({
+            title: 'Strategic Insights Generated',
+            description: 'AI analysis is complete and displayed below the canvas.',
+        });
+
     } catch (error) {
-        console.error("AI SWOT Generation failed", error);
+        console.error("AI Generation failed", error);
         toast({
             variant: "destructive",
             title: "AI Generation Failed",
-            description: "There was an error generating the SWOT analysis. Please try again.",
+            description: "There was an error generating the AI analysis. Please try again.",
         });
     } finally {
         setIsAiAnalysisRunning(false);
@@ -403,7 +394,7 @@ export default function SwotCanvas() {
                 <Wand2 className="text-primary"/>
                 AI Business Idea Analysis
             </CardTitle>
-            <CardDescription>Enter your business idea, and let our AI generate a SWOT analysis and key insights for you.</CardDescription>
+            <CardDescription>Enter your business idea, and let our AI generate a complete SWOT analysis and key strategic insights for you.</CardDescription>
         </CardHeader>
         <CardContent>
             <div className="flex flex-col sm:flex-row gap-2">
@@ -422,11 +413,11 @@ export default function SwotCanvas() {
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p>Enter a business idea and click to have the AI generate a full SWOT analysis.</p>
+                        <p>Enter a business idea and click to have the AI generate a full SWOT analysis and strategic insights.</p>
                     </TooltipContent>
                 </Tooltip>
             </div>
-            {businessInsights && (
+            {businessInsights && !isAiAnalysisRunning && (
                 <Alert className="mt-4">
                     <Lightbulb className="h-4 w-4" />
                     <AlertTitle>Business Insights</AlertTitle>
@@ -524,19 +515,6 @@ export default function SwotCanvas() {
             <TooltipContent>
                 <p>Print or save your canvas as a PDF.</p>
             </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="secondary" onClick={handleAiAnalysis} disabled={isAiAnalysisRunning || countTotalItems(data) === 0}>
-              {isAiAnalysisRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lightbulb className="mr-2 h-4 w-4" />}
-              Generate Strategic Insights
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p className="max-w-xs">
-              Fill in the SWOT analysis, then click here. The AI will analyze the relationships between quadrants and suggest actionable strategies.
-            </p>
-          </TooltipContent>
         </Tooltip>
       </div>
       
@@ -649,47 +627,6 @@ export default function SwotCanvas() {
       </div>
       {aiAnalysisResult && (
           <div className="mt-6">
-              <Dialog open={isAiResultOpen} onOpenChange={setIsAiResultOpen}>
-                <DialogContent className="max-w-3xl no-print">
-                    <DialogHeader>
-                        <DialogTitle className="flex items-center gap-2">
-                            <Lightbulb className="h-6 w-6 text-yellow-400" />
-                            AI-Generated Strategic Insights
-                        </DialogTitle>
-                        <DialogDescription>
-                            Here are actionable strategies based on your SWOT analysis, connecting your strengths and weaknesses with opportunities and threats.
-                        </DialogDescription>
-                    </DialogHeader>
-                    {aiAnalysisResult && (
-                        <ScrollArea className="max-h-[60vh] pr-4">
-                            <Accordion type="multiple" defaultValue={["soStrategies", "stStrategies", "woStrategies", "wtStrategies"]} className="w-full">
-                                {strategyCategories.map(category => (
-                                    (aiAnalysisResult[category.key] && aiAnalysisResult[category.key].length > 0) && (
-                                        <AccordionItem value={category.key} key={category.key}>
-                                            <AccordionTrigger className="text-lg font-semibold">{category.title}</AccordionTrigger>
-                                            <AccordionContent className="space-y-4 pt-2">
-                                                <p className="text-sm text-muted-foreground">{category.description}</p>
-                                                {aiAnalysisResult[category.key].map((suggestion, index) => (
-                                                    <Alert key={index}>
-                                                        <AlertTitle className="font-semibold">{suggestion.title}</AlertTitle>
-                                                        <AlertDescription>
-                                                            {suggestion.description}
-                                                        </AlertDescription>
-                                                    </Alert>
-                                                ))}
-                                            </AccordionContent>
-                                        </AccordionItem>
-                                    )
-                                ))}
-                            </Accordion>
-                        </ScrollArea>
-                    )}
-                    <DialogFooter>
-                        <Button onClick={() => setIsAiResultOpen(false)}>Close</Button>
-                    </DialogFooter>
-                </DialogContent>
-              </Dialog>
-              
               <div className="printable-insights space-y-4 p-4 rounded-lg bg-background">
                   <h2 className="text-2xl font-bold font-headline text-center">AI-Generated Strategic Insights</h2>
                   {strategyCategories.map(category => (
@@ -717,5 +654,3 @@ export default function SwotCanvas() {
     </TooltipProvider>
   );
 }
-
-    
