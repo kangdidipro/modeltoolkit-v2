@@ -8,16 +8,16 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 const faqs = [
   {
-    question: "Apa itu Model Toolkit?",
-    answer: "Model Toolkit adalah kumpulan alat perencanaan bisnis interaktif dan template analisis strategis. Kami menyediakan berbagai kerangka kerja terstruktur seperti Analisis SWOT, Business Model Canvas, dan Matriks Eisenhower untuk membantu para profesional, mahasiswa, dan pengusaha mengubah ide kompleks menjadi rencana yang dapat ditindaklanjuti."
+    question: "What is Model Toolkit?",
+    answer: "Model Toolkit is a collection of interactive business planning tools and strategic analysis templates. We provide a wide range of structured frameworks like SWOT Analysis, Business Model Canvas, and Eisenhower Matrix to help professionals, students, and entrepreneurs turn complex ideas into actionable plans."
   },
   {
-    question: "Untuk siapa aplikasi ini?",
-    answer: "Aplikasi ini dirancang untuk siapa saja yang perlu berpikir secara strategis. Ini termasuk manajer proyek, pemilik bisnis, konsultan, mahasiswa, dan individu yang ingin meningkatkan produktivitas pribadi dan kejelasan dalam pengambilan keputusan."
+    question: "Who is this app for?",
+    answer: "This app is designed for anyone who needs to think strategically. This includes project managers, business owners, consultants, students, and individuals looking to improve personal productivity and decision-making clarity."
   },
   {
-    question: "Apakah alat ini gratis untuk digunakan?",
-    answer: "Ya, semua model dan kanvas interaktif di Model Toolkit sepenuhnya gratis untuk digunakan. Tujuan kami adalah mendemokratisasi akses ke alat-alat berpikir strategis yang kuat."
+    question: "Are these tools free to use?",
+    answer: "Yes, all models and interactive canvases in Model Toolkit are completely free to use. Our goal is to democratize access to powerful strategic thinking tools."
   }
 ];
 

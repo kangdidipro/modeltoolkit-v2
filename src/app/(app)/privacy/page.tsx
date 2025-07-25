@@ -31,7 +31,7 @@ export default function PrivacyPolicyPage() {
                 <p><strong>Cookies</strong> are small files that are placed on Your computer, mobile device or any other device by a website, containing the details of Your browsing history on that website among its many uses.</p>
               </li>
               <li>
-                <p><strong>Country</strong> refers to: Indonesia</p>
+                <p><strong>Country</strong> refers to: United States</p>
               </li>
               <li>
                 <p><strong>Device</strong> means any device that can access the Service such as a computer, a cellphone or a digital tablet.</p>
@@ -135,7 +135,7 @@ export default function PrivacyPolicyPage() {
               <li><strong>For business transfers:</strong> We may share or transfer Your personal information in connection with, or during negotiations of, any merger, sale of Company assets, financing, or acquisition of all or a portion of Our business to another company.</li>
               <li><strong>With Affiliates:</strong> We may share Your information with Our affiliates, in which case we will require those affiliates to honor this Privacy Policy. Affiliates include Our parent company and any other subsidiaries, joint venture partners or other companies that We control or that are under common control with Us.</li>
               <li><strong>With business partners:</strong> We may share Your information with Our business partners to offer You certain products, services or promotions.</li>
-              <li><strong>With other users:</strong> when You share personal information or otherwise interact in the public areas with other users, such information may be viewed by all users and may be publicly distributed outside.</li>
+              <li><strong>With other users:</strong> when You share personal information or otherwise interact in the public areas with other users, such as information may be viewed by all users and may be publicly distributed outside.</li>
               <li><strong>With Your consent</strong>: We may disclose Your personal information for any other purpose with Your consent.</li>
             </ul>
             <h3>Retention of Your Personal Data</h3>
