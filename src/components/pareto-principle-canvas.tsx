@@ -19,23 +19,39 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import html2canvas from "html2canvas"
+import { Input } from "./ui/input"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip as ChartTooltip } from "recharts"
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart"
 
-type ColumnKeys = keyof ParetoPrincipleModel;
-const LOCAL_STORAGE_KEY = 'pareto-principle-history';
+type ParetoItem = ModelItem & { value: number };
+type ParetoData = {
+  vitalFew: ParetoItem[];
+  usefulMany: ParetoItem[];
+};
+
+type ColumnKeys = keyof ParetoData;
+const LOCAL_STORAGE_KEY = 'pareto-principle-history-v2';
 
 type HistoryEntry = {
   timestamp: number;
-  data: ParetoPrincipleModel;
+  data: ParetoData;
 };
 
+// Augment initial data with values
+const initialData: ParetoData = {
+  vitalFew: initialParetoPrincipleData.vitalFew.map(item => ({...item, value: item.id === 'vf1' ? 80 : 0 })),
+  usefulMany: initialParetoPrincipleData.usefulMany.map(item => ({...item, value: item.id === 'um1' ? 20 : 0 })),
+};
+
+
 export default function ParetoPrincipleCanvas() {
-  const [data, setData] = useState<ParetoPrincipleModel>(initialParetoPrincipleData);
+  const [data, setData] = useState<ParetoData>(initialData);
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [editingText, setEditingText] = useState("");
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  const draggedItem = useRef<{ item: ModelItem; from: ColumnKeys } | null>(null);
+  const draggedItem = useRef<{ item: ParetoItem; from: ColumnKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -60,15 +76,32 @@ export default function ParetoPrincipleCanvas() {
     }
   }, [toast]);
 
+  const chartData = useMemo(() => {
+    const allItems = [...data.vitalFew, ...data.usefulMany].sort((a, b) => b.value - a.value);
+    let cumulativePercentage = 0;
+    const totalValue = allItems.reduce((sum, item) => sum + item.value, 0);
+
+    return allItems.map(item => {
+      const percentage = totalValue > 0 ? (item.value / totalValue) * 100 : 0;
+      cumulativePercentage += percentage;
+      return {
+        name: item.content.length > 20 ? item.content.substring(0, 17) + '...' : item.content,
+        value: item.value,
+        cumulative: cumulativePercentage,
+      };
+    });
+  }, [data]);
+
   const columns: { key: ColumnKeys; title: string; description: string; bg: string }[] = useMemo(() => [
     { key: "vitalFew", title: "Vital Few (20%)", description: "The small number of inputs that produce the majority of results.", bg: "bg-blue-100 dark:bg-blue-900/40" },
     { key: "usefulMany", title: "Useful Many (80%)", description: "The large number of inputs that produce the minority of results.", bg: "bg-green-100 dark:bg-green-900/40" },
   ], []);
 
   const handleAddItem = (column: ColumnKeys) => {
-    const newItem: ModelItem = {
+    const newItem: ParetoItem = {
       id: `${column}-${Date.now()}`,
       content: "New item...",
+      value: 10,
     };
     setData(prev => ({ ...prev, [column]: [...prev[column], newItem] }));
     startEditing(newItem);
@@ -81,24 +114,33 @@ export default function ParetoPrincipleCanvas() {
     }));
   };
   
-  const startEditing = (item: ModelItem) => {
+  const startEditing = (item: ParetoItem) => {
     setEditingItemId(item.id);
     setEditingText(item.content);
   };
 
-  const handleSaveEdit = (column: ColumnKeys) => {
+  const handleSaveEdit = (column: ColumnKeys, value?: number) => {
     if (!editingItemId) return;
     setData(prev => ({
       ...prev,
       [column]: prev[column].map(item =>
-        item.id === editingItemId ? { ...item, content: editingText } : item
+        item.id === editingItemId ? { ...item, content: editingText, value: value !== undefined ? value : item.value } : item
       ),
     }));
     setEditingItemId(null);
     setEditingText("");
   };
 
-  const handleDragStart = (e: DragEvent<HTMLDivElement>, item: ModelItem, from: ColumnKeys) => {
+  const handleValueChange = (column: ColumnKeys, itemId: string, newValue: number) => {
+     setData(prev => ({
+      ...prev,
+      [column]: prev[column].map(item =>
+        item.id === itemId ? { ...item, value: newValue } : item
+      ),
+    }));
+  };
+
+  const handleDragStart = (e: DragEvent<HTMLDivElement>, item: ParetoItem, from: ColumnKeys) => {
     draggedItem.current = { item, from };
     e.dataTransfer.effectAllowed = "move";
     e.currentTarget.classList.add("opacity-50", "scale-95");
@@ -183,7 +225,7 @@ export default function ParetoPrincipleCanvas() {
           throw new Error("Failed to parse XML.");
         }
 
-        const newParetoData: ParetoPrincipleModel = {
+        const newParetoData: ParetoData = {
             vitalFew: [],
             usefulMany: [],
         };
@@ -194,8 +236,9 @@ export default function ParetoPrincipleCanvas() {
                 const items = Array.from(categoryElement.getElementsByTagName('item')).map(itemEl => ({
                     id: itemEl.getAttribute('id') || `imported-${Date.now()}-${Math.random()}`,
                     content: itemEl.textContent || "",
+                    value: Number(itemEl.getAttribute('value') || '0'),
                 }));
-                newParetoData[key as keyof ParetoPrincipleModel] = items;
+                newParetoData[key as keyof ParetoData] = items;
             }
         });
 
@@ -226,7 +269,7 @@ export default function ParetoPrincipleCanvas() {
     for (const [key, items] of Object.entries(data)) {
         xmlContent += `  <${key}>\n`;
         items.forEach(item => {
-            xmlContent += `    <item id="${item.id}">${item.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</item>\n`;
+            xmlContent += `    <item id="${item.id}" value="${item.value}">${item.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</item>\n`;
         });
         xmlContent += `  </${key}>\n`;
     }
@@ -242,11 +285,11 @@ export default function ParetoPrincipleCanvas() {
   }
 
   const handleExportCsv = () => {
-    let csvContent = "data:text/csv;charset=utf-8,Category,Content\n";
+    let csvContent = "data:text/csv;charset=utf-8,Category,Content,Value\n";
     for (const [key, items] of Object.entries(data)) {
         items.forEach(item => {
             const content = `"${item.content.replace(/"/g, '""')}"`;
-            csvContent += `${key},${content}\n`;
+            csvContent += `${key},${content},${item.value}\n`;
         });
     }
     const encodedUri = encodeURI(csvContent);
@@ -277,9 +320,15 @@ export default function ParetoPrincipleCanvas() {
     }
   };
   
-  const countTotalItems = (paretoData: ParetoPrincipleModel) => {
+  const countTotalItems = (paretoData: ParetoData) => {
     return Object.values(paretoData).reduce((sum, array) => sum + array.length, 0);
   }
+
+  const calculateTotal = (items: ParetoItem[]) => items.reduce((sum, item) => sum + item.value, 0);
+
+  const vitalFewTotal = calculateTotal(data.vitalFew);
+  const usefulManyTotal = calculateTotal(data.usefulMany);
+  const grandTotal = vitalFewTotal + usefulManyTotal;
 
   return (
     <TooltipProvider>
@@ -406,8 +455,8 @@ export default function ParetoPrincipleCanvas() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      <div ref={canvasRef} className="printable-canvas grid gap-6 md:grid-cols-2 items-start bg-background p-4 rounded-lg">
+    <div ref={canvasRef} className="printable-canvas bg-background p-4 rounded-lg">
+      <div className="grid gap-6 md:grid-cols-2 items-start">
         {columns.map(column => (
           <Card key={column.key} className={`${column.bg} flex flex-col min-h-[300px]`}>
             <CardHeader>
@@ -434,20 +483,28 @@ export default function ParetoPrincipleCanvas() {
                 >
                   <div className="flex items-start gap-2">
                     <GripVertical className="h-5 w-5 mt-1 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground no-print" />
-                    {editingItemId === item.id ? (
-                      <Textarea
-                        value={editingText}
-                        onChange={(e) => setEditingText(e.target.value)}
-                        onBlur={() => handleSaveEdit(column.key)}
-                        autoFocus
-                        className="w-full text-sm resize-none"
-                        onKeyDown={(e) => { if (e.key === 'Enter') handleSaveEdit(column.key) }}
+                    <div className="flex-grow space-y-2">
+                      {editingItemId === item.id ? (
+                        <Textarea
+                          value={editingText}
+                          onChange={(e) => setEditingText(e.target.value)}
+                          onBlur={() => handleSaveEdit(column.key)}
+                          autoFocus
+                          className="w-full text-sm resize-none"
+                        />
+                      ) : (
+                        <p onClick={() => startEditing(item)} className="text-sm w-full min-h-[24px]">
+                          {item.content}
+                        </p>
+                      )}
+                      <Input
+                          type="number"
+                          value={item.value}
+                          onChange={(e) => handleValueChange(column.key, item.id, Number(e.target.value))}
+                          className="h-8 text-sm"
+                          placeholder="Value"
                       />
-                    ) : (
-                      <p onClick={() => startEditing(item)} className="flex-grow text-sm w-full min-h-[24px]">
-                        {item.content}
-                      </p>
-                    )}
+                    </div>
                     <Button
                       size="icon"
                       variant="ghost"
@@ -465,8 +522,37 @@ export default function ParetoPrincipleCanvas() {
                 </div>
               )}
             </CardContent>
+             <CardFooter className="flex-col items-start pt-4 border-t">
+                <p className="font-bold">Total: {calculateTotal(data[column.key]).toLocaleString()}</p>
+                <p className="text-sm text-muted-foreground">
+                  Percentage: {grandTotal > 0 ? ((calculateTotal(data[column.key]) / grandTotal) * 100).toFixed(1) : '0.0'}%
+                </p>
+            </CardFooter>
           </Card>
         ))}
+      </div>
+      {chartData.length > 0 && grandTotal > 0 && (
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle>Pareto Chart</CardTitle>
+            <CardDescription>Visual representation of your items sorted by value.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={{
+                value: { label: "Value", color: "hsl(var(--chart-1))" },
+                cumulative: { label: "Cumulative %", color: "hsl(var(--chart-2))" },
+            }} className="h-[400px] w-full">
+              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid vertical={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 12 }} angle={-45} textAnchor="end" height={60}/>
+                <YAxis />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Bar dataKey="value" fill="var(--color-value)" radius={4} />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      )}
       </div>
     </TooltipProvider>
   )
