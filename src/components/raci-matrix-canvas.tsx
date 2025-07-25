@@ -5,14 +5,15 @@ import { useState, useEffect, useRef } from "react";
 import { initialRaciMatrixData, type RaciMatrixModel, type RaciTask, type RaciPerson, type RaciRole, type RaciAssignment } from "@/lib/models";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, Save, History, Upload, FileDown, RefreshCw, GripVertical, Users, ListChecks } from "lucide-react";
+import { Plus, Trash2, Save, History, Upload, FileDown, RefreshCw, GripVertical, Users, ListChecks, Image as ImageIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import html2canvas from "html2canvas";
 
 const LOCAL_STORAGE_KEY = 'raci-matrix-history';
 
@@ -174,6 +175,25 @@ export default function RaciMatrixCanvas() {
     document.body.removeChild(link);
   };
 
+  const handleExportPng = () => {
+    if (canvasRef.current) {
+      toast({
+        title: "Exporting as PNG",
+        description: "Your canvas is being prepared for download.",
+      });
+      html2canvas(canvasRef.current, {
+        useCORS: true,
+        scale: 2,
+        backgroundColor: window.getComputedStyle(document.body).backgroundColor,
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'raci-matrix.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+  };
+
   const addPerson = () => {
     const newPerson: RaciPerson = { id: `person-${Date.now()}`, name: "New Person" };
     setData(prev => ({ ...prev, people: [...prev.people, newPerson] }));
@@ -243,8 +263,8 @@ export default function RaciMatrixCanvas() {
   };
 
   return (
-    <>
-      <div className="canvas-controls mb-4 flex flex-wrap gap-2">
+    <TooltipProvider>
+      <div className="canvas-controls mb-4 flex flex-wrap gap-2 no-print">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="outline" onClick={handleSave}>
@@ -306,6 +326,17 @@ export default function RaciMatrixCanvas() {
           </TooltipTrigger>
           <TooltipContent>
             <p>Save your canvas as a CSV file.</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={handleExportPng}>
+              <ImageIcon className="mr-2 h-4 w-4" />
+              Export as PNG
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Save your canvas as a high-quality PNG image.</p>
           </TooltipContent>
         </Tooltip>
       </div>
@@ -398,6 +429,6 @@ export default function RaciMatrixCanvas() {
           </Card>
         </div>
       </div>
-    </>
+    </TooltipProvider>
   );
 }
