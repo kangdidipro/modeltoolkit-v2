@@ -32,7 +32,7 @@ const models = [
   { 
     name: "Pareto Principle (80/20 Rule)", 
     description: [
-      "The Pareto Principle, or the 80/20 Rule, is a powerful mental model for optimizing your efforts. It states that for many outcomes, roughly 80% of consequences come from 20% of the causes. This framework helps you identify and focus on the 'vital few' activities that yield the most significant results, rather than getting bogged down by the 'trivial many.'",
+      "The Pareto Principle, or the 80/20 Rule, is a powerful mental model for optimizing your efforts. It states that for many outcomes, roughly 80% of consequences come from 20% of the causes. This framework helps you identify and a focus on the 'vital few' activities that yield the most significant results, rather than getting bogged down by the 'trivial many.'",
       "Whether in business, where 80% of sales might come from 20% of clients, or in personal productivity, where a few key tasks drive the majority of your progress, applying this rule helps you allocate your resources more intelligently. It's a key strategy for maximizing impact with limited time and energy."
     ], 
     href: "/models/pareto-principle" 
@@ -214,6 +214,34 @@ export default function BlogPostPage() {
               </Button>
             </CardContent>
           </Card>
+        </section>
+
+        <section className="mt-16 border-t pt-8">
+            <h2 className="text-3xl font-bold font-headline text-center mb-8">Continue Reading</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+                <Link href="/blog/5-personal-development-models-to-reach-your-full-potential" className="group block">
+                    <Card className="h-full transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1 group-hover:border-primary/50">
+                        <CardContent className="p-6">
+                            <h3 className="text-xl font-semibold font-headline mb-2">5 Personal Development Models to Reach Your Full Potential</h3>
+                            <p className="text-muted-foreground mb-4">Use these mental frameworks to build self-awareness, improve productivity, and accelerate your growth.</p>
+                            <span className="font-semibold text-primary flex items-center">
+                                Read more <ArrowRight className="ml-2 h-4 w-4" />
+                            </span>
+                        </CardContent>
+                    </Card>
+                </Link>
+                <Link href="/blog/from-idea-to-action-keys-to-successful-business-plan-execution" className="group block">
+                    <Card className="h-full transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1 group-hover:border-primary/50">
+                        <CardContent className="p-6">
+                            <h3 className="text-xl font-semibold font-headline mb-2">From Idea to Action: Keys to Successful Business Plan Execution</h3>
+                            <p className="text-muted-foreground mb-4">A brilliant strategy is worthless without execution. Here’s how to close the gap between planning and doing.</p>
+                             <span className="font-semibold text-primary flex items-center">
+                                Read more <ArrowRight className="ml-2 h-4 w-4" />
+                            </span>
+                        </CardContent>
+                    </Card>
+                </Link>
+            </div>
         </section>
 
       </article>

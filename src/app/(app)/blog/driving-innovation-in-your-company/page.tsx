@@ -158,6 +158,34 @@ export default function BlogPostPage() {
           </Card>
         </section>
 
+        <section className="mt-16 border-t pt-8">
+            <h2 className="text-3xl font-bold font-headline text-center mb-8">Continue Reading</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+                <Link href="/blog/understanding-various-business-models-for-startup-growth" className="group block">
+                    <Card className="h-full transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1 group-hover:border-primary/50">
+                        <CardContent className="p-6">
+                            <h3 className="text-xl font-semibold font-headline mb-2">Understanding Various Business Models for Startup Growth</h3>
+                            <p className="text-muted-foreground mb-4">Choosing the right framework is the first step to building a sustainable and scalable company.</p>
+                            <span className="font-semibold text-primary flex items-center">
+                                Read more <ArrowRight className="ml-2 h-4 w-4" />
+                            </span>
+                        </CardContent>
+                    </Card>
+                </Link>
+                <Link href="/blog/formulating-a-strong-business-strategy-step-by-step" className="group block">
+                    <Card className="h-full transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1 group-hover:border-primary/50">
+                        <CardContent className="p-6">
+                            <h3 className="text-xl font-semibold font-headline mb-2">Formulating a Strong Business Strategy: Step-by-Step</h3>
+                            <p className="text-muted-foreground mb-4">A clear roadmap is the foundation of any successful venture. Here’s how to build one.</p>
+                             <span className="font-semibold text-primary flex items-center">
+                                Read more <ArrowRight className="ml-2 h-4 w-4" />
+                            </span>
+                        </CardContent>
+                    </Card>
+                </Link>
+            </div>
+        </section>
+
       </article>
     </div>
   );
