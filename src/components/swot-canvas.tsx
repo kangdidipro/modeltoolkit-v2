@@ -505,17 +505,6 @@ export default function SwotCanvas() {
             <p>Save your canvas as a high-quality PNG image.</p>
           </TooltipContent>
         </Tooltip>
-         <Tooltip>
-            <TooltipTrigger asChild>
-                <Button variant="outline" onClick={() => window.print()}>
-                <Printer className="mr-2 h-4 w-4" />
-                Print
-                </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-                <p>Print or save your canvas as a PDF.</p>
-            </TooltipContent>
-        </Tooltip>
       </div>
       
       <Dialog open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
