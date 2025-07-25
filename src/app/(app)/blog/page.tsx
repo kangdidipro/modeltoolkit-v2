@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const blogPosts = [
   { no: 1, keyword: "Model Toolkit", title: "Optimizing Your Business with Model Toolkit: A Complete Guide", href: "/blog/optimizing-your-business-with-model-toolkit" },
@@ -107,22 +108,32 @@ const blogPosts = [
 
 
 const BlogPostCard = ({ post }: { post: (typeof blogPosts)[0] }) => {
+  const isPublished = !!post.href;
+
   const cardContent = (
-    <Card className="flex flex-col h-full transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+    <Card className={cn(
+        "flex flex-col h-full",
+        isPublished 
+          ? "transition-all duration-200 hover:shadow-md hover:-translate-y-1"
+          : "bg-muted/50"
+      )}>
       <CardHeader>
         <Badge variant="secondary" className="w-fit">{post.keyword}</Badge>
       </CardHeader>
       <CardContent className="flex-grow">
-        <h2 className="text-lg font-semibold font-headline">{post.title}</h2>
+        <h2 className={cn(
+            "text-lg font-semibold font-headline",
+            !isPublished && "text-muted-foreground"
+          )}>{post.title}</h2>
       </CardContent>
     </Card>
   );
 
-  if (post.href) {
+  if (isPublished) {
     return <Link href={post.href}>{cardContent}</Link>;
   }
 
-  return cardContent;
+  return <div className="cursor-not-allowed">{cardContent}</div>;
 };
 
 export default function BlogPage() {
