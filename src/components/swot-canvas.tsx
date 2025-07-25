@@ -342,7 +342,7 @@ export default function SwotCanvas() {
   }
 
   return (
-    <>
+    <TooltipProvider>
       <Card className="mb-6 bg-secondary/40 no-print">
         <CardHeader>
             <CardTitle className="flex items-center gap-2 font-headline">
@@ -623,6 +623,6 @@ export default function SwotCanvas() {
           </Card>
         ))}
       </div>
-    </>
+    </TooltipProvider>
   );
 }
