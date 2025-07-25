@@ -385,7 +385,7 @@ export default function SwotCanvas() {
       </Card>
 
 
-      <div className="canvas-controls mb-4 flex flex-wrap gap-2">
+      <div className="canvas-controls mb-4 flex flex-wrap gap-2 no-print">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="outline" onClick={handleSave}>

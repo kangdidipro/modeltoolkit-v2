@@ -88,45 +88,37 @@ body {
 }
 
 @media print {
-  body * {
-    visibility: hidden;
+  @page {
+    size: auto;
+    margin: 0.5in;
   }
-  .printable-canvas, .printable-canvas * {
-    visibility: visible;
+  body {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .no-print {
+    display: none !important;
   }
   .printable-canvas {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    padding: 1rem !important;
-    margin: 0 !important;
+    display: block !important;
     box-shadow: none !important;
     border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
     background: #fff !important;
   }
-   .printable-canvas .card,
-  .printable-canvas .bg-card\/80 {
+  .printable-canvas .card {
     border-color: #ddd !important;
     box-shadow: none !important;
-    background-color: #fff !important;
   }
-  
   .printable-canvas .card-description,
   .printable-canvas .text-muted-foreground {
     color: #555 !important;
   }
+  .printable-canvas .bg-card\/80, .printable-canvas .bg-blue-100, .printable-canvas .bg-purple-100, .printable-canvas .bg-yellow-100, .printable-canvas .bg-green-100, .printable-canvas .bg-orange-100, .printable-canvas .bg-pink-100, .printable-canvas .bg-red-100, .printable-canvas .bg-gray-100, .printable-canvas .bg-teal-100, .printable-canvas .bg-indigo-100 {
+    background-color: transparent !important;
+  }
 
-  .printable-canvas .bg-blue-100 { background-color: #e0e8f9 !important; }
-  .printable-canvas .bg-purple-100 { background-color: #f3e8ff !important; }
-  .printable-canvas .bg-yellow-100 { background-color: #fef9c3 !important; }
-  .printable-canvas .bg-green-100 { background-color: #d1fae5 !important; }
-  .printable-canvas .bg-orange-100 { background-color: #ffedd5 !important; }
-  .printable-canvas .bg-pink-100 { background-color: #fce7f3 !important; }
-  .printable-canvas .bg-red-100 { background-color: #fee2e2 !important; }
-  .printable-canvas .bg-gray-100 { background-color: #f3f4f6 !important; }
-
-  /* Ensure text is visible */
   * {
     color-adjust: exact;
     -webkit-print-color-adjust: exact;

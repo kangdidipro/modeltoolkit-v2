@@ -1,13 +1,15 @@
 import Link from 'next/link';
 import { Separator } from './ui/separator';
+import { cn } from '@/lib/utils';
 
 type FooterProps = {
   timestamp?: string;
+  className?: string;
 }
 
-export function Footer({ timestamp }: FooterProps) {
+export function Footer({ timestamp, className }: FooterProps) {
   return (
-    <footer className="footer bg-muted/50 dark:bg-muted/20 mt-auto">
+    <footer className={cn("footer bg-muted/50 dark:bg-muted/20 mt-auto", className)}>
       <div className="container mx-auto px-6 py-8">
         <div className="flex flex-col items-center text-center">
             <h2 className="text-xl font-bold font-headline">Model Toolkit</h2>

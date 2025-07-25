@@ -77,7 +77,7 @@ function AppLayoutContent({ children, handleLinkClick }: { children: React.React
   
   return (
     <>
-      <Sidebar>
+      <Sidebar className="no-print">
         <SidebarHeader>
           <Link href="/models" className="flex items-center gap-2 p-2" onClick={handleLinkClick}>
             <Logo size="md" />
@@ -123,7 +123,7 @@ function AppLayoutContent({ children, handleLinkClick }: { children: React.React
         <div className="flex flex-col min-h-screen">
           <main className="flex-grow">
             <div className="p-4 md:p-6">
-              <div className="md:hidden flex items-center justify-between mb-4">
+              <div className="md:hidden flex items-center justify-between mb-4 no-print">
                 <div className="flex items-center gap-2">
                   <SidebarTrigger>
                       <Button variant="ghost" size="icon">
@@ -139,7 +139,7 @@ function AppLayoutContent({ children, handleLinkClick }: { children: React.React
               {children}
             </div>
           </main>
-          <Footer timestamp={timestamp} />
+          <Footer timestamp={timestamp} className="no-print"/>
         </div>
       </SidebarInset>
     </>
