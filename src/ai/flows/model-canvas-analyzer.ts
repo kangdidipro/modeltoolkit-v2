@@ -19,9 +19,16 @@ const AnalyzeModelCanvasInputSchema = z.object({
 });
 export type AnalyzeModelCanvasInput = z.infer<typeof AnalyzeModelCanvasInputSchema>;
 
+const StrategicSuggestionSchema = z.object({
+  title: z.string().describe("A short, catchy title for the strategic suggestion."),
+  description: z.string().describe("A detailed explanation of the strategic suggestion, including the reasoning behind it."),
+});
+
 const AnalyzeModelCanvasOutputSchema = z.object({
-  suggestions: z.array(z.string()).describe('A list of suggestions for improving the model canvas.'),
-  rationale: z.string().describe('Explanation of why suggestions are provided'),
+  soStrategies: z.array(StrategicSuggestionSchema).describe("Strengths-Opportunities (SO) strategies: How to use strengths to take advantage of opportunities."),
+  stStrategies: z.array(StrategicSuggestionSchema).describe("Strengths-Threats (ST) strategies: How to use strengths to avoid or mitigate threats."),
+  woStrategies: z.array(StrategicSuggestionSchema).describe("Weaknesses-Opportunities (WO) strategies: How to take advantage of opportunities to overcome weaknesses."),
+  wtStrategies: z.array(StrategicSuggestionSchema).describe("Weaknesses-Threats (WT) strategies: How to minimize weaknesses and avoid threats."),
 });
 export type AnalyzeModelCanvasOutput = z.infer<typeof AnalyzeModelCanvasOutputSchema>;
 
@@ -33,19 +40,20 @@ const prompt = ai.definePrompt({
   name: 'analyzeModelCanvasPrompt',
   input: {schema: AnalyzeModelCanvasInputSchema},
   output: {schema: AnalyzeModelCanvasOutputSchema},
-  prompt: `You are an AI assistant that analyzes model canvases and provides suggestions for improvement based on the model type and current state.
+  prompt: `You are an expert business strategist. Your task is to analyze a user's SWOT analysis and generate actionable strategic insights.
 
+Analyze the provided SWOT data:
 Model Type: {{{modelType}}}
 Model Canvas State: {{{modelCanvasState}}}
 
-Analyze the model canvas state and provide a list of suggestions for improvement. Also provide a brief rationale for why each suggestion is helpful.
+Based on the user's input, generate specific, actionable strategies for each of the following categories:
 
-Format your response as a JSON object:
-{
-  "suggestions": ["suggestion 1", "suggestion 2"],
-  "rationale": "Explanation of why the suggestions are provided"
-}
-`,
+1.  **SO Strategies (Strengths-Opportunities):** How can the user leverage their internal Strengths to capitalize on external Opportunities?
+2.  **ST Strategies (Strengths-Threats):** How can the user use their Strengths to mitigate or defend against external Threats?
+3.  **WO Strategies (Weaknesses-Opportunities):** How can the user exploit external Opportunities to overcome their internal Weaknesses?
+4.  **WT Strategies (Weaknesses-Threats):** What defensive strategies should the user consider to minimize the impact of their Weaknesses and avoid external Threats?
+
+For each category, provide a list of strategic suggestions. Each suggestion should have a clear title and a detailed description. Return the response as a JSON object matching the output schema.`,
 });
 
 const analyzeModelCanvasFlow = ai.defineFlow(

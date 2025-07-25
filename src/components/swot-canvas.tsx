@@ -19,6 +19,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { analyzeModelCanvas, type AnalyzeModelCanvasOutput } from "@/ai/flows/model-canvas-analyzer"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
 
 
 type ColumnKeys = keyof SwotModel;
@@ -69,6 +70,14 @@ export default function SwotCanvas() {
     { key: "opportunities", title: "Opportunities", bg: "bg-blue-100 dark:bg-blue-900/40" },
     { key: "threats", title: "Threats", bg: "bg-yellow-100 dark:bg-yellow-900/40" },
   ], []);
+  
+  const strategyCategories = [
+    { title: "SO (Strengths-Opportunities) Strategies", key: "soStrategies", description: "How to use strengths to take advantage of opportunities." },
+    { title: "ST (Strengths-Threats) Strategies", key: "stStrategies", description: "How to use strengths to avoid or mitigate threats." },
+    { title: "WO (Weaknesses-Opportunities) Strategies", key: "woStrategies", description: "How to take advantage of opportunities to overcome weaknesses." },
+    { title: "WT (Weaknesses-Threats) Strategies", key: "wtStrategies", description: "How to minimize weaknesses and avoid threats." },
+  ] as const;
+
 
   const handleAddItem = (column: ColumnKeys) => {
     const newItem: ModelItem = {
@@ -327,7 +336,7 @@ export default function SwotCanvas() {
         </Button>
         <Button variant="secondary" onClick={handleAiAnalysis} disabled={isAiAnalysisRunning}>
           {isAiAnalysisRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lightbulb className="mr-2 h-4 w-4" />}
-          Analyze with AI
+          Generate Strategic Insights
         </Button>
       </div>
       
@@ -379,33 +388,39 @@ export default function SwotCanvas() {
       </Dialog>
 
       <Dialog open={isAiResultOpen} onOpenChange={setIsAiResultOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-3xl">
             <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
-                    <Lightbulb className="h-6 w-6" />
-                    AI Analysis Results
+                    <Lightbulb className="h-6 w-6 text-yellow-400" />
+                    AI-Generated Strategic Insights
                 </DialogTitle>
                 <DialogDescription>
-                    Here are some suggestions to improve your SWOT analysis.
+                    Here are actionable strategies based on your SWOT analysis, connecting your strengths and weaknesses with opportunities and threats.
                 </DialogDescription>
             </DialogHeader>
             {aiAnalysisResult && (
-                <div className="space-y-4">
-                    <Alert>
-                        <AlertTitle>Rationale</AlertTitle>
-                        <AlertDescription>
-                            {aiAnalysisResult.rationale}
-                        </AlertDescription>
-                    </Alert>
-                    <div>
-                        <h3 className="font-semibold mb-2">Suggestions:</h3>
-                        <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
-                            {aiAnalysisResult.suggestions.map((suggestion, index) => (
-                                <li key={index}>{suggestion}</li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
+                <ScrollArea className="max-h-[60vh] pr-4">
+                    <Accordion type="multiple" defaultValue={["soStrategies", "stStrategies", "woStrategies", "wtStrategies"]} className="w-full">
+                        {strategyCategories.map(category => (
+                            (aiAnalysisResult[category.key] && aiAnalysisResult[category.key].length > 0) && (
+                                <AccordionItem value={category.key} key={category.key}>
+                                    <AccordionTrigger className="text-lg font-semibold">{category.title}</AccordionTrigger>
+                                    <AccordionContent className="space-y-4 pt-2">
+                                        <p className="text-sm text-muted-foreground">{category.description}</p>
+                                        {aiAnalysisResult[category.key].map((suggestion, index) => (
+                                            <Alert key={index}>
+                                                <AlertTitle className="font-semibold">{suggestion.title}</AlertTitle>
+                                                <AlertDescription>
+                                                    {suggestion.description}
+                                                </AlertDescription>
+                                            </Alert>
+                                        ))}
+                                    </AccordionContent>
+                                </AccordionItem>
+                            )
+                        ))}
+                    </Accordion>
+                </ScrollArea>
             )}
             <DialogFooter>
                 <Button onClick={() => setIsAiResultOpen(false)}>Close</Button>
@@ -474,5 +489,5 @@ export default function SwotCanvas() {
         ))}
       </div>
     </>
-  )
+  );
 }
