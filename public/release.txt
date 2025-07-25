@@ -1,7 +1,7 @@
 ===20250726===
 1. add AI in SWOT Model
 2. Add Graphics in Pareto Models
-3. ads
+3. ads PopCash.net
 ===20250724===
 1. add ads infolinks.com/
 2. bug fix mobile menu to auto hide
