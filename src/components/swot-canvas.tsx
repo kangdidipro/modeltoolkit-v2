@@ -3,9 +3,9 @@
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialSwotData, type SwotModel, type ModelItem } from "@/lib/models"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Printer, Lightbulb, Loader2 } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Printer, Lightbulb, Loader2, Wand2 } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -18,8 +18,10 @@ import {
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { analyzeModelCanvas, type AnalyzeModelCanvasOutput } from "@/ai/flows/model-canvas-analyzer"
+import { generateSwotAnalysis } from "@/ai/flows/swot-generator-flow"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
+import { Input } from "./ui/input"
 
 
 type ColumnKeys = keyof SwotModel;
@@ -39,6 +41,8 @@ export default function SwotCanvas() {
   const [isAiAnalysisRunning, setIsAiAnalysisRunning] = useState(false);
   const [aiAnalysisResult, setAiAnalysisResult] = useState<AnalyzeModelCanvasOutput | null>(null);
   const [isAiResultOpen, setIsAiResultOpen] = useState(false);
+  const [businessIdea, setBusinessIdea] = useState("A lemonade stand run by kids");
+  const [businessInsights, setBusinessInsights] = useState("");
 
   const draggedItem = useRef<{ item: ModelItem; from: ColumnKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -299,8 +303,80 @@ export default function SwotCanvas() {
     }
   };
 
+  const handleGenerateSwot = async () => {
+    if (!businessIdea) {
+        toast({
+            variant: 'destructive',
+            title: 'Business Idea is empty',
+            description: 'Please enter a business idea to generate the SWOT analysis.',
+        });
+        return;
+    }
+    setIsAiAnalysisRunning(true);
+    setBusinessInsights("");
+    try {
+        const result = await generateSwotAnalysis({ businessIdea });
+        const newSwotData: SwotModel = {
+            strengths: result.strengths.map((s, i) => ({ id: `s-${i}-${Date.now()}`, content: s })),
+            weaknesses: result.weaknesses.map((w, i) => ({ id: `w-${i}-${Date.now()}`, content: w })),
+            opportunities: result.opportunities.map((o, i) => ({ id: `o-${i}-${Date.now()}`, content: o })),
+            threats: result.threats.map((t, i) => ({ id: `t-${i}-${Date.now()}`, content: t })),
+        };
+        setData(newSwotData);
+        setBusinessInsights(result.businessInsights);
+        toast({
+            title: 'SWOT Analysis Generated',
+            description: 'The AI has successfully populated the SWOT canvas for your idea.',
+        });
+    } catch (error) {
+        console.error("AI SWOT Generation failed", error);
+        toast({
+            variant: "destructive",
+            title: "AI Generation Failed",
+            description: "There was an error generating the SWOT analysis. Please try again.",
+        });
+    } finally {
+        setIsAiAnalysisRunning(false);
+    }
+  }
+
   return (
     <>
+      <Card className="mb-6 bg-secondary/40">
+        <CardHeader>
+            <CardTitle className="flex items-center gap-2 font-headline">
+                <Wand2 className="text-primary"/>
+                AI Business Idea Analysis
+            </CardTitle>
+            <CardDescription>Enter your business idea, and let our AI generate a SWOT analysis and key insights for you.</CardDescription>
+        </CardHeader>
+        <CardContent>
+            <div className="flex flex-col sm:flex-row gap-2">
+                <Input 
+                    placeholder="e.g., A subscription box for eco-friendly products"
+                    value={businessIdea}
+                    onChange={(e) => setBusinessIdea(e.target.value)}
+                    onKeyDown={(e) => { if(e.key === 'Enter') handleGenerateSwot()}}
+                    disabled={isAiAnalysisRunning}
+                />
+                <Button onClick={handleGenerateSwot} disabled={isAiAnalysisRunning} className="bg-accent text-accent-foreground hover:bg-accent/90">
+                    {isAiAnalysisRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lightbulb className="mr-2 h-4 w-4" />}
+                    Generate
+                </Button>
+            </div>
+            {businessInsights && (
+                <Alert className="mt-4">
+                    <Lightbulb className="h-4 w-4" />
+                    <AlertTitle>Business Insights</AlertTitle>
+                    <AlertDescription>
+                        {businessInsights}
+                    </AlertDescription>
+                </Alert>
+            )}
+        </CardContent>
+      </Card>
+
+
       <div className="canvas-controls mb-4 flex flex-wrap gap-2">
         <Button variant="outline" onClick={handleSave}>
           <Save className="mr-2 h-4 w-4" />
@@ -334,7 +410,7 @@ export default function SwotCanvas() {
           <Printer className="mr-2 h-4 w-4" />
           Print
         </Button>
-        <Button variant="secondary" onClick={handleAiAnalysis} disabled={isAiAnalysisRunning}>
+        <Button variant="secondary" onClick={handleAiAnalysis} disabled={isAiAnalysisRunning || countTotalItems(data) === 0}>
           {isAiAnalysisRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lightbulb className="mr-2 h-4 w-4" />}
           Generate Strategic Insights
         </Button>
