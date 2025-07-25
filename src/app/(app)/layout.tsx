@@ -126,7 +126,7 @@ function AppLayoutContent({ children, handleLinkClick }: { children: React.React
       <SidebarInset>
         <div className="flex flex-col min-h-screen">
           <main className="flex-grow">
-            <div className="p-4 md:p-6">
+            <div className="p-4 md:p-6 printable-area">
               <div className="md:hidden flex items-center justify-between mb-4 no-print">
                 <div className="flex items-center gap-2">
                   <SidebarTrigger>

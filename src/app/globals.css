@@ -88,40 +88,19 @@ body {
 }
 
 @media print {
-  @page {
-    size: auto;
-    margin: 0.5in;
+  body * {
+    visibility: hidden;
   }
-  body {
-    padding: 0 !important;
-    margin: 0 !important;
+  .printable-area, .printable-area * {
+    visibility: visible;
+  }
+  .printable-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
   }
   .no-print {
     display: none !important;
-  }
-  .printable-canvas {
-    display: block !important;
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    background: #fff !important;
-  }
-  .printable-canvas .card {
-    border-color: #ddd !important;
-    box-shadow: none !important;
-  }
-  .printable-canvas .card-description,
-  .printable-canvas .text-muted-foreground {
-    color: #555 !important;
-  }
-  .printable-canvas .bg-card\/80, .printable-canvas .bg-blue-100, .printable-canvas .bg-purple-100, .printable-canvas .bg-yellow-100, .printable-canvas .bg-green-100, .printable-canvas .bg-orange-100, .printable-canvas .bg-pink-100, .printable-canvas .bg-red-100, .printable-canvas .bg-gray-100, .printable-canvas .bg-teal-100, .printable-canvas .bg-indigo-100 {
-    background-color: transparent !important;
-  }
-
-  * {
-    color-adjust: exact;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
   }
 }
