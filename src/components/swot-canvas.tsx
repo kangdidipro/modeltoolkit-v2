@@ -5,7 +5,7 @@ import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialSwotData, type SwotModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Printer, Lightbulb, Loader2, Wand2 } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Lightbulb, Loader2, Wand2, Image as ImageIcon } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -23,6 +23,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
 import { Input } from "./ui/input"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
+import html2canvas from "html2canvas"
 
 
 type ColumnKeys = keyof SwotModel;
@@ -47,6 +48,7 @@ export default function SwotCanvas() {
 
   const draggedItem = useRef<{ item: ModelItem; from: ColumnKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -277,6 +279,25 @@ export default function SwotCanvas() {
     link.click();
     document.body.removeChild(link);
   }
+
+  const handleExportPng = () => {
+    if (canvasRef.current) {
+      toast({
+        title: "Exporting as PNG",
+        description: "Your canvas is being prepared for download.",
+      });
+      html2canvas(canvasRef.current, {
+        useCORS: true,
+        scale: 2,
+        backgroundColor: window.getComputedStyle(document.body).backgroundColor,
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'swot-analysis.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+  };
   
   const countTotalItems = (swotData: SwotModel) => {
     return Object.values(swotData).reduce((sum, array) => sum + array.length, 0);
@@ -451,13 +472,13 @@ export default function SwotCanvas() {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" onClick={() => window.print()}>
-              <Printer className="mr-2 h-4 w-4" />
-              Print
+            <Button variant="outline" onClick={handleExportPng}>
+              <ImageIcon className="mr-2 h-4 w-4" />
+              Export as PNG
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Print or save your canvas as a PDF.</p>
+            <p>Save your canvas as a high-quality PNG image.</p>
           </TooltipContent>
         </Tooltip>
         <Tooltip>
@@ -563,7 +584,7 @@ export default function SwotCanvas() {
         </DialogContent>
       </Dialog>
 
-      <div className="printable-canvas grid gap-6 md:grid-cols-2 items-start bg-background p-4 rounded-lg">
+      <div ref={canvasRef} className="printable-canvas grid gap-6 md:grid-cols-2 items-start bg-background p-4 rounded-lg">
         {columns.map(column => (
           <Card key={column.key} className={`${column.bg} flex flex-col min-h-[300px]`}>
             <CardHeader>
