@@ -87,6 +87,44 @@ export default function ModelsPage() {
         ))}
       </div>
 
+      <section className="max-w-4xl mx-auto">
+        <h2 className="text-3xl font-bold font-headline mb-6 text-center">Insights from Our Blog</h2>
+        <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
+          Explore our articles to learn how to apply these models to real-world challenges and enhance your strategic thinking.
+        </p>
+        <div className="grid md:grid-cols-2 gap-6">
+            <Link href="/blog/10-best-productivity-tools" className="group block">
+                <Card className="h-full transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1 group-hover:border-primary/50">
+                    <CardContent className="p-6">
+                        <h3 className="text-xl font-semibold font-headline mb-2">10 Strategic Models to Boost Your Productivity</h3>
+                        <p className="text-muted-foreground mb-4">Discover the mental frameworks in Model Toolkit that help you think smarter, not just work harder.</p>
+                        <span className="font-semibold text-primary flex items-center">
+                            Read more <ArrowRight className="ml-2 h-4 w-4" />
+                        </span>
+                    </CardContent>
+                </Card>
+            </Link>
+            <Link href="/blog/formulating-a-strong-business-strategy-step-by-step" className="group block">
+                <Card className="h-full transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1 group-hover:border-primary/50">
+                    <CardContent className="p-6">
+                        <h3 className="text-xl font-semibold font-headline mb-2">Formulating a Strong Business Strategy: Step-by-Step</h3>
+                        <p className="text-muted-foreground mb-4">A clear roadmap is the foundation of any successful venture. Here’s how to build one.</p>
+                         <span className="font-semibold text-primary flex items-center">
+                            Read more <ArrowRight className="ml-2 h-4 w-4" />
+                        </span>
+                    </CardContent>
+                </Card>
+            </Link>
+        </div>
+        <div className="text-center mt-8">
+            <Button asChild variant="outline">
+                <Link href="/blog">
+                    View All Articles
+                </Link>
+            </Button>
+        </div>
+      </section>
+
        <section className="max-w-4xl mx-auto">
         <h2 className="text-3xl font-bold font-headline mb-6 text-center">Frequently Asked Questions</h2>
         <Accordion type="single" collapsible className="w-full">
