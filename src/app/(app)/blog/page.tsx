@@ -1,15 +1,17 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const blogPosts = [
-  { no: 1, keyword: "Model Toolkit", title: "Optimizing Your Business with Model Toolkit: A Complete Guide", href: "/blog/optimizing-your-business-with-model-toolkit", publishedOn: "July 24, 2024" },
-  { no: 2, keyword: "Productivity tools", title: "10 Strategic Models to Boost Your Productivity", href: "/blog/10-best-productivity-tools", publishedOn: "July 23, 2024" },
-  { no: 3, keyword: "Business models", title: "Understanding Various Business Models for Startup Growth", href: "/blog/understanding-various-business-models-for-startup-growth", publishedOn: "July 22, 2024" },
-  { no: 4, keyword: "Business strategy", title: "Formulating a Strong Business Strategy: Step-by-Step", href: "/blog/formulating-a-strong-business-strategy-step-by-step", publishedOn: "July 21, 2024" },
-  { no: 5, keyword: "Innovation", title: "Driving Innovation in Your Company: Frameworks and Ideas", href: "/blog/driving-innovation-in-your-company", publishedOn: "July 20, 2024" },
-  { no: 6, keyword: "Execution planning", title: "From Idea to Action: Keys to Successful Business Plan Execution", href: "/blog/from-idea-to-action-keys-to-successful-business-plan-execution", publishedOn: "July 19, 2024" },
+  { no: 1, keyword: "Model Toolkit", title: "Optimizing Your Business with Model Toolkit: A Complete Guide", href: "/blog/optimizing-your-business-with-model-toolkit", publishedOn: "July 24, 2024", imageUrl: "/1.main-page.png", imageHint: "business strategy" },
+  { no: 2, keyword: "Productivity tools", title: "10 Strategic Models to Boost Your Productivity", href: "/blog/10-best-productivity-tools", publishedOn: "July 23, 2024", imageUrl: "https://placehold.co/400x200.png", imageHint: "productivity tools" },
+  { no: 3, keyword: "Business models", title: "Understanding Various Business Models for Startup Growth", href: "/blog/understanding-various-business-models-for-startup-growth", publishedOn: "July 22, 2024", imageUrl: "https://placehold.co/400x200.png", imageHint: "startup growth" },
+  { no: 4, keyword: "Business strategy", title: "Formulating a Strong Business Strategy: Step-by-Step", href: "/blog/formulating-a-strong-business-strategy-step-by-step", publishedOn: "July 21, 2024", imageUrl: "https://placehold.co/400x200.png", imageHint: "business strategy" },
+  { no: 5, keyword: "Innovation", title: "Driving Innovation in Your Company: Frameworks and Ideas", href: "/blog/driving-innovation-in-your-company", publishedOn: "July 20, 2024", imageUrl: "https://placehold.co/400x200.png", imageHint: "innovation ideas" },
+  { no: 6, keyword: "Execution planning", title: "From Idea to Action: Keys to Successful Business Plan Execution", href: "/blog/from-idea-to-action-keys-to-successful-business-plan-execution", publishedOn: "July 19, 2024", imageUrl: "https://placehold.co/400x200.png", imageHint: "planning execution" },
   { no: 7, keyword: "Personal development", title: "5 Personal Development Models to Reach Your Full Potential" },
   { no: 8, keyword: "Productivity enhancement", title: "Productivity Enhancement Secrets: Effective Strategies and Tools" },
   { no: 9, keyword: "Free tools", title: "Best Free Tools for Business Planning and Productivity" },
@@ -107,20 +109,30 @@ const blogPosts = [
 ];
 
 
-const BlogPostCard = ({ post }: { post: (typeof blogPosts)[0] }) => {
+const BlogPostCard = ({ post }: { post: (typeof blogPosts)[number] & { imageUrl?: string, imageHint?: string } }) => {
   const isPublished = !!post.href;
 
   const cardContent = (
     <Card className={cn(
-        "flex flex-col h-full",
+        "flex flex-col h-full overflow-hidden",
         isPublished 
           ? "transition-all duration-200 hover:shadow-md hover:-translate-y-1"
           : "bg-muted/50"
       )}>
-      <CardHeader>
-        <Badge variant="secondary" className="w-fit">{post.keyword}</Badge>
-      </CardHeader>
-      <CardContent className="flex-grow flex flex-col">
+      {isPublished && post.imageUrl && (
+        <div className="relative aspect-video">
+          <Image
+            src={post.imageUrl}
+            alt={post.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            data-ai-hint={post.imageHint}
+          />
+        </div>
+      )}
+      <div className="flex flex-col flex-grow p-4">
+        <Badge variant="secondary" className="w-fit mb-2">{post.keyword}</Badge>
         <h2 className={cn(
             "text-lg font-semibold font-headline flex-grow",
             !isPublished && "text-muted-foreground"
@@ -128,7 +140,7 @@ const BlogPostCard = ({ post }: { post: (typeof blogPosts)[0] }) => {
         {isPublished && post.publishedOn && (
           <p className="text-xs text-muted-foreground mt-2">{post.publishedOn}</p>
         )}
-      </CardContent>
+      </div>
     </Card>
   );
 
@@ -136,7 +148,7 @@ const BlogPostCard = ({ post }: { post: (typeof blogPosts)[0] }) => {
     return <Link href={post.href}>{cardContent}</Link>;
   }
 
-  return <div className="cursor-not-allowed">{cardContent}</div>;
+  return <div className="cursor-not-allowed h-full">{cardContent}</div>;
 };
 
 export default function BlogPage() {
@@ -155,3 +167,5 @@ export default function BlogPage() {
     </div>
   );
 }
+
+    
