@@ -8,6 +8,8 @@ import Image from "next/image";
 import { BlogCardImage } from "@/components/blog-card-image";
 
 const blogPosts = [
+  { no: 9, keyword: "Free tools", title: "Best Free Tools for Business Planning and Productivity", href: "/blog/best-free-tools-for-business-planning-and-productivity", publishedOn: "July 26, 2024", imageHint: "powerful free" },
+  { no: 8, keyword: "Productivity enhancement", title: "Productivity Enhancement Secrets: Effective Strategies and Tools", href: "/blog/productivity-enhancement-secrets-effective-strategies-and-tools", publishedOn: "July 25, 2024", imageHint: "boost output" },
   { no: 1, keyword: "Model Toolkit", title: "Optimizing Your Business with Model Toolkit: A Complete Guide", href: "/blog/optimizing-your-business-with-model-toolkit", publishedOn: "July 24, 2024", imageHint: "business strategy" },
   { no: 2, keyword: "Productivity tools", title: "10 Strategic Models to Boost Your Productivity", href: "/blog/10-best-productivity-tools", publishedOn: "July 23, 2024", imageHint: "smarter thinking" },
   { no: 3, keyword: "Business models", title: "Understanding Various Business Models for Startup Growth", href: "/blog/understanding-various-business-models-for-startup-growth", publishedOn: "July 22, 2024", imageHint: "startup growth" },
@@ -15,9 +17,7 @@ const blogPosts = [
   { no: 5, keyword: "Innovation", title: "Driving Innovation in Your Company: Frameworks and Ideas", href: "/blog/driving-innovation-in-your-company", publishedOn: "July 20, 2024", imageHint: "new ideas" },
   { no: 6, keyword: "Execution planning", title: "From Idea to Action: Keys to Successful Business Plan Execution", href: "/blog/from-idea-to-action-keys-to-successful-business-plan-execution", publishedOn: "July 19, 2024", imageHint: "idea action" },
   { no: 7, keyword: "Personal development", title: "5 Personal Development Models to Reach Your Full Potential", href: "/blog/5-personal-development-models-to-reach-your-full-potential", publishedOn: "July 18, 2024", imageHint: "personal growth" },
-  { no: 8, keyword: "Productivity enhancement", title: "Productivity Enhancement Secrets: Effective Strategies and Tools", href: "/blog/productivity-enhancement-secrets-effective-strategies-and-tools", publishedOn: "July 25, 2024", imageHint: "boost output" },
-  { no: 9, keyword: "Free tools", title: "Best Free Tools for Business Planning and Productivity", href: "/blog/best-free-tools-for-business-planning-and-productivity", publishedOn: "July 26, 2024", imageHint: "powerful free" },
-  { no: 10, keyword: "Strategic planning", title: "A Complete Guide to Strategic Planning for Small Businesses" },
+  { no: 10, keyword: "Strategic planning", title: "A Complete Guide to Strategic Planning for Small Businesses", href: "/blog/a-complete-guide-to-strategic-planning-for-small-businesses", publishedOn: "July 27, 2024", imageHint: "small business" },
   { no: 11, keyword: "Eisenhower Matrix", title: "Prioritize Your Tasks: A Guide to Mastering the Eisenhower Matrix" },
   { no: 12, keyword: "Eisenhower Matrix", title: "How the Eisenhower Matrix Changes the Way You Work" },
   { no: 13, keyword: "Task prioritization", title: "Task Prioritization Techniques: Managing Time More Effectively" },
@@ -108,7 +108,7 @@ const blogPosts = [
   { no: 98, keyword: "Negotiation skills", title: "Mastering Negotiation Skills for Business Success" },
   { no: 99, keyword: "Digital transformation", title: "Navigating Digital Transformation in Modern Business" },
   { no: 100, keyword: "Strategic planning models", title: "Comparing Different Strategic Planning Models for Your Needs" },
-];
+].sort((a, b) => (b.publishedOn || "").localeCompare(a.publishedOn || ""));
 
 
 const BlogPostCard = ({ post }: { post: (typeof blogPosts)[number] & { imageUrl?: string, imageHint?: string } }) => {

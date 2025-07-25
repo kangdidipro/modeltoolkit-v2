@@ -19,6 +19,7 @@ function generateSitemap() {
     { url: '/blog/5-personal-development-models-to-reach-your-full-potential', priority: 0.6 },
     { url: '/blog/productivity-enhancement-secrets-effective-strategies-and-tools', priority: 0.6 },
     { url: '/blog/best-free-tools-for-business-planning-and-productivity', priority: 0.6 },
+    { url: '/blog/a-complete-guide-to-strategic-planning-for-small-businesses', priority: 0.6 },
     { url: '/terms', priority: 0.3 },
     { url: '/privacy', priority: 0.3 },
   ];
