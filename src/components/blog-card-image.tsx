@@ -165,6 +165,26 @@ export function BlogCardImage({ href }: { href: string }) {
             </svg>
         );
     }
+    if (href === '/blog/best-free-tools-for-business-planning-and-productivity') {
+        return (
+             <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+              <defs>
+                <linearGradient id="grad-card-free-tools" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 0.1 }} />
+                  <stop offset="100%" style={{ stopColor: 'hsl(var(--accent))', stopOpacity: 0.1 }} />
+                </linearGradient>
+              </defs>
+              <rect width="1200" height="600" fill="url(#grad-card-free-tools)" />
+              <g transform="translate(600, 300)">
+                <path d="M-100 -50 L100 -50 L120 0 L100 50 L-100 50 L-120 0 Z" fill="hsl(var(--primary))" opacity="0.1" />
+                 <circle cx="0" cy="0" r="40" stroke="hsl(var(--accent))" strokeWidth="3" fill="none" opacity="0.4" />
+              </g>
+              <text x="600" y="310" fontFamily="var(--font-space-grotesk), sans-serif" fontSize="60" fontWeight="bold" textAnchor="middle" fill="hsl(var(--foreground))" opacity="0.8">
+                Powerful & Free
+              </text>
+            </svg>
+        )
+    }
     
     return <div className="w-full h-full bg-muted/20"></div>;
 }

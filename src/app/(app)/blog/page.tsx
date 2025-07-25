@@ -16,7 +16,7 @@ const blogPosts = [
   { no: 6, keyword: "Execution planning", title: "From Idea to Action: Keys to Successful Business Plan Execution", href: "/blog/from-idea-to-action-keys-to-successful-business-plan-execution", publishedOn: "July 19, 2024", imageHint: "idea action" },
   { no: 7, keyword: "Personal development", title: "5 Personal Development Models to Reach Your Full Potential", href: "/blog/5-personal-development-models-to-reach-your-full-potential", publishedOn: "July 18, 2024", imageHint: "personal growth" },
   { no: 8, keyword: "Productivity enhancement", title: "Productivity Enhancement Secrets: Effective Strategies and Tools", href: "/blog/productivity-enhancement-secrets-effective-strategies-and-tools", publishedOn: "July 25, 2024", imageHint: "boost output" },
-  { no: 9, keyword: "Free tools", title: "Best Free Tools for Business Planning and Productivity" },
+  { no: 9, keyword: "Free tools", title: "Best Free Tools for Business Planning and Productivity", href: "/blog/best-free-tools-for-business-planning-and-productivity", publishedOn: "July 26, 2024", imageHint: "powerful free" },
   { no: 10, keyword: "Strategic planning", title: "A Complete Guide to Strategic Planning for Small Businesses" },
   { no: 11, keyword: "Eisenhower Matrix", title: "Prioritize Your Tasks: A Guide to Mastering the Eisenhower Matrix" },
   { no: 12, keyword: "Eisenhower Matrix", title: "How the Eisenhower Matrix Changes the Way You Work" },
