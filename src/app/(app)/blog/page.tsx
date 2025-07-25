@@ -8,6 +8,7 @@ import Image from "next/image";
 import { BlogCardImage } from "@/components/blog-card-image";
 
 const blogPosts = [
+  { no: 12, keyword: "Eisenhower Matrix", title: "How the Eisenhower Matrix Changes the Way You Work", href: "/blog/how-the-eisenhower-matrix-changes-the-way-you-work", publishedOn: "July 29, 2024", imageHint: "transform work" },
   { no: 11, keyword: "Eisenhower Matrix", title: "Prioritize Your Tasks: A Guide to Mastering the Eisenhower Matrix", href: "/blog/prioritize-your-tasks-a-guide-to-mastering-the-eisenhower-matrix", publishedOn: "July 28, 2024", imageHint: "focus matters" },
   { no: 10, keyword: "Strategic planning", title: "A Complete Guide to Strategic Planning for Small Businesses", href: "/blog/a-complete-guide-to-strategic-planning-for-small-businesses", publishedOn: "July 27, 2024", imageHint: "small business" },
   { no: 9, keyword: "Free tools", title: "Best Free Tools for Business Planning and Productivity", href: "/blog/best-free-tools-for-business-planning-and-productivity", publishedOn: "July 26, 2024", imageHint: "powerful free" },
@@ -19,7 +20,6 @@ const blogPosts = [
   { no: 5, keyword: "Innovation", title: "Driving Innovation in Your Company: Frameworks and Ideas", href: "/blog/driving-innovation-in-your-company", publishedOn: "July 20, 2024", imageHint: "new ideas" },
   { no: 6, keyword: "Execution planning", title: "From Idea to Action: Keys to Successful Business Plan Execution", href: "/blog/from-idea-to-action-keys-to-successful-business-plan-execution", publishedOn: "July 19, 2024", imageHint: "idea action" },
   { no: 7, keyword: "Personal development", title: "5 Personal Development Models to Reach Your Full Potential", href: "/blog/5-personal-development-models-to-reach-your-full-potential", publishedOn: "July 18, 2024", imageHint: "personal growth" },
-  { no: 12, keyword: "Eisenhower Matrix", title: "How the Eisenhower Matrix Changes the Way You Work" },
   { no: 13, keyword: "Task prioritization", title: "Task Prioritization Techniques: Managing Time More Effectively" },
   { no: 14, keyword: "Time management", title: "Time Management Strategies for Busy Professionals" },
   { no: 15, keyword: "SWOT Analysis", title: "Conducting an Effective SWOT Analysis for Competitive Advantage" },
@@ -173,3 +173,5 @@ export default function BlogPage() {
     </div>
   );
 }
+
+    

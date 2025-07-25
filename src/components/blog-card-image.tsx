@@ -1,6 +1,27 @@
 
 
 export function BlogCardImage({ href }: { href: string }) {
+    if (href === '/blog/how-the-eisenhower-matrix-changes-the-way-you-work') {
+        return (
+             <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+              <defs>
+                <linearGradient id="grad-card-transform" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 0.1 }} />
+                  <stop offset="100%" style={{ stopColor: 'hsl(var(--accent))', stopOpacity: 0.1 }} />
+                </linearGradient>
+              </defs>
+              <rect width="1200" height="600" fill="url(#grad-card-transform)" />
+              <path d="M 200 300 H 1000" stroke="hsl(var(--foreground))" strokeWidth="2" opacity="0.2" />
+              <path d="M 350 450 L 500 300 L 650 150" stroke="hsl(var(--primary))" strokeWidth="4" opacity="0.4" fill="none" />
+              <path d="M 500 300 L 850 300" stroke="hsl(var(--accent))" strokeWidth="4" opacity="0.4" fill="none" strokeDasharray="10 5" />
+              <circle cx="500" cy="300" r="15" fill="hsl(var(--background))" stroke="hsl(var(--primary))" strokeWidth="4" />
+              <circle cx="650" cy="150" r="15" fill="hsl(var(--background))" stroke="hsl(var(--primary))" strokeWidth="4" />
+              <text x="600" y="400" fontFamily="var(--font-space-grotesk), sans-serif" fontSize="60" fontWeight="bold" textAnchor="middle" fill="hsl(var(--foreground))" opacity="0.8">
+                Transform Your Work
+              </text>
+            </svg>
+        )
+    }
     if (href === '/blog/prioritize-your-tasks-a-guide-to-mastering-the-eisenhower-matrix') {
         return (
              <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
@@ -229,3 +250,5 @@ export function BlogCardImage({ href }: { href: string }) {
     
     return <div className="w-full h-full bg-muted/20"></div>;
 }
+
+    
