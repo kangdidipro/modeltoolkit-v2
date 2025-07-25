@@ -8,7 +8,7 @@ const blogPosts = [
   { no: 3, keyword: "Business models", title: "Understanding Various Business Models for Startup Growth", href: "/blog/understanding-various-business-models-for-startup-growth" },
   { no: 4, keyword: "Business strategy", title: "Formulating a Strong Business Strategy: Step-by-Step", href: "/blog/formulating-a-strong-business-strategy-step-by-step" },
   { no: 5, keyword: "Innovation", title: "Driving Innovation in Your Company: Frameworks and Ideas", href: "/blog/driving-innovation-in-your-company" },
-  { no: 6, keyword: "Execution planning", title: "From Idea to Action: Keys to Successful Business Plan Execution" },
+  { no: 6, keyword: "Execution planning", title: "From Idea to Action: Keys to Successful Business Plan Execution", href: "/blog/from-idea-to-action-keys-to-successful-business-plan-execution" },
   { no: 7, keyword: "Personal development", title: "5 Personal Development Models to Reach Your Full Potential" },
   { no: 8, keyword: "Productivity enhancement", title: "Productivity Enhancement Secrets: Effective Strategies and Tools" },
   { no: 9, keyword: "Free tools", title: "Best Free Tools for Business Planning and Productivity" },
