@@ -4,12 +4,12 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 const blogPosts = [
-  { no: 1, keyword: "Model Toolkit", title: "Optimizing Your Business with Model Toolkit: A Complete Guide", href: "/blog/optimizing-your-business-with-model-toolkit" },
-  { no: 2, keyword: "Productivity tools", title: "10 Strategic Models to Boost Your Productivity", href: "/blog/10-best-productivity-tools" },
-  { no: 3, keyword: "Business models", title: "Understanding Various Business Models for Startup Growth", href: "/blog/understanding-various-business-models-for-startup-growth" },
-  { no: 4, keyword: "Business strategy", title: "Formulating a Strong Business Strategy: Step-by-Step", href: "/blog/formulating-a-strong-business-strategy-step-by-step" },
-  { no: 5, keyword: "Innovation", title: "Driving Innovation in Your Company: Frameworks and Ideas", href: "/blog/driving-innovation-in-your-company" },
-  { no: 6, keyword: "Execution planning", title: "From Idea to Action: Keys to Successful Business Plan Execution", href: "/blog/from-idea-to-action-keys-to-successful-business-plan-execution" },
+  { no: 1, keyword: "Model Toolkit", title: "Optimizing Your Business with Model Toolkit: A Complete Guide", href: "/blog/optimizing-your-business-with-model-toolkit", publishedOn: "July 24, 2024" },
+  { no: 2, keyword: "Productivity tools", title: "10 Strategic Models to Boost Your Productivity", href: "/blog/10-best-productivity-tools", publishedOn: "July 23, 2024" },
+  { no: 3, keyword: "Business models", title: "Understanding Various Business Models for Startup Growth", href: "/blog/understanding-various-business-models-for-startup-growth", publishedOn: "July 22, 2024" },
+  { no: 4, keyword: "Business strategy", title: "Formulating a Strong Business Strategy: Step-by-Step", href: "/blog/formulating-a-strong-business-strategy-step-by-step", publishedOn: "July 21, 2024" },
+  { no: 5, keyword: "Innovation", title: "Driving Innovation in Your Company: Frameworks and Ideas", href: "/blog/driving-innovation-in-your-company", publishedOn: "July 20, 2024" },
+  { no: 6, keyword: "Execution planning", title: "From Idea to Action: Keys to Successful Business Plan Execution", href: "/blog/from-idea-to-action-keys-to-successful-business-plan-execution", publishedOn: "July 19, 2024" },
   { no: 7, keyword: "Personal development", title: "5 Personal Development Models to Reach Your Full Potential" },
   { no: 8, keyword: "Productivity enhancement", title: "Productivity Enhancement Secrets: Effective Strategies and Tools" },
   { no: 9, keyword: "Free tools", title: "Best Free Tools for Business Planning and Productivity" },
@@ -120,11 +120,14 @@ const BlogPostCard = ({ post }: { post: (typeof blogPosts)[0] }) => {
       <CardHeader>
         <Badge variant="secondary" className="w-fit">{post.keyword}</Badge>
       </CardHeader>
-      <CardContent className="flex-grow">
+      <CardContent className="flex-grow flex flex-col">
         <h2 className={cn(
-            "text-lg font-semibold font-headline",
+            "text-lg font-semibold font-headline flex-grow",
             !isPublished && "text-muted-foreground"
           )}>{post.title}</h2>
+        {isPublished && post.publishedOn && (
+          <p className="text-xs text-muted-foreground mt-2">{post.publishedOn}</p>
+        )}
       </CardContent>
     </Card>
   );

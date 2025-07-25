@@ -9,7 +9,7 @@ export default function BlogPostPage() {
     <div className="max-w-4xl mx-auto">
       <article className="space-y-8">
         <header className="space-y-4 text-center">
-          <p className="text-sm text-muted-foreground">Published on {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <p className="text-sm text-muted-foreground">Published on July 24, 2024</p>
           <h1 className="text-4xl lg:text-5xl font-bold font-headline leading-tight">Optimizing Your Business with Model Toolkit: A Complete Guide</h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             Unlock strategic clarity and drive growth by leveraging a powerful suite of business and productivity models.

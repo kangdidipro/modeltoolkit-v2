@@ -50,7 +50,7 @@ export default function BlogPostPage() {
     <div className="max-w-4xl mx-auto">
       <article className="space-y-8">
         <header className="space-y-4 text-center">
-          <p className="text-sm text-muted-foreground">Published on {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <p className="text-sm text-muted-foreground">Published on July 21, 2024</p>
           <h1 className="text-4xl lg:text-5xl font-bold font-headline leading-tight">Formulating a Strong Business Strategy: Step-by-Step</h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             A clear roadmap is the foundation of any successful venture. Here’s how to build one.

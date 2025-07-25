@@ -49,7 +49,7 @@ export default function BlogPostPage() {
     <div className="max-w-4xl mx-auto">
       <article className="space-y-8">
         <header className="space-y-4 text-center">
-          <p className="text-sm text-muted-foreground">Published on {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <p className="text-sm text-muted-foreground">Published on July 19, 2024</p>
           <h1 className="text-4xl lg:text-5xl font-bold font-headline leading-tight">From Idea to Action: Keys to Successful Business Plan Execution</h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             A brilliant strategy is worthless without execution. Here’s how to close the gap between planning and doing.
