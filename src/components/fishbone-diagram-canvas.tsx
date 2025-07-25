@@ -5,7 +5,7 @@ import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialFishboneDiagramData, type FishboneDiagramModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Pencil } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Pencil, Image as ImageIcon } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
@@ -18,7 +18,8 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
+import html2canvas from "html2canvas"
 
 type CategoryKeys = keyof Omit<FishboneDiagramModel, 'effect'>;
 const LOCAL_STORAGE_KEY = 'fishbone-diagram-history';
@@ -280,6 +281,25 @@ export default function FishboneDiagramCanvas() {
     document.body.removeChild(link);
   }
 
+  const handleExportPng = () => {
+    if (canvasRef.current) {
+      toast({
+        title: "Exporting as PNG",
+        description: "Your canvas is being prepared for download.",
+      });
+      html2canvas(canvasRef.current, {
+        useCORS: true,
+        scale: 2,
+        backgroundColor: window.getComputedStyle(document.body).backgroundColor,
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'fishbone-diagram.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+  };
+  
   const CauseCard = ({ categoryInfo }: { categoryInfo: { key: CategoryKeys; title: string; bgColor: string; } }) => {
     return (
       <Card className={`flex flex-col min-h-[200px] ${categoryInfo.bgColor}`}>
@@ -342,7 +362,7 @@ export default function FishboneDiagramCanvas() {
   }
 
   return (
-    <>
+    <TooltipProvider>
       <div className="canvas-controls mb-4 flex flex-wrap gap-2">
         <Tooltip>
           <TooltipTrigger asChild>
@@ -405,6 +425,17 @@ export default function FishboneDiagramCanvas() {
           </TooltipTrigger>
           <TooltipContent>
             <p>Save your canvas as a CSV file.</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={handleExportPng}>
+              <ImageIcon className="mr-2 h-4 w-4" />
+              Export as PNG
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Save your canvas as a high-quality PNG image.</p>
           </TooltipContent>
         </Tooltip>
       </div>
@@ -493,6 +524,8 @@ export default function FishboneDiagramCanvas() {
           </div>
         </div>
       </div>
-    </>
+    </TooltipProvider>
   )
 }
+
+    
