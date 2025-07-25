@@ -89,26 +89,56 @@ body {
 
 @media print {
   body {
-    background: #fff;
-    color: #000;
+    background: #fff !important;
+    color: #000 !important;
   }
+  .no-print,
   [data-sidebar="sidebar"],
   [data-sidebar="trigger"],
   .canvas-controls,
   .footer,
-  .md\:hidden {
+  .md\:hidden,
+  .p-4.md\:p-6 > div:first-child { /* Hides mobile header */
     display: none !important;
   }
+  
   main {
     padding: 0 !important;
+    margin: 0 !important;
   }
+  
   .printable-canvas {
-    padding: 0 !important;
+    padding: 1rem !important;
     box-shadow: none !important;
     border: none !important;
+    background: #fff !important;
   }
-  .printable-canvas .card {
+
+  .printable-canvas .card,
+  .printable-canvas .bg-card\/80 {
     border-color: #ddd !important;
     box-shadow: none !important;
+    background-color: #fff !important;
+  }
+  
+  .printable-canvas .card-description,
+  .printable-canvas .text-muted-foreground {
+    color: #555 !important;
+  }
+
+  .printable-canvas .bg-blue-100 { background-color: #e0e8f9 !important; }
+  .printable-canvas .bg-purple-100 { background-color: #f3e8ff !important; }
+  .printable-canvas .bg-yellow-100 { background-color: #fef9c3 !important; }
+  .printable-canvas .bg-green-100 { background-color: #d1fae5 !important; }
+  .printable-canvas .bg-orange-100 { background-color: #ffedd5 !important; }
+  .printable-canvas .bg-pink-100 { background-color: #fce7f3 !important; }
+  .printable-canvas .bg-red-100 { background-color: #fee2e2 !important; }
+  .printable-canvas .bg-gray-100 { background-color: #f3f4f6 !important; }
+
+  /* Ensure text is visible */
+  * {
+    color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }

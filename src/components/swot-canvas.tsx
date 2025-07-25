@@ -342,7 +342,7 @@ export default function SwotCanvas() {
 
   return (
     <>
-      <Card className="mb-6 bg-secondary/40">
+      <Card className="mb-6 bg-secondary/40 no-print">
         <CardHeader>
             <CardTitle className="flex items-center gap-2 font-headline">
                 <Wand2 className="text-primary"/>
