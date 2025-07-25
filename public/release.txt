@@ -3,6 +3,7 @@
 2. Add Graphics in Pareto Models
 3. ads PopCash.net
 4. Buy Me a Cup of Coffee - PAYPAL
+
 ===20250724===
 1. add ads infolinks.com/
 2. bug fix mobile menu to auto hide
