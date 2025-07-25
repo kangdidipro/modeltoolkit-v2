@@ -4,7 +4,22 @@ export function BlogCardImage({ href }: { href: string }) {
     if (href === '/blog/optimizing-your-business-with-model-toolkit') {
         return (
              <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
-                <rect width="1200" height="600" fill="hsl(var(--primary) / 0.05)" />
+              <defs>
+                <linearGradient id="grad-card-optimize" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 0.1 }} />
+                  <stop offset="100%" style={{ stopColor: 'hsl(var(--accent))', stopOpacity: 0.1 }} />
+                </linearGradient>
+              </defs>
+              <rect width="1200" height="600" fill="url(#grad-card-optimize)" />
+              <path d="M100,500 C 300,400 400,200 600,300 S 800,500 1100,400" stroke="hsl(var(--primary))" fill="none" strokeWidth="3" opacity="0.4" />
+              <path d="M150,100 L 450,250 L 150,400 Z" fill="hsl(var(--primary))" opacity="0.1" />
+              <g transform="translate(900, 200)">
+                <circle cx="0" cy="0" r="80" fill="hsl(var(--accent))" opacity="0.1" />
+                <circle cx="0" cy="0" r="20" fill="hsl(var(--accent))" opacity="0.3" />
+              </g>
+              <text x="600" y="310" fontFamily="var(--font-space-grotesk), sans-serif" fontSize="60" fontWeight="bold" textAnchor="middle" fill="hsl(var(--foreground))" opacity="0.8">
+                Drive Growth
+              </text>
             </svg>
         )
     }
