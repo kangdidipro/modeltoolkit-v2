@@ -579,7 +579,7 @@ export default function ParetoPrincipleCanvas() {
                 }} className="h-[400px] w-full">
                     <PieChart>
                         <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
-                        <Pie data={chartData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={150} label>
+                        <Pie data={chartData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={150} label={(entry) => entry.value}>
                             {chartData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={`hsl(var(--chart-${(index % 5) + 1}))`} />
                             ))}
