@@ -5,7 +5,7 @@ import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialMaslowsHierarchyData, type MaslowsHierarchyModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Image as ImageIcon } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -17,7 +17,8 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
+import html2canvas from "html2canvas"
 
 type LevelKeys = keyof MaslowsHierarchyModel;
 const LOCAL_STORAGE_KEY = 'maslows-hierarchy-history';
@@ -36,6 +37,7 @@ export default function MaslowsHierarchyCanvas() {
 
   const draggedItem = useRef<{ item: ModelItem; from: LevelKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -258,12 +260,31 @@ export default function MaslowsHierarchyCanvas() {
     document.body.removeChild(link);
   }
   
+  const handleExportPng = () => {
+    if (canvasRef.current) {
+      toast({
+        title: "Exporting as PNG",
+        description: "Your canvas is being prepared for download.",
+      });
+      html2canvas(canvasRef.current, {
+        useCORS: true,
+        scale: 2,
+        backgroundColor: window.getComputedStyle(document.body).backgroundColor,
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'maslows-hierarchy.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+  };
+  
   const countTotalItems = (hierarchyData: MaslowsHierarchyModel) => {
     return Object.values(hierarchyData).reduce((sum, array) => sum + array.length, 0);
   }
 
   return (
-    <>
+    <TooltipProvider>
       <div className="canvas-controls mb-4 flex flex-wrap gap-2">
         <Tooltip>
           <TooltipTrigger asChild>
@@ -328,6 +349,17 @@ export default function MaslowsHierarchyCanvas() {
             <p>Save your canvas as a CSV file.</p>
           </TooltipContent>
         </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" onClick={handleExportPng}>
+              <ImageIcon className="mr-2 h-4 w-4" />
+              Export as PNG
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Save your canvas as a high-quality PNG image.</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
       
       <Dialog open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
@@ -377,7 +409,7 @@ export default function MaslowsHierarchyCanvas() {
         </DialogContent>
       </Dialog>
 
-      <div className="printable-canvas bg-background p-4 rounded-lg">
+      <div ref={canvasRef} className="printable-canvas bg-background p-4 rounded-lg">
         <div className="flex flex-col-reverse items-center space-y-reverse space-y-4">
           {levels.map((level, index) => (
               <div key={level.key} className="w-full" style={{ maxWidth: `${100 - index * 10}%` }}>
@@ -385,7 +417,7 @@ export default function MaslowsHierarchyCanvas() {
                       <CardHeader>
                       <div className="flex items-center justify-between">
                           <CardTitle className="text-lg font-medium font-headline">{level.title}</CardTitle>
-                          <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleAddItem(level.key)}>
+                          <Button size="icon" variant="ghost" className="h-8 w-8 no-print" onClick={() => handleAddItem(level.key)}>
                           <Plus className="h-4 w-4" />
                           </Button>
                       </div>
@@ -405,7 +437,7 @@ export default function MaslowsHierarchyCanvas() {
                           className="group bg-card/80 dark:bg-card/50 backdrop-blur-sm rounded-lg p-3 shadow transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
                           >
                           <div className="flex items-start gap-2">
-                              <GripVertical className="h-5 w-5 mt-1 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground" />
+                              <GripVertical className="h-5 w-5 mt-1 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground no-print" />
                               {editingItemId === item.id ? (
                               <Textarea
                                   value={editingText}
@@ -423,7 +455,7 @@ export default function MaslowsHierarchyCanvas() {
                               <Button
                               size="icon"
                               variant="ghost"
-                              className="h-7 w-7 opacity-0 group-hover:opacity-100 shrink-0"
+                              className="h-7 w-7 opacity-0 group-hover:opacity-100 shrink-0 no-print"
                               onClick={() => handleDeleteItem(level.key, item.id)}
                               >
                               <Trash2 className="h-4 w-4" />
@@ -442,6 +474,6 @@ export default function MaslowsHierarchyCanvas() {
           ))}
         </div>
       </div>
-    </>
+    </TooltipProvider>
   )
 }
