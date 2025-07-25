@@ -393,7 +393,7 @@ export const initialCommunicationModelData: CommunicationModel = {
 };
 
 
-export const modelInfo: { [key: string]: { name: string; description: string, icon: React.ComponentType<any> } } = {
+export const modelInfo: { [key: string]: { name: string; description: string, icon: React.ComponentType<any>, ai?: boolean } } = {
   'eisenhower-matrix': {
     name: 'Eisenhower Matrix',
     description: 'A free tool to prioritize tasks by urgency and importance to focus on what matters.',
@@ -403,6 +403,7 @@ export const modelInfo: { [key: string]: { name: string; description: string, ic
     name: 'SWOT Analysis',
     description: 'A free tool to identify strengths, weaknesses, opportunities, and threats to make strategic decisions.',
     icon: LayoutGrid,
+    ai: true,
   },
   'pareto-principle': {
     name: 'Pareto Principle (80/20 Rule)',

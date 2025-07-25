@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/accordion"
 import {
   LayoutGrid,
+  Wand2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { modelInfo, categories } from "@/lib/models"
@@ -104,9 +105,12 @@ function AppLayoutContent({ children, handleLinkClick }: { children: React.React
                                         <SidebarMenuButton
                                             isActive={isActive(`/models/${id}`)}
                                             icon={<Icon />}
-                                            className="h-8"
+                                            className="h-8 justify-between"
                                         >
-                                            {info.name}
+                                            <span className="truncate">{info.name}</span>
+                                            {info.ai && (
+                                                <Wand2 className="h-4 w-4 text-primary shrink-0" />
+                                            )}
                                         </SidebarMenuButton>
                                     </Link>
                                 </SidebarMenuItem>
