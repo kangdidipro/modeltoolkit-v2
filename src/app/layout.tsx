@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: 'Model Toolkit',
   description: 'A toolkit for business and productivity models.',
   icons: {
-    icon: '/favicon-modeltoolkit.ico',
+    icon: '/favicon.ico',
   },
 };
 
