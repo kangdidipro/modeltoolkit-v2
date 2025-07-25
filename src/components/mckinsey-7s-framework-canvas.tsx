@@ -5,7 +5,7 @@ import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialMckinsey7sFrameworkData, type Mckinsey7sFrameworkModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Printer } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -393,17 +393,6 @@ export default function Mckinsey7sFrameworkCanvas() {
           </TooltipTrigger>
           <TooltipContent>
             <p>Save your canvas as a CSV file.</p>
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="outline" onClick={() => window.print()}>
-              <Printer className="mr-2 h-4 w-4" />
-              Print
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Print or save your canvas as a PDF.</p>
           </TooltipContent>
         </Tooltip>
       </div>

@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { initialRaciMatrixData, type RaciMatrixModel, type RaciTask, type RaciPerson, type RaciRole, type RaciAssignment } from "@/lib/models";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, Save, History, Upload, FileDown, RefreshCw, GripVertical, Users, ListChecks, Printer } from "lucide-react";
+import { Plus, Trash2, Save, History, Upload, FileDown, RefreshCw, GripVertical, Users, ListChecks } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -306,17 +306,6 @@ export default function RaciMatrixCanvas() {
           </TooltipTrigger>
           <TooltipContent>
             <p>Save your canvas as a CSV file.</p>
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="outline" onClick={() => window.print()}>
-              <Printer className="mr-2 h-4 w-4" />
-              Print
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Print or save your canvas as a PDF.</p>
           </TooltipContent>
         </Tooltip>
       </div>
