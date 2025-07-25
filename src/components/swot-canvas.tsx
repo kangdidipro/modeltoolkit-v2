@@ -24,10 +24,13 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./
 import { Input } from "./ui/input"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
 import html2canvas from "html2canvas"
+import { usePathname } from "next/navigation"
+import { trackEvent } from "@/lib/tracking"
 
 
 type ColumnKeys = keyof SwotModel;
 const LOCAL_STORAGE_KEY = 'swot-model-history';
+const MODEL_NAME = "SWOT Analysis";
 
 type HistoryEntry = {
   timestamp: number;
@@ -49,6 +52,16 @@ export default function SwotCanvas() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const pathname = usePathname();
+
+  const trackCanvasEvent = (elementClicked: string) => {
+    trackEvent({
+        eventName: 'canvas_interaction',
+        modelName: MODEL_NAME,
+        elementClicked,
+        path: pathname,
+    });
+  };
 
   useEffect(() => {
     try {
@@ -92,6 +105,7 @@ export default function SwotCanvas() {
     };
     setData(prev => ({ ...prev, [column]: [...prev[column], newItem] }));
     startEditing(newItem);
+    trackCanvasEvent(`add_item_${column}`);
   };
 
   const handleDeleteItem = (column: ColumnKeys, itemId: string) => {
@@ -143,7 +157,7 @@ export default function SwotCanvas() {
       newData[to] = [...newData[to], dragged];
       return newData;
     });
-  
+    trackCanvasEvent(`drag_and_drop_item`);
     draggedItem.current = null;
   };
 
@@ -152,6 +166,7 @@ export default function SwotCanvas() {
   }
 
   const handleSave = () => {
+    trackCanvasEvent('save_to_history');
     try {
       const newEntry: HistoryEntry = {
         timestamp: Date.now(),
@@ -175,6 +190,7 @@ export default function SwotCanvas() {
   };
 
   const handleLoadFromHistory = (entry: HistoryEntry) => {
+    trackCanvasEvent('load_from_history');
     setData(entry.data);
     setIsHistoryOpen(false);
     toast({
@@ -184,6 +200,7 @@ export default function SwotCanvas() {
   };
 
   const handleXmlImportClick = () => {
+    trackCanvasEvent('import_xml_click');
     fileInputRef.current?.click();
   };
 
@@ -191,6 +208,7 @@ export default function SwotCanvas() {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    trackCanvasEvent('import_xml_file_selected');
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
@@ -243,6 +261,7 @@ export default function SwotCanvas() {
   };
 
   const handleExportXml = () => {
+    trackCanvasEvent('export_xml');
     let xmlContent = `<swot_analysis>\n`;
     for (const [key, items] of Object.entries(data)) {
         xmlContent += `  <${key}>\n`;
@@ -281,6 +300,7 @@ export default function SwotCanvas() {
   };
 
   const handleExportCsv = () => {
+    trackCanvasEvent('export_csv');
     let csvContent = "Category,Title,Description\n";
     for (const [key, items] of Object.entries(data)) {
         items.forEach(item => {
@@ -311,6 +331,7 @@ export default function SwotCanvas() {
   }
 
   const handleExportPng = () => {
+    trackCanvasEvent('export_png');
     const exportNode = document.getElementById('png-export-area');
     if (exportNode) {
       toast({
@@ -335,6 +356,7 @@ export default function SwotCanvas() {
   }
 
   const handleGenerateSwot = async () => {
+    trackCanvasEvent('generate_swot_with_ai');
     if (!businessIdea) {
         toast({
             variant: 'destructive',
@@ -443,7 +465,7 @@ export default function SwotCanvas() {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" onClick={() => setIsHistoryOpen(true)}>
+            <Button variant="outline" onClick={() => { setIsHistoryOpen(true); trackCanvasEvent('open_history'); }}>
               <History className="mr-2 h-4 w-4" />
               History
             </Button>
@@ -532,7 +554,7 @@ export default function SwotCanvas() {
                         <RefreshCw className="mr-2 h-4 w-4" />
                         Load
                       </Button>
-                       <Button variant="outline" onClick={handleExportXml}>
+                       <Button variant="outline" onClick={() => { trackCanvasEvent('export_xml_from_history'); handleExportXml(); }}>
                         <FileDown className="mr-2 h-4 w-4" />
                         XML
                       </Button>

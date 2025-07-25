@@ -1,4 +1,6 @@
 
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { categories, modelInfo } from "@/lib/models";
 import Link from "next/link";
@@ -7,6 +9,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/tracking";
 
 const faqs = [
   {
@@ -24,6 +27,15 @@ const faqs = [
 ];
 
 export default function ModelsPage() {
+
+  const handleModelClick = (modelName: string) => {
+    trackEvent({
+      eventName: "model_card_clicked",
+      modelName,
+      path: "/models",
+    });
+  };
+
   return (
     <div className="space-y-12">
       <div className="text-center space-y-4 max-w-4xl mx-auto">
@@ -74,7 +86,7 @@ export default function ModelsPage() {
                 const info = modelInfo[id];
                 const Icon = info.icon;
                 return (
-                  <Link href={`/models/${id}`} key={id} className="group block">
+                  <Link href={`/models/${id}`} key={id} className="group block" onClick={() => handleModelClick(info.name)}>
                     <Card className="h-full flex flex-col transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1 group-hover:border-primary/50">
                       <CardHeader className="flex-row items-start gap-4 space-y-0">
                          <div className="p-3 bg-primary/10 rounded-lg">
