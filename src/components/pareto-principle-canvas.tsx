@@ -20,8 +20,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import html2canvas from "html2canvas"
 import { Input } from "./ui/input"
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip as ChartTooltip, PieChart, Pie, Cell } from "recharts"
-import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip as ChartTooltip, PieChart, Pie, Cell, Legend } from "recharts"
+import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltipContent } from "@/components/ui/chart"
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
 import { Label } from "./ui/label"
 
@@ -78,9 +78,13 @@ export default function ParetoPrincipleCanvas() {
       });
     }
   }, [toast]);
-
+  
   const chartData = useMemo(() => {
-    const allItems = [...data.vitalFew, ...data.usefulMany].sort((a, b) => b.value - a.value);
+    const vitalFewItems = data.vitalFew.map(item => ({ ...item, category: 'vitalFew' as const }));
+    const usefulManyItems = data.usefulMany.map(item => ({ ...item, category: 'usefulMany' as const }));
+    
+    const allItems = [...vitalFewItems, ...usefulManyItems].sort((a, b) => b.value - a.value);
+    
     let cumulativePercentage = 0;
     const totalValue = allItems.reduce((sum, item) => sum + item.value, 0);
 
@@ -90,10 +94,25 @@ export default function ParetoPrincipleCanvas() {
       return {
         name: item.content.length > 20 ? item.content.substring(0, 17) + '...' : item.content,
         value: item.value,
+        category: item.category,
         cumulative: cumulativePercentage,
       };
     });
   }, [data]);
+  
+  const pieChartConfig = {
+    value: {
+      label: "Value",
+    },
+    vitalFew: {
+      label: "Vital Few",
+      color: "hsl(var(--chart-1))",
+    },
+    usefulMany: {
+      label: "Useful Many",
+      color: "hsl(var(--chart-2))",
+    },
+  }
 
   const columns: { key: ColumnKeys; title: string; description: string; bg: string }[] = useMemo(() => [
     { key: "vitalFew", title: "Vital Few (20%)", description: "The small number of inputs that produce the majority of results.", bg: "bg-blue-100 dark:bg-blue-900/40" },
@@ -573,15 +592,13 @@ export default function ParetoPrincipleCanvas() {
                 </BarChart>
                 </ChartContainer>
             ) : (
-                <ChartContainer config={{
-                    value: { label: "Value" },
-                    ...chartData.reduce((acc, item) => ({...acc, [item.name]: {label: item.name}}), {})
-                }} className="h-[400px] w-full">
+                <ChartContainer config={pieChartConfig} className="h-[400px] w-full">
                     <PieChart>
                         <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
+                        <Legend content={<ChartLegendContent />} />
                         <Pie data={chartData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={150} label={({ name, value }) => `${name}: ${value}`}>
                             {chartData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={`hsl(var(--chart-${(index % 5) + 1}))`} />
+                                <Cell key={`cell-${index}`} fill={entry.category === 'vitalFew' ? "hsl(var(--chart-1))" : "hsl(var(--chart-2))"} />
                             ))}
                         </Pie>
                     </PieChart>
