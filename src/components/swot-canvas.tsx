@@ -22,6 +22,7 @@ import { generateSwotAnalysis } from "@/ai/flows/swot-generator-flow"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
 import { Input } from "./ui/input"
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip"
 
 
 type ColumnKeys = keyof SwotModel;
@@ -410,10 +411,19 @@ export default function SwotCanvas() {
           <Printer className="mr-2 h-4 w-4" />
           Print
         </Button>
-        <Button variant="secondary" onClick={handleAiAnalysis} disabled={isAiAnalysisRunning || countTotalItems(data) === 0}>
-          {isAiAnalysisRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lightbulb className="mr-2 h-4 w-4" />}
-          Generate Strategic Insights
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="secondary" onClick={handleAiAnalysis} disabled={isAiAnalysisRunning || countTotalItems(data) === 0}>
+              {isAiAnalysisRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lightbulb className="mr-2 h-4 w-4" />}
+              Generate Strategic Insights
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="max-w-xs">
+              Fill in the SWOT analysis, then click here. The AI will analyze the relationships between quadrants and suggest actionable strategies.
+            </p>
+          </TooltipContent>
+        </Tooltip>
       </div>
       
       <Dialog open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
