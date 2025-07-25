@@ -5,7 +5,7 @@ import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialSwotData, type SwotModel, type ModelItem } from "@/lib/models"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Printer } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Printer, Lightbulb, Loader2 } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -17,6 +17,8 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { analyzeModelCanvas, type AnalyzeModelCanvasOutput } from "@/ai/flows/model-canvas-analyzer"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 
 type ColumnKeys = keyof SwotModel;
@@ -33,6 +35,9 @@ export default function SwotCanvas() {
   const [editingText, setEditingText] = useState("");
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isAiAnalysisRunning, setIsAiAnalysisRunning] = useState(false);
+  const [aiAnalysisResult, setAiAnalysisResult] = useState<AnalyzeModelCanvasOutput | null>(null);
+  const [isAiResultOpen, setIsAiResultOpen] = useState(false);
 
   const draggedItem = useRef<{ item: ModelItem; from: ColumnKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -263,6 +268,28 @@ export default function SwotCanvas() {
     return Object.values(swotData).reduce((sum, array) => sum + array.length, 0);
   }
 
+  const handleAiAnalysis = async () => {
+    setIsAiAnalysisRunning(true);
+    setAiAnalysisResult(null);
+    try {
+      const result = await analyzeModelCanvas({
+        modelType: "SWOT",
+        modelCanvasState: JSON.stringify(data),
+      });
+      setAiAnalysisResult(result);
+      setIsAiResultOpen(true);
+    } catch (error) {
+      console.error("AI Analysis failed", error);
+      toast({
+        variant: "destructive",
+        title: "AI Analysis Failed",
+        description: "There was an error analyzing your SWOT canvas. Please try again.",
+      });
+    } finally {
+      setIsAiAnalysisRunning(false);
+    }
+  };
+
   return (
     <>
       <div className="canvas-controls mb-4 flex flex-wrap gap-2">
@@ -297,6 +324,10 @@ export default function SwotCanvas() {
         <Button variant="outline" onClick={() => window.print()}>
           <Printer className="mr-2 h-4 w-4" />
           Print
+        </Button>
+        <Button variant="secondary" onClick={handleAiAnalysis} disabled={isAiAnalysisRunning}>
+          {isAiAnalysisRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lightbulb className="mr-2 h-4 w-4" />}
+          Analyze with AI
         </Button>
       </div>
       
@@ -344,6 +375,41 @@ export default function SwotCanvas() {
                 Your data is saved in your browser's local storage.
               </p>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAiResultOpen} onOpenChange={setIsAiResultOpen}>
+        <DialogContent className="max-w-2xl">
+            <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                    <Lightbulb className="h-6 w-6" />
+                    AI Analysis Results
+                </DialogTitle>
+                <DialogDescription>
+                    Here are some suggestions to improve your SWOT analysis.
+                </DialogDescription>
+            </DialogHeader>
+            {aiAnalysisResult && (
+                <div className="space-y-4">
+                    <Alert>
+                        <AlertTitle>Rationale</AlertTitle>
+                        <AlertDescription>
+                            {aiAnalysisResult.rationale}
+                        </AlertDescription>
+                    </Alert>
+                    <div>
+                        <h3 className="font-semibold mb-2">Suggestions:</h3>
+                        <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                            {aiAnalysisResult.suggestions.map((suggestion, index) => (
+                                <li key={index}>{suggestion}</li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            )}
+            <DialogFooter>
+                <Button onClick={() => setIsAiResultOpen(false)}>Close</Button>
+            </DialogFooter>
         </DialogContent>
       </Dialog>
 
