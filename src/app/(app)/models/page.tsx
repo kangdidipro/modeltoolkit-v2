@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { categories, modelInfo } from "@/lib/models";
 import Link from "next/link";
@@ -5,6 +6,7 @@ import { ArrowRight, ChevronDown, Wand2 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { cn } from "@/lib/utils";
 
 const faqs = [
   {
@@ -64,7 +66,10 @@ export default function ModelsPage() {
         {categories.map((category) => (
           <section key={category.name}>
             <h2 className="text-3xl font-bold font-headline mb-6">{category.name}</h2>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className={cn(
+              "grid gap-6 md:grid-cols-2 lg:grid-cols-3",
+              {"lg:grid-cols-1": category.name === "Support"}
+            )}>
               {category.models.map(({ id }) => {
                 const info = modelInfo[id];
                 const Icon = info.icon;
