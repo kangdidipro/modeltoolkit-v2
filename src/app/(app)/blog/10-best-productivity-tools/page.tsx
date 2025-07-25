@@ -102,12 +102,13 @@ export default function BlogPostPage() {
         <Card className="overflow-hidden">
           <CardContent className="p-0">
             <Image
-              src="/10 Strategic Models to Boost Your Productivity.jpg"
+              src="https://placehold.co/1200x600.png"
               alt="A person planning on a whiteboard"
               width={1200}
               height={600}
               className="w-full object-cover"
               priority
+              data-ai-hint="whiteboard strategy"
             />
           </CardContent>
         </Card>
