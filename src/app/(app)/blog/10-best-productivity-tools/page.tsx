@@ -100,16 +100,57 @@ export default function BlogPostPage() {
         </header>
 
         <Card className="overflow-hidden">
-          <CardContent className="p-0">
-            <Image
-              src="https://placehold.co/1200x600.png"
-              alt="A person planning on a whiteboard"
-              width={1200}
-              height={600}
-              className="w-full object-cover"
-              priority
-              data-ai-hint="whiteboard strategy"
-            />
+          <CardContent className="p-0 bg-primary/5">
+            <svg
+              viewBox="0 0 1200 600"
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-full h-auto"
+            >
+              <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 0.1 }} />
+                  <stop offset="100%" style={{ stopColor: 'hsl(var(--accent))', stopOpacity: 0.1 }} />
+                </linearGradient>
+                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                  <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <rect width="1200" height="600" fill="url(#grad1)" />
+              
+              {/* Abstract shapes */}
+              <path d="M 150 200 Q 250 100 350 200 T 550 200" stroke="hsl(var(--primary))" fill="none" strokeWidth="3" opacity="0.6" />
+              <path d="M 800 450 Q 900 550 1000 450 T 1200 450" stroke="hsl(var(--accent))" fill="none" strokeWidth="3" opacity="0.6" />
+              
+              <g transform="translate(300, 350) rotate(45)">
+                <rect x="-50" y="-50" width="100" height="100" rx="15" fill="hsl(var(--primary))" opacity="0.2" filter="url(#glow)"/>
+                <rect x="-40" y="-40" width="80" height="80" rx="10" stroke="hsl(var(--primary))" strokeWidth="2" fill="none" />
+              </g>
+
+              <g transform="translate(900, 200) rotate(-30)">
+                 <circle cx="0" cy="0" r="60" fill="hsl(var(--accent))" opacity="0.2" filter="url(#glow)"/>
+                 <circle cx="0" cy="0" r="50" stroke="hsl(var(--accent))" strokeWidth="2" fill="none" />
+              </g>
+
+              <g transform="translate(600, 480)">
+                <path d="M-50 -30 L0 30 L50 -30 Z" fill="hsl(var(--foreground))" opacity="0.05" />
+              </g>
+
+               <g transform="translate(100, 500)">
+                <path d="M0,0 L20,10 L0,20 L-20,10 Z" fill="hsl(var(--primary))" opacity="0.3" />
+              </g>
+              
+               <g transform="translate(1100, 80)">
+                <path d="M0,0 L15,5 L15,15 L0,20 L-15,15 L-15,5 Z" fill="hsl(var(--accent))" opacity="0.4" />
+              </g>
+
+              <text x="600" y="310" fontFamily="var(--font-space-grotesk), sans-serif" fontSize="60" fontWeight="bold" textAnchor="middle" fill="hsl(var(--foreground))" opacity="0.8">
+                Think Smarter
+              </text>
+            </svg>
           </CardContent>
         </Card>
 
