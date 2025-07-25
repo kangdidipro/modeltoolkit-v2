@@ -12,6 +12,11 @@ function generateSitemap() {
     { url: '/blog', priority: 0.7 },
     { url: '/blog/optimizing-your-business-with-model-toolkit', priority: 0.6 },
     { url: '/blog/10-best-productivity-tools', priority: 0.6 },
+    { url: '/blog/understanding-various-business-models-for-startup-growth', priority: 0.6 },
+    { url: '/blog/formulating-a-strong-business-strategy-step-by-step', priority: 0.6 },
+    { url: '/blog/driving-innovation-in-your-company', priority: 0.6 },
+    { url: '/blog/from-idea-to-action-keys-to-successful-business-plan-execution', priority: 0.6 },
+    { url: '/blog/5-personal-development-models-to-reach-your-full-potential', priority: 0.6 },
     { url: '/terms', priority: 0.3 },
     { url: '/privacy', priority: 0.3 },
   ];

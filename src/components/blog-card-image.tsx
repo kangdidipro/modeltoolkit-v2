@@ -126,6 +126,26 @@ export function BlogCardImage({ href }: { href: string }) {
             </svg>
         );
     }
+     if (href === '/blog/5-personal-development-models-to-reach-your-full-potential') {
+        return (
+             <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+                <defs>
+                    <linearGradient id="grad-card-6" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 0.1 }} />
+                    <stop offset="100%" style={{ stopColor: 'hsl(var(--accent))', stopOpacity: 0.1 }} />
+                    </linearGradient>
+                </defs>
+                <rect width="1200" height="600" fill="url(#grad-card-6)" />
+                <path d="M 150 500 C 300 450, 400 350, 600 300 S 800 150, 1050 100" stroke="hsl(var(--primary))" fill="none" strokeWidth="4" opacity="0.3" />
+                <path d="M 100 100 C 250 150, 350 250, 600 300 S 850 450, 1100 500" stroke="hsl(var(--accent))" fill="none" strokeWidth="4" opacity="0.3" />
+                <circle cx="600" cy="300" r="50" fill="hsl(var(--primary))" opacity="0.1" />
+                <circle cx="600" cy="300" r="25" fill="hsl(var(--accent))" opacity="0.2" />
+                <text x="600" y="310" fontFamily="var(--font-space-grotesk), sans-serif" fontSize="60" fontWeight="bold" textAnchor="middle" fill="hsl(var(--foreground))" opacity="0.8">
+                    Unlock Potential
+                </text>
+            </svg>
+        );
+    }
     
     return <div className="w-full h-full bg-muted/20"></div>;
 }

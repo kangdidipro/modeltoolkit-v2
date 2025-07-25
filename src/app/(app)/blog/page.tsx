@@ -8,13 +8,13 @@ import Image from "next/image";
 import { BlogCardImage } from "@/components/blog-card-image";
 
 const blogPosts = [
-  { no: 1, keyword: "Model Toolkit", title: "Optimizing Your Business with Model Toolkit: A Complete Guide", href: "/blog/optimizing-your-business-with-model-toolkit", publishedOn: "July 24, 2024", imageUrl: "/1.main-page.png", imageHint: "business strategy" },
+  { no: 1, keyword: "Model Toolkit", title: "Optimizing Your Business with Model Toolkit: A Complete Guide", href: "/blog/optimizing-your-business-with-model-toolkit", publishedOn: "July 24, 2024", imageHint: "business strategy" },
   { no: 2, keyword: "Productivity tools", title: "10 Strategic Models to Boost Your Productivity", href: "/blog/10-best-productivity-tools", publishedOn: "July 23, 2024", imageHint: "smarter thinking" },
   { no: 3, keyword: "Business models", title: "Understanding Various Business Models for Startup Growth", href: "/blog/understanding-various-business-models-for-startup-growth", publishedOn: "July 22, 2024", imageHint: "startup growth" },
   { no: 4, keyword: "Business strategy", title: "Formulating a Strong Business Strategy: Step-by-Step", href: "/blog/formulating-a-strong-business-strategy-step-by-step", publishedOn: "July 21, 2024", imageHint: "chart course" },
   { no: 5, keyword: "Innovation", title: "Driving Innovation in Your Company: Frameworks and Ideas", href: "/blog/driving-innovation-in-your-company", publishedOn: "July 20, 2024", imageHint: "new ideas" },
   { no: 6, keyword: "Execution planning", title: "From Idea to Action: Keys to Successful Business Plan Execution", href: "/blog/from-idea-to-action-keys-to-successful-business-plan-execution", publishedOn: "July 19, 2024", imageHint: "idea action" },
-  { no: 7, keyword: "Personal development", title: "5 Personal Development Models to Reach Your Full Potential" },
+  { no: 7, keyword: "Personal development", title: "5 Personal Development Models to Reach Your Full Potential", href: "/blog/5-personal-development-models-to-reach-your-full-potential", publishedOn: "July 18, 2024", imageHint: "personal growth" },
   { no: 8, keyword: "Productivity enhancement", title: "Productivity Enhancement Secrets: Effective Strategies and Tools" },
   { no: 9, keyword: "Free tools", title: "Best Free Tools for Business Planning and Productivity" },
   { no: 10, keyword: "Strategic planning", title: "A Complete Guide to Strategic Planning for Small Businesses" },
