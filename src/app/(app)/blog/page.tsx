@@ -8,6 +8,7 @@ import Image from "next/image";
 import { BlogCardImage } from "@/components/blog-card-image";
 
 const blogPosts = [
+  { no: 15, keyword: "SWOT Analysis", title: "Conducting an Effective SWOT Analysis for Competitive Advantage", href: "/blog/conducting-an-effective-swot-analysis-for-competitive-advantage", publishedOn: "August 1, 2024", imageHint: "competitive advantage" },
   { no: 14, keyword: "Time management", title: "Time Management Strategies for Busy Professionals", href: "/blog/time-management-strategies-for-busy-professionals", publishedOn: "July 31, 2024", imageHint: "time management" },
   { no: 13, keyword: "Task prioritization", title: "Task Prioritization Techniques: Managing Time More Effectively", href: "/blog/task-prioritization-techniques-managing-time-more-effectively", publishedOn: "July 30, 2024", imageHint: "master time" },
   { no: 12, keyword: "Eisenhower Matrix", title: "How the Eisenhower Matrix Changes the Way You Work", href: "/blog/how-the-eisenhower-matrix-changes-the-way-you-work", publishedOn: "July 29, 2024", imageHint: "transform work" },
@@ -22,7 +23,6 @@ const blogPosts = [
   { no: 5, keyword: "Innovation", title: "Driving Innovation in Your Company: Frameworks and Ideas", href: "/blog/driving-innovation-in-your-company", publishedOn: "July 20, 2024", imageHint: "new ideas" },
   { no: 6, keyword: "Execution planning", title: "From Idea to Action: Keys to Successful Business Plan Execution", href: "/blog/from-idea-to-action-keys-to-successful-business-plan-execution", publishedOn: "July 19, 2024", imageHint: "idea action" },
   { no: 7, keyword: "Personal development", title: "5 Personal Development Models to Reach Your Full Potential", href: "/blog/5-personal-development-models-to-reach-your-full-potential", publishedOn: "July 18, 2024", imageHint: "personal growth" },
-  { no: 15, keyword: "SWOT Analysis", title: "Conducting an Effective SWOT Analysis for Competitive Advantage" },
   { no: 16, keyword: "Strengths weaknesses opportunities threats", title: "Identifying Your Business's Strengths, Weaknesses, Opportunities, and Threats" },
   { no: 17, keyword: "Pareto Principle", title: "The 80/20 Rule: Maximizing Results with the Pareto Principle" },
   { no: 18, keyword: "80/20 rule", title: "Applying the 80/20 Rule in Productivity and Life" },
@@ -173,3 +173,4 @@ export default function BlogPage() {
     </div>
   );
 }
+

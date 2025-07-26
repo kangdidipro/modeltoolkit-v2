@@ -11,6 +11,7 @@ function generateSitemap() {
     { url: '/about', priority: 0.8 },
     { url: '/feedback', priority: 0.5 },
     { url: '/blog', priority: 0.7 },
+    { url: '/blog/conducting-an-effective-swot-analysis-for-competitive-advantage', priority: 0.6 },
     { url: '/blog/time-management-strategies-for-busy-professionals', priority: 0.6 },
     { url: '/blog/task-prioritization-techniques-managing-time-more-effectively', priority: 0.6 },
     { url: '/blog/how-the-eisenhower-matrix-changes-the-way-you-work', priority: 0.6 },

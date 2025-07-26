@@ -1,6 +1,27 @@
 
 
 export function BlogCardImage({ href }: { href: string }) {
+    if (href === '/blog/conducting-an-effective-swot-analysis-for-competitive-advantage') {
+        return (
+             <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+              <defs>
+                <linearGradient id="grad-card-swot" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 0.1 }} />
+                  <stop offset="100%" style={{ stopColor: 'hsl(var(--accent))', stopOpacity: 0.1 }} />
+                </linearGradient>
+              </defs>
+              <rect width="1200" height="600" fill="url(#grad-card-swot)" />
+              <g transform="translate(600, 300) scale(1.2)">
+                <path d="M -150 -150 H 150 V 150 H -150 Z" fill="hsl(var(--foreground))" opacity="0.02" />
+                <line x1="-150" y1="0" x2="150" y2="0" stroke="hsl(var(--primary))" strokeWidth="2" opacity="0.3" />
+                <line x1="0" y1="-150" x2="0" y2="150" stroke="hsl(var(--primary))" strokeWidth="2" opacity="0.3" />
+              </g>
+              <text x="600" y="310" fontFamily="var(--font-space-grotesk), sans-serif" fontSize="60" fontWeight="bold" textAnchor="middle" fill="hsl(var(--foreground))" opacity="0.8">
+                Competitive Edge
+              </text>
+            </svg>
+        )
+    }
     if (href === '/blog/time-management-strategies-for-busy-professionals') {
         return (
              <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
