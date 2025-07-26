@@ -105,11 +105,11 @@ function AppLayoutContent({ children, handleLinkClick }: { children: React.React
                                         <SidebarMenuButton
                                             isActive={isActive(`/models/${id}`)}
                                             icon={<Icon />}
-                                            className="h-8 justify-between"
+                                            className="h-8"
                                         >
                                             <span className="truncate">{info.name}</span>
                                             {info.ai && (
-                                                <Wand2 className="h-4 w-4 text-primary shrink-0" />
+                                                <Wand2 className="h-4 w-4 text-primary shrink-0 ml-auto" />
                                             )}
                                         </SidebarMenuButton>
                                     </Link>
