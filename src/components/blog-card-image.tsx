@@ -1,6 +1,27 @@
 
 
 export function BlogCardImage({ href }: { href: string }) {
+    if (href === '/blog/task-prioritization-techniques-managing-time-more-effectively') {
+        return (
+             <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+              <defs>
+                <linearGradient id="grad-card-prioritize" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 0.1 }} />
+                  <stop offset="100%" style={{ stopColor: 'hsl(var(--accent))', stopOpacity: 0.1 }} />
+                </linearGradient>
+              </defs>
+              <rect width="1200" height="600" fill="url(#grad-card-prioritize)" />
+              <g transform="translate(600, 300) scale(1.1)">
+                <rect x="-200" y="-80" width="100" height="160" rx="10" fill="hsl(var(--primary))" opacity="0.1" />
+                <rect x="-50" y="-120" width="100" height="240" rx="10" fill="hsl(var(--accent))" opacity="0.1" />
+                <rect x="100" y="-50" width="100" height="100" rx="10" fill="hsl(var(--primary))" opacity="0.1" />
+              </g>
+              <text x="600" y="310" fontFamily="var(--font-space-grotesk), sans-serif" fontSize="60" fontWeight="bold" textAnchor="middle" fill="hsl(var(--foreground))" opacity="0.8">
+                Master Your Time
+              </text>
+            </svg>
+        )
+    }
     if (href === '/blog/how-the-eisenhower-matrix-changes-the-way-you-work') {
         return (
              <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
