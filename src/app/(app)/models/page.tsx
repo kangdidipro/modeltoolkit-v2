@@ -4,7 +4,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { categories, modelInfo } from "@/lib/models";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, Wand2 } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -68,10 +68,6 @@ export default function ModelsPage() {
         <p className="text-muted-foreground">
           Model Toolkit provides a versatile collection of interactive business planning tools and strategic analysis templates. Whether you are charting a new business venture, optimizing a project, or enhancing personal productivity, our frameworks provide the structure needed for clear thinking and decisive action. Dive in and start turning your abstract concepts into concrete results.
         </p>
-        <p className="text-muted-foreground !mt-4 inline-flex items-center gap-2 rounded-full bg-primary/5 px-4 py-2 border border-primary/10">
-          <Wand2 className="h-5 w-5 text-primary" />
-          Look for models marked with the magic stick to get AI-powered insights.
-        </p>
       </section>
 
       <div className="space-y-10">
@@ -95,7 +91,6 @@ export default function ModelsPage() {
                         <div className="flex-1">
                           <CardTitle className="font-headline text-xl flex items-center justify-between">
                             {info.name}
-                            {info.ai && <Wand2 className="h-5 w-5 text-primary" />}
                           </CardTitle>
                         </div>
                       </CardHeader>

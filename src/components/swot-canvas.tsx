@@ -3,9 +3,9 @@
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialSwotData, type SwotModel, type ModelItem } from "@/lib/models"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Lightbulb, Loader2, Wand2, Image as ImageIcon } from "lucide-react"
+import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Image as ImageIcon } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -17,11 +17,6 @@ import {
   DialogFooter
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { analyzeModelCanvas, type AnalyzeModelCanvasOutput } from "@/ai/flows/model-canvas-analyzer"
-import { generateSwotAnalysis } from "@/ai/flows/swot-generator-flow"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
-import { Input } from "./ui/input"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
 import html2canvas from "html2canvas"
 import { usePathname } from "next/navigation"
@@ -43,10 +38,6 @@ export default function SwotCanvas() {
   const [editingText, setEditingText] = useState("");
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const [isAiAnalysisRunning, setIsAiAnalysisRunning] = useState(false);
-  const [aiAnalysisResult, setAiAnalysisResult] = useState<AnalyzeModelCanvasOutput | null>(null);
-  const [businessIdea, setBusinessIdea] = useState("Selling homemade jewelry on a marketplace");
-  const [businessInsights, setBusinessInsights] = useState("");
 
   const draggedItem = useRef<{ item: ModelItem; from: ColumnKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -89,14 +80,6 @@ export default function SwotCanvas() {
     { key: "opportunities", title: "Opportunities", bg: "bg-blue-100 dark:bg-blue-900/40" },
     { key: "threats", title: "Threats", bg: "bg-yellow-100 dark:bg-yellow-900/40" },
   ], []);
-  
-  const strategyCategories = [
-    { title: "SO (Strengths-Opportunities) Strategies", key: "soStrategies", description: "How to use strengths to take advantage of opportunities." },
-    { title: "ST (Strengths-Threats) Strategies", key: "stStrategies", description: "How to use strengths to avoid or mitigate threats." },
-    { title: "WO (Weaknesses-Opportunities) Strategies", key: "woStrategies", description: "How to take advantage of opportunities to overcome weaknesses." },
-    { title: "WT (Weaknesses-Threats) Strategies", key: "wtStrategies", description: "How to minimize weaknesses and avoid threats." },
-  ] as const;
-
 
   const handleAddItem = (column: ColumnKeys) => {
     const newItem: ModelItem = {
@@ -270,24 +253,6 @@ export default function SwotCanvas() {
         });
         xmlContent += `  </${key}>\n`;
     }
-
-    if (aiAnalysisResult) {
-        xmlContent += `  <strategic_insights>\n`;
-        for (const category of strategyCategories) {
-            if (aiAnalysisResult[category.key] && aiAnalysisResult[category.key].length > 0) {
-                xmlContent += `    <${category.key}>\n`;
-                aiAnalysisResult[category.key].forEach(suggestion => {
-                    xmlContent += `      <suggestion>\n`;
-                    xmlContent += `        <title>${suggestion.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</title>\n`;
-                    xmlContent += `        <description>${suggestion.description.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</description>\n`;
-                    xmlContent += `      </suggestion>\n`;
-                });
-                xmlContent += `    </${category.key}>\n`;
-            }
-        }
-        xmlContent += `  </strategic_insights>\n`;
-    }
-
     xmlContent += `</swot_analysis>`;
 
     const blob = new Blob([xmlContent], { type: 'application/xml' });
@@ -301,24 +266,12 @@ export default function SwotCanvas() {
 
   const handleExportCsv = () => {
     trackCanvasEvent('export_csv');
-    let csvContent = "Category,Title,Description\n";
+    let csvContent = "Category,Content\n";
     for (const [key, items] of Object.entries(data)) {
         items.forEach(item => {
             const content = `"${item.content.replace(/"/g, '""')}"`;
-            csvContent += `${key},${content},""\n`;
+            csvContent += `${key},${content}\n`;
         });
-    }
-
-    if (aiAnalysisResult) {
-        for (const category of strategyCategories) {
-            if (aiAnalysisResult[category.key] && aiAnalysisResult[category.key].length > 0) {
-                aiAnalysisResult[category.key].forEach(suggestion => {
-                    const title = `"${suggestion.title.replace(/"/g, '""')}"`;
-                    const description = `"${suggestion.description.replace(/"/g, '""')}"`;
-                    csvContent += `${category.key},${title},${description}\n`;
-                });
-            }
-        }
     }
 
     const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
@@ -332,13 +285,12 @@ export default function SwotCanvas() {
 
   const handleExportPng = () => {
     trackCanvasEvent('export_png');
-    const exportNode = document.getElementById('png-export-area');
-    if (exportNode) {
+    if (canvasRef.current) {
       toast({
         title: "Exporting as PNG",
         description: "Your canvas is being prepared for download.",
       });
-      html2canvas(exportNode, {
+      html2canvas(canvasRef.current, {
         useCORS: true,
         scale: 2,
         backgroundColor: window.getComputedStyle(document.body).backgroundColor,
@@ -355,102 +307,8 @@ export default function SwotCanvas() {
     return Object.values(swotData).reduce((sum, array) => sum + array.length, 0);
   }
 
-  const handleGenerateSwot = async () => {
-    trackCanvasEvent('generate_swot_with_ai');
-    if (!businessIdea) {
-        toast({
-            variant: 'destructive',
-            title: 'Business Idea is empty',
-            description: 'Please enter a business idea to generate the SWOT analysis.',
-        });
-        return;
-    }
-    setIsAiAnalysisRunning(true);
-    setBusinessInsights("");
-    setAiAnalysisResult(null);
-    try {
-        // Step 1: Generate SWOT
-        const swotResult = await generateSwotAnalysis({ businessIdea });
-        const newSwotData: SwotModel = {
-            strengths: swotResult.strengths.map((s, i) => ({ id: `s-${i}-${Date.now()}`, content: s })),
-            weaknesses: swotResult.weaknesses.map((w, i) => ({ id: `w-${i}-${Date.now()}`, content: w })),
-            opportunities: swotResult.opportunities.map((o, i) => ({ id: `o-${i}-${Date.now()}`, content: o })),
-            threats: swotResult.threats.map((t, i) => ({ id: `t-${i}-${Date.now()}`, content: t })),
-        };
-        setData(newSwotData);
-        setBusinessInsights(swotResult.businessInsights);
-        toast({
-            title: 'SWOT Analysis Generated',
-            description: 'The AI has populated the SWOT canvas. Now generating strategic insights...',
-        });
-
-        // Step 2: Generate Strategic Insights from the new SWOT data
-        const analysisResult = await analyzeModelCanvas({
-          modelType: "SWOT",
-          modelCanvasState: JSON.stringify(newSwotData),
-        });
-        setAiAnalysisResult(analysisResult);
-        toast({
-            title: 'Strategic Insights Generated',
-            description: 'AI analysis is complete and displayed below the canvas.',
-        });
-
-    } catch (error) {
-        console.error("AI Generation failed", error);
-        toast({
-            variant: "destructive",
-            title: "AI Generation Failed",
-            description: "There was an error generating the AI analysis. Please try again.",
-        });
-    } finally {
-        setIsAiAnalysisRunning(false);
-    }
-  }
-
   return (
     <TooltipProvider>
-      <Card className="mb-6 bg-secondary/40">
-        <CardHeader>
-            <CardTitle className="flex items-center gap-2 font-headline">
-                <Wand2 className="text-primary"/>
-                AI Business Idea Analysis
-            </CardTitle>
-            <CardDescription>Enter your business idea, and let our AI generate a complete SWOT analysis and key strategic insights for you.</CardDescription>
-        </CardHeader>
-        <CardContent>
-            <div className="flex flex-col sm:flex-row gap-2">
-                <Input 
-                    placeholder="e.g., Selling homemade jewelry on a marketplace"
-                    value={businessIdea}
-                    onChange={(e) => setBusinessIdea(e.target.value)}
-                    onKeyDown={(e) => { if(e.key === 'Enter') handleGenerateSwot()}}
-                    disabled={isAiAnalysisRunning}
-                />
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button onClick={handleGenerateSwot} disabled={isAiAnalysisRunning} className="bg-accent text-accent-foreground hover:bg-accent/90">
-                            {isAiAnalysisRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lightbulb className="mr-2 h-4 w-4" />}
-                            Generate
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Enter a business idea and click to have the AI generate a full SWOT analysis and strategic insights.</p>
-                    </TooltipContent>
-                </Tooltip>
-            </div>
-            {businessInsights && !isAiAnalysisRunning && (
-                <Alert className="mt-4">
-                    <Lightbulb className="h-4 w-4" />
-                    <AlertTitle>Business Insights</AlertTitle>
-                    <AlertDescription>
-                        {businessInsights}
-                    </AlertDescription>
-                </Alert>
-            )}
-        </CardContent>
-      </Card>
-
-
       <div className="canvas-controls mb-4 flex flex-wrap gap-2">
         <Tooltip>
           <TooltipTrigger asChild>
@@ -636,31 +494,6 @@ export default function SwotCanvas() {
             </Card>
           ))}
         </div>
-        {aiAnalysisResult && (
-            <div className="mt-6">
-                <div className="printable-insights space-y-4 p-4 rounded-lg bg-background">
-                    <h2 className="text-2xl font-bold font-headline text-center">AI-Generated Strategic Insights</h2>
-                    {strategyCategories.map(category => (
-                        (aiAnalysisResult[category.key] && aiAnalysisResult[category.key].length > 0) && (
-                          <div key={category.key}>
-                              <h3 className="text-lg font-semibold mt-4 mb-2">{category.title}</h3>
-                              <p className="text-sm text-muted-foreground mb-4">{category.description}</p>
-                              <div className="space-y-2">
-                              {aiAnalysisResult[category.key].map((suggestion, index) => (
-                                  <Alert key={index} className="bg-card">
-                                      <AlertTitle className="font-semibold">{suggestion.title}</AlertTitle>
-                                      <AlertDescription>
-                                          {suggestion.description}
-                                      </AlertDescription>
-                                  </Alert>
-                              ))}
-                              </div>
-                          </div>
-                        )
-                    ))}
-                </div>
-            </div>
-        )}
       </div>
     </TooltipProvider>
   );
