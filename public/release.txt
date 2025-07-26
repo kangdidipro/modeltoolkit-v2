@@ -1,5 +1,6 @@
 ===20250727===
 1. AI bug fix
+2. recently error AI has stopped
 
 ===20250726===
 1. add AI in SWOT Model
