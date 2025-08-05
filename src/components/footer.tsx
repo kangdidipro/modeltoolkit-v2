@@ -18,7 +18,7 @@ export function Footer({ timestamp, className }: FooterProps) {
         <Separator className="my-6" />
         <div className="flex flex-col items-center sm:flex-row sm:justify-between">
           <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} Model Toolkit. All Rights Reserved.</p>
-          <div className="flex items-center -mx-2 mt-4 sm:mt-0">
+          <div className="flex items-center -mx-2 mt-4 sm:mt-0 flex-wrap justify-center">
             {timestamp && <span className="text-xs text-muted-foreground mx-2">Update timestamp: {timestamp}</span>}
             <Link href="/blog" className="mx-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
               Blog
@@ -28,6 +28,9 @@ export function Footer({ timestamp, className }: FooterProps) {
             </Link>
             <Link href="/feedback" className="mx-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
               Feedback
+            </Link>
+            <Link href="/user-guide" className="mx-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              User Guide
             </Link>
             <Link href="/terms" className="mx-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
               Terms
