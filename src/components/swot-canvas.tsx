@@ -22,6 +22,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/t
 import html2canvas from "html2canvas"
 import { usePathname } from "next/navigation"
 import { trackEvent } from "@/lib/tracking"
+import { PolarGrid, PolarAngleAxis, Radar, RadarChart } from "recharts"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
 
 type ColumnKeys = keyof SwotModel;
@@ -332,6 +334,17 @@ export default function SwotCanvas() {
     return { total, average };
   };
 
+  const chartData = useMemo(() => {
+    return columns.map(column => {
+        const { average } = calculateScores(data[column.key]);
+        return {
+            subject: column.title,
+            value: average,
+            fullMark: 5,
+        };
+    });
+  }, [data, columns]);
+
   const countTotalItems = (swotData: SwotModel) => {
     return Object.values(swotData).reduce((sum, array) => sum + array.length, 0);
   }
@@ -463,91 +476,121 @@ export default function SwotCanvas() {
       </Dialog>
       
       <div id="png-export-area">
-        <div ref={canvasRef} className="printable-canvas grid gap-6 md:grid-cols-2 items-start bg-background p-4 rounded-lg">
-          {columns.map(column => {
-            const { total, average } = calculateScores(data[column.key]);
-            return (
-              <Card key={column.key} className={`${column.bg} flex flex-col min-h-[300px]`}>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg font-medium font-headline">{column.title}</CardTitle>
-                    <Button size="icon" variant="ghost" className="h-8 w-8 no-print" onClick={() => handleAddItem(column.key)}>
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent
-                  className="flex-grow space-y-2 p-4 pt-0"
-                  onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, column.key)}
-                >
-                  {data[column.key].map(item => (
-                    <div
-                      key={item.id}
-                      draggable
-                      onDragStart={(e) => handleDragStart(e, item, column.key)}
-                      onDragEnd={handleDragEnd}
-                      className="group bg-card/80 dark:bg-card/50 backdrop-blur-sm rounded-lg p-3 shadow transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
-                    >
-                      <div className="flex items-start gap-2">
-                        <GripVertical className="h-5 w-5 mt-1 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground no-print" />
-                        <div className="flex-grow">
-                            {editingItemId === item.id ? (
-                                <Textarea
-                                value={editingText}
-                                onChange={(e) => setEditingText(e.target.value)}
-                                onBlur={() => handleSaveEdit(column.key)}
-                                autoFocus
-                                className="w-full text-sm resize-none mb-2"
-                                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSaveEdit(column.key); } }}
-                                />
-                            ) : (
-                                <p onClick={() => startEditing(item)} className="text-sm w-full min-h-[24px] mb-2">
-                                {item.content}
-                                </p>
-                            )}
-                             <Select
-                                value={item.score.toString()}
-                                onValueChange={(value) => handleScoreChange(column.key, item.id, value)}
-                                >
-                                <SelectTrigger className="h-8 text-sm">
-                                    <SelectValue placeholder="Set score" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {Object.entries(scoreLabels).map(([value, label]) => (
-                                    <SelectItem key={value} value={value}>{label}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="h-7 w-7 opacity-0 group-hover:opacity-100 shrink-0 no-print"
-                          onClick={() => handleDeleteItem(column.key, item.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
+        <div ref={canvasRef} className="printable-canvas bg-background p-4 rounded-lg">
+            <div className="grid gap-6 md:grid-cols-2 items-start">
+            {columns.map(column => {
+                const { total, average } = calculateScores(data[column.key]);
+                return (
+                <Card key={column.key} className={`${column.bg} flex flex-col min-h-[300px]`}>
+                    <CardHeader>
+                    <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg font-medium font-headline">{column.title}</CardTitle>
+                        <Button size="icon" variant="ghost" className="h-8 w-8 no-print" onClick={() => handleAddItem(column.key)}>
+                        <Plus className="h-4 w-4" />
                         </Button>
-                      </div>
                     </div>
-                  ))}
-                  {data[column.key].length === 0 && (
-                    <div className="text-center text-muted-foreground text-sm p-4 border-2 border-dashed rounded-lg">
-                      Drop items here or click `+` to add.
-                    </div>
-                  )}
+                    </CardHeader>
+                    <CardContent
+                    className="flex-grow space-y-2 p-4 pt-0"
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, column.key)}
+                    >
+                    {data[column.key].map(item => (
+                        <div
+                        key={item.id}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, item, column.key)}
+                        onDragEnd={handleDragEnd}
+                        className="group bg-card/80 dark:bg-card/50 backdrop-blur-sm rounded-lg p-3 shadow transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
+                        >
+                        <div className="flex items-start gap-2">
+                            <GripVertical className="h-5 w-5 mt-1 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground no-print" />
+                            <div className="flex-grow">
+                                {editingItemId === item.id ? (
+                                    <Textarea
+                                    value={editingText}
+                                    onChange={(e) => setEditingText(e.target.value)}
+                                    onBlur={() => handleSaveEdit(column.key)}
+                                    autoFocus
+                                    className="w-full text-sm resize-none mb-2"
+                                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSaveEdit(column.key); } }}
+                                    />
+                                ) : (
+                                    <p onClick={() => startEditing(item)} className="text-sm w-full min-h-[24px] mb-2">
+                                    {item.content}
+                                    </p>
+                                )}
+                                <Select
+                                    value={item.score.toString()}
+                                    onValueChange={(value) => handleScoreChange(column.key, item.id, value)}
+                                    >
+                                    <SelectTrigger className="h-8 text-sm">
+                                        <SelectValue placeholder="Set score" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {Object.entries(scoreLabels).map(([value, label]) => (
+                                        <SelectItem key={value} value={value}>{label}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-7 w-7 opacity-0 group-hover:opacity-100 shrink-0 no-print"
+                            onClick={() => handleDeleteItem(column.key, item.id)}
+                            >
+                            <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </div>
+                        </div>
+                    ))}
+                    {data[column.key].length === 0 && (
+                        <div className="text-center text-muted-foreground text-sm p-4 border-2 border-dashed rounded-lg">
+                        Drop items here or click `+` to add.
+                        </div>
+                    )}
+                    </CardContent>
+                    <CardFooter className="flex-col items-start pt-4 border-t">
+                    <p className="font-bold">Total Score: {total}</p>
+                    <p className="text-sm text-muted-foreground">
+                        Average Score: {average.toFixed(2)}
+                    </p>
+                    </CardFooter>
+                </Card>
+                )
+            })}
+            </div>
+            <Card className="mt-6">
+                <CardHeader>
+                    <CardTitle>SWOT Analysis Summary</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ChartContainer
+                        config={{
+                            value: { label: "Average Score", color: "hsl(var(--primary))"},
+                        }}
+                        className="h-[400px] w-full"
+                    >
+                        <RadarChart data={chartData}>
+                            <ChartTooltip
+                                content={<ChartTooltipContent indicator="line" />}
+                            />
+                            <PolarGrid />
+                            <PolarAngleAxis dataKey="subject" />
+                            <Radar
+                                dataKey="value"
+                                fill="var(--color-value)"
+                                fillOpacity={0.6}
+                                stroke="var(--color-value)"
+                            />
+                        </RadarChart>
+                    </ChartContainer>
                 </CardContent>
-                <CardFooter className="flex-col items-start pt-4 border-t">
-                  <p className="font-bold">Total Score: {total}</p>
-                  <p className="text-sm text-muted-foreground">
-                    Average Score: {average.toFixed(2)}
-                  </p>
-                </CardFooter>
-              </Card>
-            )
-          })}
+            </Card>
         </div>
       </div>
     </TooltipProvider>
   );
 }
+
