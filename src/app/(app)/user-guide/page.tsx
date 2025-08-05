@@ -60,9 +60,9 @@ export default function UserGuidePage() {
         </p>
         <Card className="bg-card/50">
             <CardHeader>
-                <Link href="/models/swot">
-                    <CardTitle className="hover:text-primary transition-colors">SWOT Analysis</CardTitle>
-                </Link>
+              <Link href="/models/swot">
+                <CardTitle className="hover:text-primary transition-colors">SWOT Analysis</CardTitle>
+              </Link>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="flex items-start gap-4">
@@ -83,9 +83,9 @@ export default function UserGuidePage() {
         </Card>
          <Card className="bg-card/50">
             <CardHeader>
-                <Link href="/models/business-model-canvas">
-                    <CardTitle className="hover:text-primary transition-colors">Business Model Canvas</CardTitle>
-                </Link>
+              <Link href="/models/business-model-canvas">
+                <CardTitle className="hover:text-primary transition-colors">Business Model Canvas</CardTitle>
+              </Link>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="flex items-start gap-4">
