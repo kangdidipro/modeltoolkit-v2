@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button"
 import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Image as ImageIcon } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
 import {
   Dialog,
@@ -33,10 +34,14 @@ const MODEL_NAME = "SWOT Analysis";
 type HistoryEntry = {
   timestamp: number;
   data: SwotModel;
+  title: string;
+  creator: string;
 };
 
 export default function SwotCanvas() {
   const [data, setData] = useState<SwotModel>(initialSwotData);
+  const [title, setTitle] = useState("My SWOT Analysis");
+  const [creator, setCreator] = useState("Analysis created by");
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [editingText, setEditingText] = useState("");
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -69,10 +74,12 @@ export default function SwotCanvas() {
     try {
       const savedHistory = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (savedHistory) {
-        const parsedHistory = JSON.parse(savedHistory);
+        const parsedHistory: HistoryEntry[] = JSON.parse(savedHistory);
         setHistory(parsedHistory);
         if (parsedHistory.length > 0) {
           setData(parsedHistory[0].data);
+          setTitle(parsedHistory[0].title || "My SWOT Analysis");
+          setCreator(parsedHistory[0].creator || "Analysis created by");
         }
       }
     } catch (error) {
@@ -175,6 +182,8 @@ export default function SwotCanvas() {
       const newEntry: HistoryEntry = {
         timestamp: Date.now(),
         data: data,
+        title,
+        creator,
       };
       const updatedHistory = [newEntry, ...history];
       setHistory(updatedHistory);
@@ -196,6 +205,8 @@ export default function SwotCanvas() {
   const handleLoadFromHistory = (entry: HistoryEntry) => {
     trackCanvasEvent('load_from_history');
     setData(entry.data);
+    setTitle(entry.title || "My SWOT Analysis");
+    setCreator(entry.creator || "Analysis created by");
     setIsHistoryOpen(false);
     toast({
       title: "Work Loaded",
@@ -224,6 +235,11 @@ export default function SwotCanvas() {
         if (errorNode) {
           throw new Error("Failed to parse XML.");
         }
+
+        const titleElement = xmlDoc.getElementsByTagName('title')[0];
+        const creatorElement = xmlDoc.getElementsByTagName('creator')[0];
+        setTitle(titleElement ? titleElement.textContent || '' : "My SWOT Analysis");
+        setCreator(creatorElement ? creatorElement.textContent || '' : "Analysis created by");
 
         const newSwotData: SwotModel = {
             strengths: [],
@@ -268,6 +284,9 @@ export default function SwotCanvas() {
   const handleExportXml = () => {
     trackCanvasEvent('export_xml');
     let xmlContent = `<swot_analysis>\n`;
+    xmlContent += `  <title>${title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</title>\n`;
+    xmlContent += `  <creator>${creator.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</creator>\n`;
+
     for (const [key, items] of Object.entries(data)) {
         xmlContent += `  <${key}>\n`;
         items.forEach(item => {
@@ -446,8 +465,10 @@ export default function SwotCanvas() {
                 history.map((entry) => (
                   <div key={entry.timestamp} className="p-4 border rounded-lg flex justify-between items-center">
                     <div>
-                      <p className="font-semibold">{new Date(entry.timestamp).toLocaleString()}</p>
-                      <p className="text-sm text-muted-foreground">{countTotalItems(entry.data)} items</p>
+                      <p className="font-semibold">{entry.title || "Untitled Analysis"}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Saved at {new Date(entry.timestamp).toLocaleString()} with {countTotalItems(entry.data)} items
+                      </p>
                     </div>
                     <div className="flex gap-2">
                       <Button variant="secondary" onClick={() => handleLoadFromHistory(entry)}>
@@ -477,6 +498,22 @@ export default function SwotCanvas() {
       
       <div id="png-export-area">
         <div ref={canvasRef} className="printable-canvas bg-background p-4 rounded-lg">
+            <div className="mb-4 space-y-2">
+              <Input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Analysis Title"
+                className="text-2xl font-bold h-auto p-2 border-0 shadow-none focus-visible:ring-0"
+              />
+              <Input
+                type="text"
+                value={creator}
+                onChange={(e) => setCreator(e.target.value)}
+                placeholder="Author Name"
+                className="text-muted-foreground border-0 shadow-none focus-visible:ring-0 p-2 h-auto"
+              />
+            </div>
             <div className="grid gap-6 md:grid-cols-2 items-start">
             {columns.map(column => {
                 const { total, average } = calculateScores(data[column.key]);
@@ -593,4 +630,3 @@ export default function SwotCanvas() {
     </TooltipProvider>
   );
 }
-
