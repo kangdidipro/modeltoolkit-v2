@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Trash2, Save, History, Upload, FileDown, Image as ImageIcon, Link2, BarChartBig, BrainCircuit } from "lucide-react";
+import { Plus, Trash2, Save, History, Upload, FileDown, Image as ImageIcon, Link2, BarChartBig, BrainCircuit, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -60,9 +60,7 @@ export default function UserGuidePage() {
         </p>
         <Card className="bg-card/50">
             <CardHeader>
-              <Link href="/models/swot">
-                <CardTitle className="hover:text-primary transition-colors">SWOT Analysis</CardTitle>
-              </Link>
+                <CardTitle>SWOT Analysis</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="flex items-start gap-4">
@@ -79,13 +77,16 @@ export default function UserGuidePage() {
                         <p className="text-muted-foreground">Based on the average scores of your categories, the tool automatically recommends a strategic approach (e.g., SO - Strengths-Opportunities) to guide your next steps.</p>
                     </div>
                 </div>
+                <Button asChild variant="link" className="p-0 h-auto text-primary">
+                    <Link href="/models/swot">
+                        Try this model <ArrowRight className="ml-1 h-4 w-4" />
+                    </Link>
+                </Button>
             </CardContent>
         </Card>
          <Card className="bg-card/50">
             <CardHeader>
-              <Link href="/models/business-model-canvas">
-                <CardTitle className="hover:text-primary transition-colors">Business Model Canvas</CardTitle>
-              </Link>
+                <CardTitle>Business Model Canvas</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="flex items-start gap-4">
@@ -102,6 +103,11 @@ export default function UserGuidePage() {
                         <p className="text-muted-foreground">Just like the SWOT model, you can assign an importance score to each item on your canvas. This helps you identify the most critical components of your business model, with the average score displayed for each block.</p>
                     </div>
                 </div>
+                <Button asChild variant="link" className="p-0 h-auto text-primary">
+                    <Link href="/models/business-model-canvas">
+                        Try this model <ArrowRight className="ml-1 h-4 w-4" />
+                    </Link>
+                </Button>
             </CardContent>
         </Card>
       </section>
