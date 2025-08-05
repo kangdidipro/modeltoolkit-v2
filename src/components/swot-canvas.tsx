@@ -40,8 +40,8 @@ type HistoryEntry = {
 
 export default function SwotCanvas() {
   const [data, setData] = useState<SwotModel>(initialSwotData);
-  const [title, setTitle] = useState("My SWOT Analysis");
-  const [creator, setCreator] = useState("Analysis created by");
+  const [title, setTitle] = useState("");
+  const [creator, setCreator] = useState("");
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [editingText, setEditingText] = useState("");
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -78,8 +78,8 @@ export default function SwotCanvas() {
         setHistory(parsedHistory);
         if (parsedHistory.length > 0) {
           setData(parsedHistory[0].data);
-          setTitle(parsedHistory[0].title || "My SWOT Analysis");
-          setCreator(parsedHistory[0].creator || "Analysis created by");
+          setTitle(parsedHistory[0].title || "");
+          setCreator(parsedHistory[0].creator || "");
         }
       }
     } catch (error) {
@@ -205,8 +205,8 @@ export default function SwotCanvas() {
   const handleLoadFromHistory = (entry: HistoryEntry) => {
     trackCanvasEvent('load_from_history');
     setData(entry.data);
-    setTitle(entry.title || "My SWOT Analysis");
-    setCreator(entry.creator || "Analysis created by");
+    setTitle(entry.title || "");
+    setCreator(entry.creator || "");
     setIsHistoryOpen(false);
     toast({
       title: "Work Loaded",
@@ -238,8 +238,8 @@ export default function SwotCanvas() {
 
         const titleElement = xmlDoc.getElementsByTagName('title')[0];
         const creatorElement = xmlDoc.getElementsByTagName('creator')[0];
-        setTitle(titleElement ? titleElement.textContent || '' : "My SWOT Analysis");
-        setCreator(creatorElement ? creatorElement.textContent || '' : "Analysis created by");
+        setTitle(titleElement ? titleElement.textContent || '' : "");
+        setCreator(creatorElement ? creatorElement.textContent || '' : "");
 
         const newSwotData: SwotModel = {
             strengths: [],
@@ -498,20 +498,20 @@ export default function SwotCanvas() {
       
       <div id="png-export-area">
         <div ref={canvasRef} className="printable-canvas bg-background p-4 rounded-lg">
-            <div className="mb-4 space-y-2">
+            <div className="mb-4 space-y-2 text-center">
               <Input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Analysis Title"
-                className="text-2xl font-bold h-auto p-2 border-0 shadow-none focus-visible:ring-0"
+                className="text-2xl font-bold h-auto p-2 border-0 shadow-none focus-visible:ring-0 text-center"
               />
               <Input
                 type="text"
                 value={creator}
                 onChange={(e) => setCreator(e.target.value)}
                 placeholder="Author Name"
-                className="text-muted-foreground border-0 shadow-none focus-visible:ring-0 p-2 h-auto"
+                className="text-muted-foreground border-0 shadow-none focus-visible:ring-0 p-2 h-auto text-center"
               />
             </div>
             <div className="grid gap-6 md:grid-cols-2 items-start">
