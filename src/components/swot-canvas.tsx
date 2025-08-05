@@ -3,7 +3,7 @@
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
 import { initialSwotData, type SwotModel, type ScoredModelItem } from "@/lib/models"
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Image as ImageIcon } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
@@ -307,7 +307,10 @@ export default function SwotCanvas() {
 
   const handleExportCsv = () => {
     trackCanvasEvent('export_csv');
-    let csvContent = "Category,Content,Score\n";
+    let csvContent = `Title,${title}\n`;
+    csvContent += `Creator,${creator}\n\n`;
+    csvContent += "Category,Content,Score\n";
+
     for (const [key, items] of Object.entries(data)) {
         items.forEach(item => {
             const content = `"${item.content.replace(/"/g, '""')}"`;
@@ -363,6 +366,32 @@ export default function SwotCanvas() {
         };
     });
   }, [data, columns]);
+  
+  const recommendedStrategy = useMemo(() => {
+    const scores = {
+      strengths: calculateScores(data.strengths).average,
+      weaknesses: calculateScores(data.weaknesses).average,
+      opportunities: calculateScores(data.opportunities).average,
+      threats: calculateScores(data.threats).average,
+    };
+  
+    const strategies = {
+      so: { score: scores.strengths + scores.opportunities, name: "SO (Maxi-Maxi)", description: "Use your strengths to maximize opportunities." },
+      st: { score: scores.strengths + scores.threats, name: "ST (Maxi-Mini)", description: "Use your strengths to minimize threats." },
+      wo: { score: scores.weaknesses + scores.opportunities, name: "WO (Mini-Maxi)", description: "Minimize your weaknesses by taking advantage of opportunities." },
+      wt: { score: scores.weaknesses + scores.threats, name: "WT (Mini-Mini)", description: "Minimize your weaknesses and avoid threats." },
+    };
+  
+    let bestStrategy = { name: "N/A", score: -1, description: "Add more items to determine a strategy." };
+    for (const [key, value] of Object.entries(strategies)) {
+        if (value.score > bestStrategy.score) {
+            bestStrategy = value;
+        }
+    }
+    
+    return bestStrategy;
+
+  }, [data]);
 
   const countTotalItems = (swotData: SwotModel) => {
     return Object.values(swotData).reduce((sum, array) => sum + array.length, 0);
@@ -504,14 +533,14 @@ export default function SwotCanvas() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Analysis Title"
-                className="text-2xl font-bold h-auto p-2 border-0 shadow-none focus-visible:ring-0 text-center"
+                className="text-2xl font-bold h-auto p-2 border-0 shadow-none focus-visible:ring-0 text-center bg-transparent"
               />
               <Input
                 type="text"
                 value={creator}
                 onChange={(e) => setCreator(e.target.value)}
                 placeholder="Author Name"
-                className="text-muted-foreground border-0 shadow-none focus-visible:ring-0 p-2 h-auto text-center"
+                className="text-muted-foreground border-0 shadow-none focus-visible:ring-0 p-2 h-auto text-center bg-transparent"
               />
             </div>
             <div className="grid gap-6 md:grid-cols-2 items-start">
@@ -623,6 +652,17 @@ export default function SwotCanvas() {
                             />
                         </RadarChart>
                     </ChartContainer>
+                </CardContent>
+            </Card>
+             <Card className="mt-6">
+                <CardHeader>
+                    <CardTitle>Recommended Strategy</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="text-center p-4 bg-secondary/50 rounded-lg">
+                        <p className="text-lg font-bold text-primary">{recommendedStrategy.name}</p>
+                        <p className="text-muted-foreground">{recommendedStrategy.description}</p>
+                    </div>
                 </CardContent>
             </Card>
         </div>
