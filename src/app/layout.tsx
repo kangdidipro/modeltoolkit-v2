@@ -32,14 +32,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <head>
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-V92K5V6Z25"></Script>
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-5KJN1V9ZTK"></Script>
         <Script id="google-analytics">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
 
-            gtag('config', 'G-V92K5V6Z25');
+            gtag('config', 'G-5KJN1V9ZTK');
           `}
         </Script>
       </head>
