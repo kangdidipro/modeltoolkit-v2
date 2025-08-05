@@ -137,6 +137,15 @@ export default function BusinessModelCanvas() {
     { key: "revenueStreams", title: "Revenue Streams", gridArea: "revenue", bgColor: "bg-green-100 dark:bg-green-900/40" },
   ], []);
 
+  const calculateScores = (items: ScoredModelItem[]) => {
+    if (items.length === 0) {
+      return { average: 0 };
+    }
+    const total = items.reduce((sum, item) => sum + item.score, 0);
+    const average = total / items.length;
+    return { average };
+  };
+
   const chartData = useMemo(() => {
     return columns.map(column => {
         const { average } = calculateScores(data[column.key]);
@@ -419,15 +428,6 @@ export default function BusinessModelCanvas() {
         link.click();
       });
     }
-  };
-  
-  const calculateScores = (items: ScoredModelItem[]) => {
-    if (items.length === 0) {
-      return { average: 0 };
-    }
-    const total = items.reduce((sum, item) => sum + item.score, 0);
-    const average = total / items.length;
-    return { average };
   };
   
   const countTotalItems = (canvasData: BusinessModelCanvasModel) => {
