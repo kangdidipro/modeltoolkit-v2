@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Trash2, Save, History, Upload, FileDown, Image as ImageIcon, Link2, BarChartBig, BrainCircuit } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function UserGuidePage() {
   return (
@@ -58,7 +60,9 @@ export default function UserGuidePage() {
         </p>
         <Card className="bg-card/50">
             <CardHeader>
-                <CardTitle>SWOT Analysis</CardTitle>
+                <Link href="/models/swot">
+                    <CardTitle className="hover:text-primary transition-colors">SWOT Analysis</CardTitle>
+                </Link>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="flex items-start gap-4">
@@ -79,7 +83,9 @@ export default function UserGuidePage() {
         </Card>
          <Card className="bg-card/50">
             <CardHeader>
-                <CardTitle>Business Model Canvas</CardTitle>
+                <Link href="/models/business-model-canvas">
+                    <CardTitle className="hover:text-primary transition-colors">Business Model Canvas</CardTitle>
+                </Link>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="flex items-start gap-4">
