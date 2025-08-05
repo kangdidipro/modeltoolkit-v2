@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/accordion"
 import {
   LayoutGrid,
-  Wand2,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { modelInfo, categories } from "@/lib/models"
@@ -99,18 +98,17 @@ function AppLayoutContent({ children, handleLinkClick }: { children: React.React
                           {category.models.filter(({id}) => modelInfo[id]).map(({id}) => {
                               const info = modelInfo[id];
                               const Icon = info.icon;
+                              const href = id === 'user-guide' ? '/user-guide' : `/models/${id}`;
+
                               return (
                                 <SidebarMenuItem key={id}>
-                                    <Link href={`/models/${id}`} className="block" onClick={handleLinkClick}>
+                                    <Link href={href} className="block" onClick={handleLinkClick}>
                                         <SidebarMenuButton
-                                            isActive={isActive(`/models/${id}`)}
+                                            isActive={isActive(href)}
                                             icon={<Icon />}
                                             className="h-8"
                                         >
                                             <span className="truncate">{info.name}</span>
-                                            {info.ai && (
-                                                <Wand2 className="h-4 w-4 text-primary shrink-0 ml-auto" />
-                                            )}
                                         </SidebarMenuButton>
                                     </Link>
                                 </SidebarMenuItem>

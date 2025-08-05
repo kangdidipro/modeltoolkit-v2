@@ -22,6 +22,7 @@ import CommunicationModelCanvas from '@/components/communication-model-canvas';
 import { modelInfo } from '@/lib/models';
 import { notFound } from 'next/navigation';
 import CoffeePage from '../../coffee/page';
+import UserGuidePage from '../../user-guide/page';
 
 type ModelPageProps = {
   params: {
@@ -79,6 +80,8 @@ export default function ModelPage({ params }: ModelPageProps) {
         return <ChangeManagementCanvas />;
       case 'communication-model':
         return <CommunicationModelCanvas />;
+      case 'user-guide':
+        return <UserGuidePage />;
       case 'coffee':
         return <CoffeePage />;
       default:
