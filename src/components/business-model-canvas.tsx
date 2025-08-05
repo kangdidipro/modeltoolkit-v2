@@ -21,6 +21,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import html2canvas from "html2canvas"
 import { cn } from "@/lib/utils"
+import { PolarGrid, PolarAngleAxis, Radar, RadarChart } from "recharts"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+
 
 type ColumnKeys = keyof BusinessModelCanvasModel;
 const LOCAL_STORAGE_KEY = 'business-model-canvas-history-v2';
@@ -133,6 +136,18 @@ export default function BusinessModelCanvas() {
     { key: "costStructure", title: "Cost Structure", gridArea: "costs", bgColor: "bg-red-100 dark:bg-red-900/40" },
     { key: "revenueStreams", title: "Revenue Streams", gridArea: "revenue", bgColor: "bg-green-100 dark:bg-green-900/40" },
   ], []);
+
+  const chartData = useMemo(() => {
+    return columns.map(column => {
+        const { average } = calculateScores(data[column.key]);
+        return {
+            subject: column.title,
+            value: average,
+            fullMark: 5,
+        };
+    });
+  }, [data, columns]);
+
 
   const handleAddItem = (column: ColumnKeys) => {
     const newItem: ScoredModelItem = {
@@ -666,6 +681,38 @@ export default function BusinessModelCanvas() {
           </defs>
         </svg>
       </div>
+
+       <Card className="mt-6">
+          <CardHeader>
+              <CardTitle>Business Model Summary</CardTitle>
+              <CardDescription>
+                  This radar chart visualizes the average importance score for each block of your Business Model Canvas.
+              </CardDescription>
+          </CardHeader>
+          <CardContent>
+              <ChartContainer
+                  config={{
+                      value: { label: "Average Score", color: "hsl(var(--primary))"},
+                  }}
+                  className="h-[400px] w-full"
+              >
+                  <RadarChart data={chartData}>
+                      <ChartTooltip
+                          content={<ChartTooltipContent indicator="line" />}
+                      />
+                      <PolarGrid />
+                      <PolarAngleAxis dataKey="subject" />
+                      <Radar
+                          dataKey="value"
+                          fill="var(--color-value)"
+                          fillOpacity={0.6}
+                          stroke="var(--color-value)"
+                          domain={[0, 5]}
+                      />
+                  </RadarChart>
+              </ChartContainer>
+          </CardContent>
+      </Card>
     </TooltipProvider>
   )
 }
