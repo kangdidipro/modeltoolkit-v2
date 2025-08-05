@@ -2,8 +2,8 @@
 "use client"
 
 import { useState, useMemo, useRef, type DragEvent, useEffect } from "react"
-import { initialSwotData, type SwotModel, type ModelItem } from "@/lib/models"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { initialSwotData, type SwotModel, type ScoredModelItem } from "@/lib/models"
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Plus, Trash2, GripVertical, Save, History, Upload, FileDown, RefreshCw, Image as ImageIcon } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
@@ -14,8 +14,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter
+  DialogFooter as DialogFooterComponent
 } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
 import html2canvas from "html2canvas"
@@ -24,7 +25,7 @@ import { trackEvent } from "@/lib/tracking"
 
 
 type ColumnKeys = keyof SwotModel;
-const LOCAL_STORAGE_KEY = 'swot-model-history';
+const LOCAL_STORAGE_KEY = 'swot-model-history-v2';
 const MODEL_NAME = "SWOT Analysis";
 
 type HistoryEntry = {
@@ -39,11 +40,19 @@ export default function SwotCanvas() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  const draggedItem = useRef<{ item: ModelItem; from: ColumnKeys } | null>(null);
+  const draggedItem = useRef<{ item: ScoredModelItem; from: ColumnKeys } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const pathname = usePathname();
+
+  const scoreLabels: { [key: number]: string } = {
+    1: "Very Low",
+    2: "Low",
+    3: "Medium",
+    4: "High",
+    5: "Very High",
+  };
 
   const trackCanvasEvent = (elementClicked: string) => {
     trackEvent({
@@ -82,9 +91,10 @@ export default function SwotCanvas() {
   ], []);
 
   const handleAddItem = (column: ColumnKeys) => {
-    const newItem: ModelItem = {
+    const newItem: ScoredModelItem = {
       id: `${column}-${Date.now()}`,
       content: "New item...",
+      score: 3,
     };
     setData(prev => ({ ...prev, [column]: [...prev[column], newItem] }));
     startEditing(newItem);
@@ -98,7 +108,7 @@ export default function SwotCanvas() {
     }));
   };
   
-  const startEditing = (item: ModelItem) => {
+  const startEditing = (item: ScoredModelItem) => {
     setEditingItemId(item.id);
     setEditingText(item.content);
   };
@@ -115,7 +125,16 @@ export default function SwotCanvas() {
     setEditingText("");
   };
 
-  const handleDragStart = (e: DragEvent<HTMLDivElement>, item: ModelItem, from: ColumnKeys) => {
+  const handleScoreChange = (column: ColumnKeys, itemId: string, newScore: string) => {
+    setData(prev => ({
+      ...prev,
+      [column]: prev[column].map(item =>
+        item.id === itemId ? { ...item, score: parseInt(newScore, 10) } : item
+      ),
+    }));
+  }
+
+  const handleDragStart = (e: DragEvent<HTMLDivElement>, item: ScoredModelItem, from: ColumnKeys) => {
     draggedItem.current = { item, from };
     e.dataTransfer.effectAllowed = "move";
     e.currentTarget.classList.add("opacity-50", "scale-95");
@@ -217,6 +236,7 @@ export default function SwotCanvas() {
                 const items = Array.from(categoryElement.getElementsByTagName('item')).map(itemEl => ({
                     id: itemEl.getAttribute('id') || `imported-${Date.now()}-${Math.random()}`,
                     content: itemEl.textContent || "",
+                    score: parseInt(itemEl.getAttribute('score') || '3', 10),
                 }));
                 newSwotData[key as keyof SwotModel] = items;
             }
@@ -249,7 +269,7 @@ export default function SwotCanvas() {
     for (const [key, items] of Object.entries(data)) {
         xmlContent += `  <${key}>\n`;
         items.forEach(item => {
-            xmlContent += `    <item id="${item.id}">${item.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</item>\n`;
+            xmlContent += `    <item id="${item.id}" score="${item.score}">${item.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</item>\n`;
         });
         xmlContent += `  </${key}>\n`;
     }
@@ -266,11 +286,11 @@ export default function SwotCanvas() {
 
   const handleExportCsv = () => {
     trackCanvasEvent('export_csv');
-    let csvContent = "Category,Content\n";
+    let csvContent = "Category,Content,Score\n";
     for (const [key, items] of Object.entries(data)) {
         items.forEach(item => {
             const content = `"${item.content.replace(/"/g, '""')}"`;
-            csvContent += `${key},${content}\n`;
+            csvContent += `${key},${content},${item.score}\n`;
         });
     }
 
@@ -303,13 +323,22 @@ export default function SwotCanvas() {
     }
   };
   
+  const calculateScores = (items: ScoredModelItem[]) => {
+    if (items.length === 0) {
+      return { total: 0, average: 0 };
+    }
+    const total = items.reduce((sum, item) => sum + item.score, 0);
+    const average = total / items.length;
+    return { total, average };
+  };
+
   const countTotalItems = (swotData: SwotModel) => {
     return Object.values(swotData).reduce((sum, array) => sum + array.length, 0);
   }
 
   return (
     <TooltipProvider>
-      <div className="canvas-controls mb-4 flex flex-wrap gap-2">
+      <div className="canvas-controls mb-4 flex flex-wrap gap-2 no-print">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="outline" onClick={handleSave}>
@@ -425,74 +454,98 @@ export default function SwotCanvas() {
             </div>
           </ScrollArea>
           
-          <DialogFooter className="pt-4 border-t">
+          <DialogFooterComponent className="pt-4 border-t">
               <p className="text-sm text-muted-foreground">
                 Your data is saved in your browser's local storage.
               </p>
-          </DialogFooter>
+          </DialogFooterComponent>
         </DialogContent>
       </Dialog>
       
       <div id="png-export-area">
         <div ref={canvasRef} className="printable-canvas grid gap-6 md:grid-cols-2 items-start bg-background p-4 rounded-lg">
-          {columns.map(column => (
-            <Card key={column.key} className={`${column.bg} flex flex-col min-h-[300px]`}>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg font-medium font-headline">{column.title}</CardTitle>
-                  <Button size="icon" variant="ghost" className="h-8 w-8 no-print" onClick={() => handleAddItem(column.key)}>
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent
-                className="flex-grow space-y-2 p-4 pt-0"
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, column.key)}
-              >
-                {data[column.key].map(item => (
-                  <div
-                    key={item.id}
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, item, column.key)}
-                    onDragEnd={handleDragEnd}
-                    className="group bg-card/80 dark:bg-card/50 backdrop-blur-sm rounded-lg p-3 shadow transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
-                  >
-                    <div className="flex items-start gap-2">
-                      <GripVertical className="h-5 w-5 mt-1 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground no-print" />
-                      {editingItemId === item.id ? (
-                        <Textarea
-                          value={editingText}
-                          onChange={(e) => setEditingText(e.target.value)}
-                          onBlur={() => handleSaveEdit(column.key)}
-                          autoFocus
-                          className="w-full text-sm resize-none"
-                          onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSaveEdit(column.key); } }}
-                        />
-                      ) : (
-                        <p onClick={() => startEditing(item)} className="flex-grow text-sm w-full min-h-[24px]">
-                          {item.content}
-                        </p>
-                      )}
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-7 w-7 opacity-0 group-hover:opacity-100 shrink-0 no-print"
-                        onClick={() => handleDeleteItem(column.key, item.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+          {columns.map(column => {
+            const { total, average } = calculateScores(data[column.key]);
+            return (
+              <Card key={column.key} className={`${column.bg} flex flex-col min-h-[300px]`}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg font-medium font-headline">{column.title}</CardTitle>
+                    <Button size="icon" variant="ghost" className="h-8 w-8 no-print" onClick={() => handleAddItem(column.key)}>
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent
+                  className="flex-grow space-y-2 p-4 pt-0"
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, column.key)}
+                >
+                  {data[column.key].map(item => (
+                    <div
+                      key={item.id}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, item, column.key)}
+                      onDragEnd={handleDragEnd}
+                      className="group bg-card/80 dark:bg-card/50 backdrop-blur-sm rounded-lg p-3 shadow transition-all duration-200 ease-in-out cursor-grab active:cursor-grabbing"
+                    >
+                      <div className="flex items-start gap-2">
+                        <GripVertical className="h-5 w-5 mt-1 text-muted-foreground/50 shrink-0 group-hover:text-muted-foreground no-print" />
+                        <div className="flex-grow">
+                            {editingItemId === item.id ? (
+                                <Textarea
+                                value={editingText}
+                                onChange={(e) => setEditingText(e.target.value)}
+                                onBlur={() => handleSaveEdit(column.key)}
+                                autoFocus
+                                className="w-full text-sm resize-none mb-2"
+                                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSaveEdit(column.key); } }}
+                                />
+                            ) : (
+                                <p onClick={() => startEditing(item)} className="text-sm w-full min-h-[24px] mb-2">
+                                {item.content}
+                                </p>
+                            )}
+                             <Select
+                                value={item.score.toString()}
+                                onValueChange={(value) => handleScoreChange(column.key, item.id, value)}
+                                >
+                                <SelectTrigger className="h-8 text-sm">
+                                    <SelectValue placeholder="Set score" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {Object.entries(scoreLabels).map(([value, label]) => (
+                                    <SelectItem key={value} value={value}>{label}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-7 w-7 opacity-0 group-hover:opacity-100 shrink-0 no-print"
+                          onClick={() => handleDeleteItem(column.key, item.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                ))}
-                {data[column.key].length === 0 && (
-                  <div className="text-center text-muted-foreground text-sm p-4 border-2 border-dashed rounded-lg">
-                    Drop items here or click `+` to add.
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
+                  ))}
+                  {data[column.key].length === 0 && (
+                    <div className="text-center text-muted-foreground text-sm p-4 border-2 border-dashed rounded-lg">
+                      Drop items here or click `+` to add.
+                    </div>
+                  )}
+                </CardContent>
+                <CardFooter className="flex-col items-start pt-4 border-t">
+                  <p className="font-bold">Total Score: {total}</p>
+                  <p className="text-sm text-muted-foreground">
+                    Average Score: {average.toFixed(2)}
+                  </p>
+                </CardFooter>
+              </Card>
+            )
+          })}
         </div>
       </div>
     </TooltipProvider>

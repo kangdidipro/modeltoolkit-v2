@@ -26,11 +26,17 @@ export type ModelItem = {
   content: string;
 };
 
+export type ScoredModelItem = {
+  id: string;
+  content: string;
+  score: number;
+}
+
 export type SwotModel = {
-  strengths: ModelItem[];
-  weaknesses: ModelItem[];
-  opportunities: ModelItem[];
-  threats: ModelItem[];
+  strengths: ScoredModelItem[];
+  weaknesses: ScoredModelItem[];
+  opportunities: ScoredModelItem[];
+  threats: ScoredModelItem[];
 };
 
 export type EisenhowerMatrixModel = {
@@ -199,18 +205,18 @@ export type CommunicationModel = {
 
 export const initialSwotData: SwotModel = {
   strengths: [
-    { id: 's1', content: 'Strong brand recognition' },
-    { id: 's2', content: 'Experienced team' },
+    { id: 's1', content: 'Strong brand recognition', score: 5 },
+    { id: 's2', content: 'Experienced team', score: 4 },
   ],
   weaknesses: [
-    { id: 'w1', content: 'High operating costs' },
+    { id: 'w1', content: 'High operating costs', score: 2 },
   ],
   opportunities: [
-    { id: 'o1', content: 'Emerging markets' },
-    { id: 'o2', content: 'New technology adoption' },
+    { id: 'o1', content: 'Emerging markets', score: 5 },
+    { id: 'o2', content: 'New technology adoption', score: 3 },
   ],
   threats: [
-    { id: 't1', content: 'Intense competition' },
+    { id: 't1', content: 'Intense competition', score: 4 },
   ],
 };
 
