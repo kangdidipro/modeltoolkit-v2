@@ -52,15 +52,15 @@ export type ParetoPrincipleModel = {
 };
 
 export type BusinessModelCanvasModel = {
-  keyPartners: ModelItem[];
-  keyActivities: ModelItem[];
-  keyResources: ModelItem[];
-  valuePropositions: ModelItem[];
-  customerRelationships: ModelItem[];
-  channels: ModelItem[];
-  customerSegments: ModelItem[];
-  costStructure: ModelItem[];
-  revenueStreams: ModelItem[];
+  keyPartners: ScoredModelItem[];
+  keyActivities: ScoredModelItem[];
+  keyResources: ScoredModelItem[];
+  valuePropositions: ScoredModelItem[];
+  customerRelationships: ScoredModelItem[];
+  channels: ScoredModelItem[];
+  customerSegments: ScoredModelItem[];
+  costStructure: ScoredModelItem[];
+  revenueStreams: ScoredModelItem[];
 };
 
 export type MaslowsHierarchyModel = {
@@ -245,15 +245,15 @@ export const initialParetoPrincipleData: ParetoPrincipleModel = {
 };
 
 export const initialBusinessModelCanvasData: BusinessModelCanvasModel = {
-  keyPartners: [{ id: 'kp1', content: 'Strategic Alliances' }],
-  keyActivities: [{ id: 'ka1', content: 'Problem Solving' }],
-  keyResources: [{ id: 'kr1', content: 'Intellectual Property' }],
-  valuePropositions: [{ id: 'vp1', content: 'Newness' }],
-  customerRelationships: [{ id: 'cr1', content: 'Personal Assistance' }],
-  channels: [{ id: 'ch1', content: 'Sales Force' }],
-  customerSegments: [{ id: 'cs1', content: 'Mass Market' }],
-  costStructure: [{ id: 'cst1', content: 'Fixed Costs' }],
-  revenueStreams: [{ id: 'rs1', content: 'Asset Sale' }],
+  keyPartners: [{ id: 'kp1', content: 'Strategic Alliances', score: 4 }],
+  keyActivities: [{ id: 'ka1', content: 'Problem Solving', score: 5 }],
+  keyResources: [{ id: 'kr1', content: 'Intellectual Property', score: 5 }],
+  valuePropositions: [{ id: 'vp1', content: 'Newness', score: 4 }],
+  customerRelationships: [{ id: 'cr1', content: 'Personal Assistance', score: 3 }],
+  channels: [{ id: 'ch1', content: 'Sales Force', score: 4 }],
+  customerSegments: [{ id: 'cs1', content: 'Mass Market', score: 3 }],
+  costStructure: [{ id: 'cst1', content: 'Fixed Costs', score: 2 }],
+  revenueStreams: [{ id: 'rs1', content: 'Asset Sale', score: 4 }],
 };
 
 export const initialMaslowsHierarchyData: MaslowsHierarchyModel = {
