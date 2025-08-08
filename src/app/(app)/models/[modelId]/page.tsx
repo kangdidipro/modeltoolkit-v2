@@ -23,6 +23,8 @@ import { modelInfo } from '@/lib/models';
 import { notFound } from 'next/navigation';
 import CoffeePage from '../../coffee/page';
 import UserGuidePage from '../../user-guide/page';
+import Image from 'next/image';
+import { Card } from '@/components/ui/card';
 
 type ModelPageProps = {
   params: {
@@ -95,6 +97,16 @@ export default function ModelPage({ params }: ModelPageProps) {
 
   return (
     <div className="space-y-4">
+      <Card className="overflow-hidden">
+        <Image 
+          src="/Master Email Marketing with Our Free Ebook.jpg"
+          alt="Master Email Marketing with Our Free Ebook"
+          width={1200}
+          height={300}
+          className="w-full object-cover"
+          priority
+        />
+      </Card>
       <div>
         <h1 className="text-3xl font-bold font-headline">{info.name}</h1>
         <p className="text-muted-foreground">{info.description}</p>
