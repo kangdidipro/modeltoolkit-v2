@@ -42,6 +42,17 @@ export default function RootLayout({
             gtag('config', 'G-5KJN1V9ZTK');
           `}
         </Script>
+        {/* <!-- Google tag (gtag.js) --> */}
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=AW-17454541541"></Script>
+        <Script id="google-ad-tracking">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'AW-17454541541');
+          `}
+        </Script>
       </head>
       <body className="font-body antialiased">
         {children}
