@@ -1,6 +1,27 @@
 
 
 export function BlogCardImage({ href }: { href: string }) {
+    if (href === '/blog/beyond-the-canvas') {
+        return (
+             <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+              <defs>
+                <linearGradient id="grad-card-beyond-canvas" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 0.1 }} />
+                  <stop offset="100%" style={{ stopColor: 'hsl(var(--accent))', stopOpacity: 0.1 }} />
+                </linearGradient>
+              </defs>
+              <rect width="1200" height="600" fill="url(#grad-card-beyond-canvas)" />
+              <g transform="translate(600, 300) scale(1.1)">
+                <rect x="-250" y="-150" width="500" height="300" rx="15" fill="hsl(var(--background))" opacity="0.5"/>
+                <rect x="-220" y="-120" width="150" height="100" rx="5" fill="hsl(var(--primary))" opacity="0.1"/>
+                <rect x="70" y="-120" width="150" height="100" rx="5" fill="hsl(var(--accent))" opacity="0.1"/>
+              </g>
+              <text x="600" y="310" fontFamily="var(--font-space-grotesk), sans-serif" fontSize="60" fontWeight="bold" textAnchor="middle" fill="hsl(var(--foreground))" opacity="0.8">
+                Innovation Platforms
+              </text>
+            </svg>
+        )
+    }
     if (href === '/blog/beyond-the-business-plan') {
         return (
              <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">

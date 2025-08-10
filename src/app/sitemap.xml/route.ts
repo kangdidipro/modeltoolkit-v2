@@ -12,6 +12,7 @@ function generateSitemap() {
     { url: '/feedback', priority: 0.5 },
     { url: '/blog', priority: 0.7 },
     { url: '/user-guide', priority: 0.7 },
+    { url: '/blog/beyond-the-canvas', priority: 0.6 },
     { url: '/blog/beyond-the-business-plan', priority: 0.6 },
     { url: '/blog/conducting-an-effective-swot-analysis-for-competitive-advantage', priority: 0.6 },
     { url: '/blog/time-management-strategies-for-busy-professionals', priority: 0.6 },
