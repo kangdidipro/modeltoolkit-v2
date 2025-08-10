@@ -8,6 +8,7 @@ import Image from "next/image";
 import { BlogCardImage } from "@/components/blog-card-image";
 
 const blogPosts = [
+  { no: 16, keyword: "Visual Strategy", title: "Beyond the Business Plan: How Visual Strategy Tools Can Transform Your Startup", href: "/blog/beyond-the-business-plan", publishedOn: "August 2, 2024", imageHint: "dynamic strategy" },
   { no: 15, keyword: "SWOT Analysis", title: "Conducting an Effective SWOT Analysis for Competitive Advantage", href: "/blog/conducting-an-effective-swot-analysis-for-competitive-advantage", publishedOn: "August 1, 2024", imageHint: "competitive advantage" },
   { no: 14, keyword: "Time management", title: "Time Management Strategies for Busy Professionals", href: "/blog/time-management-strategies-for-busy-professionals", publishedOn: "July 31, 2024", imageHint: "time management" },
   { no: 13, keyword: "Task prioritization", title: "Task Prioritization Techniques: Managing Time More Effectively", href: "/blog/task-prioritization-techniques-managing-time-more-effectively", publishedOn: "July 30, 2024", imageHint: "master time" },

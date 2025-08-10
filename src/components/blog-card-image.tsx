@@ -1,6 +1,32 @@
 
 
 export function BlogCardImage({ href }: { href: string }) {
+    if (href === '/blog/beyond-the-business-plan') {
+        return (
+             <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+              <defs>
+                <linearGradient id="grad-card-beyond-plan" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 0.1 }} />
+                  <stop offset="100%" style={{ stopColor: 'hsl(var(--accent))', stopOpacity: 0.1 }} />
+                </linearGradient>
+              </defs>
+              <rect width="1200" height="600" fill="url(#grad-card-beyond-plan)" />
+              <g transform="translate(300, 300)">
+                <rect x="-150" y="-100" width="300" height="200" rx="10" fill="hsl(var(--foreground))" opacity="0.05" />
+                <text x="0" y="0" fontFamily="sans-serif" fontSize="24" textAnchor="middle" fill="hsl(var(--muted-foreground))">Plan</text>
+              </g>
+              <path d="M 480 300 C 550 250, 650 350, 720 300" stroke="hsl(var(--primary))" strokeWidth="4" fill="none" opacity="0.5" strokeDasharray="10 5" />
+              <g transform="translate(900, 300)">
+                 <rect x="-150" y="-120" width="300" height="240" rx="15" fill="hsl(var(--primary))" opacity="0.1"/>
+                 <rect x="-60" y="-80" width="120" height="60" rx="5" fill="hsl(var(--background))" opacity="0.7" />
+                 <text x="0" y="-40" fontFamily="sans-serif" fontSize="18" textAnchor="middle" fill="hsl(var(--foreground))">Value Prop</text>
+              </g>
+              <text x="600" y="500" fontFamily="var(--font-space-grotesk), sans-serif" fontSize="50" fontWeight="bold" textAnchor="middle" fill="hsl(var(--foreground))" opacity="0.8">
+                Dynamic Strategy
+              </text>
+            </svg>
+        )
+    }
     if (href === '/blog/conducting-an-effective-swot-analysis-for-competitive-advantage') {
         return (
              <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
