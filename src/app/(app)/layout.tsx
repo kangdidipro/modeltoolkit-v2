@@ -98,7 +98,7 @@ function AppLayoutContent({ children, handleLinkClick }: { children: React.React
                           {category.models.filter(({id}) => modelInfo[id]).map(({id}) => {
                               const info = modelInfo[id];
                               const Icon = info.icon;
-                              const href = id === 'user-guide' ? '/user-guide' : `/models/${id}`;
+                              const href = id === 'user-guide' ? '/user-guide' : id === 'blog' ? '/blog' : `/models/${id}`;
 
                               return (
                                 <SidebarMenuItem key={id}>

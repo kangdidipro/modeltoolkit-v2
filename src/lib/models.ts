@@ -19,6 +19,7 @@ import {
   Lightbulb,
   Coffee,
   BookOpen,
+  Rss, // Tambahkan ikon Rss
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
@@ -502,6 +503,11 @@ export const modelInfo: { [key: string]: { name: string; description: string, ic
     description: 'A free framework for explaining how the communication process works.',
     icon: MessageCircle,
   },
+  'blog': {
+    name: 'Blog',
+    description: 'Read our latest articles on strategy and productivity.',
+    icon: Rss,
+  },
   'user-guide': {
     name: 'User Guide',
     description: 'Learn how to use Model Toolkit.',
@@ -569,6 +575,7 @@ export const categories: ModelCategory[] = [
   {
       name: "Support",
       models: [
+        {id: "blog"},
         {id: "user-guide"},
         {id: "coffee"},
       ]
