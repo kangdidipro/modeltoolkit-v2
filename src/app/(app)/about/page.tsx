@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Mail } from "lucide-react";
 import Image from "next/image";
@@ -87,7 +88,7 @@ export default function AboutPage() {
           <CardContent className="p-8 text-center">
             <Mail className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <p className="text-muted-foreground max-w-md mx-auto">
-              Have questions, feedback, or suggestions? We'd love to hear from you. Please don't hesitate to reach out.
+              Have questions, feedback, or suggestions? We'd love to hear from you. We are also open to collaboration or investment opportunities. Please don't hesitate to reach out.
             </p>
             <a href="mailto:modeltoolkitcom@gmail.com" className="mt-6 inline-block text-lg font-semibold text-primary hover:underline">
               modeltoolkitcom@gmail.com
