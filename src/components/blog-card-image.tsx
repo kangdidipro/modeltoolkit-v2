@@ -1,6 +1,29 @@
 
 
 export function BlogCardImage({ href }: { href: string }) {
+    if (href === '/blog/model-toolkit-vs-the-classics') {
+        return (
+             <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+              <defs>
+                <linearGradient id="grad-card-vs-classics" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 0.1 }} />
+                  <stop offset="100%" style={{ stopColor: 'hsl(var(--accent))', stopOpacity: 0.1 }} />
+                </linearGradient>
+              </defs>
+              <rect width="1200" height="600" fill="url(#grad-card-vs-classics)" />
+              <g transform="translate(300, 300)">
+                <path d="M-150,-100 Q-150,-150 0,-150 Q150,-150 150,-100 L150,100 Q150,150 0,150 Q-150,150 -150,100 Z" fill="hsl(var(--foreground))" opacity="0.05" />
+                <text x="0" y="50" fontFamily="serif" fontSize="24" textAnchor="middle" fill="hsl(var(--muted-foreground))">Classic</text>
+              </g>
+              <path d="M 480 300 C 580 250, 620 350, 720 300" stroke="hsl(var(--primary))" strokeWidth="4" fill="none" opacity="0.5" strokeDasharray="10 5" />
+              <g transform="translate(900, 300)">
+                 <rect x="-150" y="-120" width="300" height="240" rx="15" fill="hsl(var(--primary))" opacity="0.1"/>
+                 <rect x="-60" y="-80" width="120" height="60" rx="5" fill="hsl(var(--background))" opacity="0.7" />
+                 <text x="0" y="-40" fontFamily="sans-serif" fontSize="18" textAnchor="middle" fill="hsl(var(--foreground))">Modern</text>
+              </g>
+            </svg>
+        )
+    }
     if (href === '/blog/beyond-the-canvas') {
         return (
              <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
