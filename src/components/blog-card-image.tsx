@@ -1,6 +1,28 @@
 
 
 export function BlogCardImage({ href }: { href: string }) {
+    if (href === '/blog/streamlining-innovation-how-to-get-a-quote') {
+        return (
+            <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+              <defs>
+                <linearGradient id="grad-card-streamline" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 0.1 }} />
+                  <stop offset="100%" style={{ stopColor: 'hsl(var(--accent))', stopOpacity: 0.1 }} />
+                </linearGradient>
+              </defs>
+              <rect width="1200" height="600" fill="url(#grad-card-streamline)" />
+              <g transform="translate(600, 300)">
+                <path d="M-300,0 L300,0" stroke="hsl(var(--primary))" stroke-width="3" opacity="0.3" stroke-dasharray="10 5" />
+                <circle cx="-200" cy="0" r="30" fill="hsl(var(--accent))" opacity="0.3"/>
+                <circle cx="0" cy="0" r="40" fill="hsl(var(--primary))" opacity="0.2" />
+                <circle cx="200" cy="0" r="30" fill="hsl(var(--accent))" opacity="0.3"/>
+              </g>
+              <text x="600" y="310" fontFamily="var(--font-space-grotesk), sans-serif" fontSize="60" fontWeight="bold" textAnchor="middle" fill="hsl(var(--foreground))" opacity="0.8">
+                Streamline Innovation
+              </text>
+            </svg>
+        )
+    }
     if (href === '/blog/model-toolkit-vs-the-classics') {
         return (
              <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">

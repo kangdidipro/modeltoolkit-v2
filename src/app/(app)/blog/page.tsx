@@ -8,6 +8,7 @@ import Image from "next/image";
 import { BlogCardImage } from "@/components/blog-card-image";
 
 const blogPosts = [
+  { no: 104, keyword: "Innovation Tools", title: "Streamlining Innovation: How to Get a Quote for Collaborative Tools like Model Toolkit", href: "/blog/streamlining-innovation-how-to-get-a-quote", publishedOn: "August 5, 2024", imageHint: "streamline innovation" },
   { no: 103, keyword: "Visual Tools", title: "Model Toolkit vs. The Classics: Comparing Modern Visual Tools for Business Strategy", href: "/blog/model-toolkit-vs-the-classics", publishedOn: "August 4, 2024", imageHint: "modern tools" },
   { no: 102, keyword: "Innovation Platforms", title: "Beyond the Canvas: The Top Platforms for Business Model Innovation You Need to Know", href: "/blog/beyond-the-canvas", publishedOn: "August 3, 2024", imageHint: "innovation platforms" },
   { no: 16, keyword: "Visual Strategy", title: "Beyond the Business Plan: How Visual Strategy Tools Can Transform Your Startup", href: "/blog/beyond-the-business-plan", publishedOn: "August 2, 2024", imageHint: "dynamic strategy" },
