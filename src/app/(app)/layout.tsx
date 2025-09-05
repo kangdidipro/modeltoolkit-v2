@@ -31,6 +31,7 @@ import { Button } from "@/components/ui/button"
 import { modelInfo, categories } from "@/lib/models"
 import { cn } from "@/lib/utils"
 import { Footer } from "@/components/footer"
+import Script from "next/script"
 
 const defaultOpenCategories = categories.map(category => category.name);
 
@@ -141,6 +142,10 @@ function AppLayoutContent({ children, handleLinkClick }: { children: React.React
               {children}
             </div>
           </main>
+          <div className="text-center my-4">
+            <Script async={true} data-cfasync="false" src="//pl17416442.revenuecpmgate.com/a478fa22d151ffce1ae090333b7d786f/invoke.js"></Script>
+            <div id="container-a478fa22d151ffce1ae090333b7d786f"></div>
+          </div>
           <Footer timestamp={timestamp} className="no-print"/>
         </div>
       </SidebarInset>
